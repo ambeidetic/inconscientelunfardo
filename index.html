@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inconsciente Lunfardo - J. Abraham Muñoz Bravo</title>
+    <style>
+        :root {
+            --primary-color: #c89a9e;
+            --secondary-color: #a67f83;
+            --background-color: #f5f1f2;
+            --text-color: #333;
+            --light-color: #fff;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--background-color);
+        }
+        
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header styles */
+        header {
+            padding: 2rem 0;
+            text-align: center;
+        }
+        
+        .hero {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4rem;
+            padding: 5rem 1rem;
+        }
+        
+        @media (min-width: 768px) {
+            .hero {
+                flex-direction: row;
+                text-align: left;
+            }
+        }
+        
+        .book-cover {
+            width: 350px;
+            height: 525px;
+            border-radius: 5px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+            overflow: hidden;
+            perspective: 1000px;
+            margin: 0 auto;
+        }
+        
+        .book-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.8s;
+            transform-style: preserve-3d;
+        }
+        
+        .book-cover:hover .book-inner {
+            transform: rotateY(180deg);
+        }
+        
+        .book-front, .book-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        
+        .book-front {
+            color: black;
+        }
+        
+        .book-back {
+            transform: rotateY(180deg);
+        }
+        
+        .book-front img, .book-back img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .hero-content {
+            max-width: 500px;
+        }
+        
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            font-weight: 300;
+            color: var(--secondary-color);
+        }
+        
+        .hero p {
+            font-size: 1.1rem;
+            margin-bottom: 2.5rem;
+            line-height: 1.8;
+        }
+        
+        .author-name {
+            font-style: italic;
+            color: var(--secondary-color);
+            margin-bottom: 2rem;
+        }
+        
+        /* Button styles */
+        .btn-container {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background-color: var(--primary-color);
+            color: var(--light-color);
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            letter-spacing: 0.5px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            background-color: var(--secondary-color);
+        }
+        
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--secondary-color);
+            border: 1px solid var(--secondary-color);
+        }
+        
+        .btn-secondary:hover {
+            background-color: var(--secondary-color);
+            color: var(--light-color);
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--secondary-color);
+            color: var(--light-color);
+            padding: 2rem 0;
+            text-align: center;
+            margin-top: 5rem;
+        }
+        
+        .social-links {
+            margin-top: 1.5rem;
+            display: flex;
+            justify-content: center;
+        }
+        
+        .youtube-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+            background-color: #FF0000;
+            border-radius: 50%;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .youtube-link:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            z-index: 100;
+            overflow: auto;
+        }
+        
+        .modal-content {
+            background-color: var(--light-color);
+            margin: 10% auto;
+            padding: 2.5rem;
+            width: 90%;
+            max-width: 500px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            position: relative;
+        }
+        
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        /* Form styles */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--secondary-color);
+        }
+        
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-family: inherit;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+        
+        /* Success message */
+        .success-message {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 5px;
+            display: none;
+        }
+        
+        /* Download link */
+        .download-link {
+            background-color: rgba(200, 154, 158, 0.1);
+            color: var(--secondary-color);
+            padding: 2rem;
+            margin: 3rem auto;
+            border-radius: 10px;
+            text-align: center;
+            display: none;
+            max-width: 600px;
+        }
+        
+        .download-link a {
+            color: var(--primary-color);
+            font-weight: bold;
+            text-decoration: none;
+        }
+        
+        .download-link a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Media Section Styles */
+        .media-section {
+            padding: 5rem 0;
+            background-color: rgba(200, 154, 158, 0.05);
+        }
+        
+        .media-section h2 {
+            text-align: center;
+            margin-bottom: 2.5rem;
+            font-weight: 300;
+            color: var(--secondary-color);
+            font-size: 2rem;
+        }
+        
+        .video-container {
+            margin-bottom: 5rem;
+        }
+        
+        .responsive-video {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+            height: 0;
+            overflow: hidden;
+            max-width: 800px;
+            margin: 0 auto;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+            border-radius: 10px;
+        }
+        
+        .responsive-video iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 10px;
+        }
+        
+        .linkedin-post {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .post-container {
+            background-color: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease;
+        }
+        
+        .post-container:hover {
+            transform: translateY(-5px);
+        }
+        
+        .post-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .profile-img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin-right: 1rem;
+        }
+        
+        .post-author h3 {
+            margin: 0;
+            color: var(--text-color);
+            font-size: 1.1rem;
+        }
+        
+        .post-author p {
+            margin: 0;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .post-content p {
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+            color: var(--text-color);
+        }
+        
+        .linkedin-link {
+            display: inline-block;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 0;
+            transition: color 0.3s ease;
+        }
+        
+        .linkedin-link:hover {
+            color: var(--secondary-color);
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 768px) {
+            .post-container {
+                padding: 1.5rem;
+            }
+        }
+        
+        /* Author Section Styles */
+        .author-section {
+            padding: 5rem 0;
+            background-color: rgba(166, 127, 131, 0.05);
+        }
+        
+        .author-section h2 {
+            text-align: center;
+            margin-bottom: 3rem;
+            font-weight: 300;
+            color: var(--secondary-color);
+            font-size: 2rem;
+        }
+        
+        .author-profile {
+            display: flex;
+            flex-direction: column;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        @media (min-width: 768px) {
+            .author-profile {
+                flex-direction: row;
+                gap: 3rem;
+            }
+        }
+        
+        .author-image {
+            flex-shrink: 0;
+            width: 300px;
+            height: 300px;
+            margin: 0 auto 2rem;
+            overflow: hidden;
+            border-radius: 5px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        .author-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .author-bio {
+            flex-grow: 1;
+        }
+        
+        .author-bio h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--secondary-color);
+            font-weight: 500;
+        }
+        
+        .author-description p {
+            margin-bottom: 1.5rem;
+            line-height: 1.8;
+            font-size: 0.9rem;
+        }
+        
+        .author-resources {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(166, 127, 131, 0.2);
+        }
+        
+        .author-resources h4 {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: var(--secondary-color);
+            font-weight: 500;
+        }
+        
+        .author-resources ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .author-resources li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .author-resources a {
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: color 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .author-resources a:hover {
+            color: var(--secondary-color);
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header section -->
+    <header>
+        <div class="container">
+            <!-- Minimalist header with no navigation -->
+        </div>
+    </header>
+    
+    <!-- Hero section -->
+    <section class="hero">
+        <div class="book-cover">
+            <div class="book-inner">
+                <div class="book-front">
+                    <img src="images/portada.jpg" alt="Inconsciente Lunfardo by J. Abraham Muñoz Bravo">
+                </div>
+                <div class="book-back">
+                    <img src="images/contraportada.jpg" alt="Contraportada - Inconsciente Lunfardo">
+                </div>
+            </div>
+        </div>
+        <div class="hero-content">
+            <h1>Inconsciente Lunfardo</h1>
+            <div class="author-name">J. Abraham Muñoz Bravo</div>
+            <p>La modernidad cristalizada en Argentina: un análisis filosófico que revela cómo el lunfardo, lejos de ser simple jerga, constituye la síntesis única de las grandes corrientes occidentales—Marx, Nietzsche, Freud—y amalgama las teorías de Jung y Lacan de manera singular. Una mirada reveladora que desafía las narrativas convencionales sobre el desarrollo cultural global.</p>
+            <div class="btn-container">
+                <button class="btn" id="downloadBtn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px; vertical-align: -3px;">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="12" y1="18" x2="12" y2="12"></line>
+                        <line x1="9" y1="15" x2="15" y2="15"></line>
+                    </svg>
+                    Descarga Gratuita
+                </button>
+                <button class="btn btn-secondary" id="buyBtn">Comprar - $19.99</button>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Media Section -->
+    <section class="media-section">
+        <div class="container">
+            <!-- Video Section -->
+            <div class="video-container">
+                <h2>Descubre más sobre el libro</h2>
+                <div class="responsive-video">
+                    <iframe width="560" height="315" src="https://www.youtube.com/embed/Si5KjH_tiFI?start=2099" 
+                            title="Inconsciente Lunfardo" 
+                            frameborder="0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                            allowfullscreen>
+                    </iframe>
+                </div>
+            </div>
+            
+            <!-- LinkedIn Post -->
+            <div class="linkedin-post">
+                <h2>Lo que dicen del libro</h2>
+                <div class="post-container">
+                    <div class="post-header">
+                        <div class="profile-img" style="background-color: #a67f83; display: flex; justify-content: center; align-items: center;">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="36" height="36" fill="#ffffff">
+                                <path d="M12 12C14.21 12 16 10.21 16 8C16 5.79 14.21 4 12 4C9.79 4 8 5.79 8 8C8 10.21 9.79 12 12 12ZM12 14C9.33 14 4 15.34 4 18V20H20V18C20 15.34 14.67 14 12 14Z"/>
+                            </svg>
+                        </div>
+                        <div class="post-author">
+                            <h3>Ezequiel Murina</h3>
+                            <p>Físico cuántico</p>
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        <p>"Inconsciente Lunfardo - J. Abraham Muñoz Bravo presenta una exploración fascinante del inconsciente colectivo a través del prisma del lunfardo. Una lectura imprescindible para entender la intersección entre psicología y lenguaje."</p>
+                        <a href="https://www.linkedin.com/posts/ezequielmurina_inconsciente-lunfardo-abraham-mu%C3%B1oz-bravo-activity-7290076382259269634-Hje3?utm_source=share&utm_medium=member_desktop" 
+                           target="_blank" 
+                           class="linkedin-link">
+                           Ver publicación original en LinkedIn
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Gustavo Dessal Review -->
+                <div class="post-container" style="margin-top: 2rem;">
+                    <div class="post-header">
+                        <div class="profile-img" style="background-color: #a67f83; display: flex; justify-content: center; align-items: center;">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="36" height="36" fill="#ffffff">
+                                <path d="M12 12C14.21 12 16 10.21 16 8C16 5.79 14.21 4 12 4C9.79 4 8 5.79 8 8C8 10.21 9.79 12 12 12ZM12 14C9.33 14 4 15.34 4 18V20H20V18C20 15.34 14.67 14 12 14Z"/>
+                            </svg>
+                        </div>
+                        <div class="post-author">
+                            <h3>Gustavo Dessal</h3>
+                            <p>Psicoanalista y Escritor</p>
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        <p>"Un psicoanalista que aborda los efectos de la 'lalangue' en la configuración del sujeto del inconsciente. El estudio del lunfardo como 'lengua madre' da una idea de porqué la transferencia con el psicoanálisis es en la Argentina algo que ha modelado la cultura sin distinción entre derecha e izquierda. En otras palabras: el psicoanálisis como ideología que todos allí comparten."</p>
+                    </div>
+                </div>
+                
+                <!-- Shirley Sharon-Zisser Review -->
+                <div class="post-container" style="margin-top: 2rem;">
+                    <div class="post-header">
+                        <div class="profile-img" style="background-color: #a67f83; display: flex; justify-content: center; align-items: center;">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="36" height="36" fill="#ffffff">
+                                <path d="M12,2C6.48,2,2,6.48,2,12c0,5.52,4.48,10,10,10s10-4.48,10-10C22,6.48,17.52,2,12,2z M12,6c1.93,0,3.5,1.57,3.5,3.5 S13.93,13,12,13s-3.5-1.57-3.5-3.5S10.07,6,12,6z M12,20c-2.03,0-4.43-0.82-6.14-2.88C7.55,15.8,9.68,15,12,15 s4.45,0.8,6.14,2.12C16.43,19.18,14.03,20,12,20z"/>
+                                <path d="M12,11c-0.83,0-1.5-0.67-1.5-1.5c0-0.83,0.67-1.5,1.5-1.5s1.5,0.67,1.5,1.5C13.5,10.33,12.83,11,12,11z"/>
+                                <path d="M12,11c0.83,0,1.5-0.67,1.5-1.5c0-0.83-0.67-1.5-1.5-1.5s-1.5,0.67-1.5,1.5C10.5,10.33,11.17,11,12,11z"/>
+                                <path d="M11.55,14h0.9v-2.5c0-0.28-0.22-0.5-0.5-0.5h0c-0.28,0-0.5,0.22-0.5,0.5V14H11.55z"/>
+                                <path d="M13.95,14h0.1c0.83,0,1.5-0.67,1.5-1.5V11h-1.5v1.5C14.05,13.33,14.01,13.66,13.95,14z"/>
+                                <path d="M9.95,14h0.1c-0.05-0.34-0.1-0.67-0.1-1V11h-1.5v1.5C8.45,13.33,9.12,14,9.95,14z"/>
+                            </svg>
+                        </div>
+                        <div class="post-author">
+                            <h3>Shirley Sharon-Zisser</h3>
+                            <p>Profesora en literatura comparativa, psicoanálisis freudo-lacaniano y experta semióloga</p>
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        <p>"Brillante, preciso, elegante."</p>
+                    </div>
+                </div>
+                
+                <!-- Santiago Molina Ruiz Review -->
+                <div class="post-container" style="margin-top: 2rem;">
+                    <div class="post-header">
+                        <div class="profile-img" style="background-color: #a67f83; display: flex; justify-content: center; align-items: center;">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="36" height="36" fill="#ffffff">
+                                <path d="M12 12C14.21 12 16 10.21 16 8C16 5.79 14.21 4 12 4C9.79 4 8 5.79 8 8C8 10.21 9.79 12 12 12ZM12 14C9.33 14 4 15.34 4 18V20H20V18C20 15.34 14.67 14 12 14Z"/>
+                            </svg>
+                        </div>
+                        <div class="post-author">
+                            <h3>Santiago Molina Ruiz</h3>
+                            <p>Filósofo y Prologuista del libro</p>
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        <p>"Complejo, atrevido, sofisticado e intempestivo en la medida en que pocos poseen la delicadeza de ver la historia pasar mientras está pasando. Abraham ha conseguido fijarse en los lentos pasos de la historia que sólo suelen entenderse con los años, con los procesos ya concluidos y cristalizados en la materia de los historiadores, que es la muerte."</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Author Section -->
+    <section class="author-section">
+        <div class="container">
+            <h2>Sobre el autor</h2>
+            <div class="author-profile">
+                <div class="author-image">
+                    <img src="images/autor.jpg" alt="J. Abraham Muñoz Bravo">
+                </div>
+                <div class="author-bio">
+                    <h3>J. Abraham Muñoz Bravo</h3>
+                    <div class="author-description">
+                        <p>Como el único freudiano ortodoxo e historiador universal de su generación, con Lacan en una mano y Hegel en la otra, Abraham Muñoz B. aplica la filosofía teórica contemporánea –Realismo Especulativo– y la praxis psicoanalítica a los misterios culturales de Argentina y descubre los pilares psicológicos, antropológicos y lingüísticos de la compleja capital de esta nación: Buenos Aires.</p>
+                        
+                        <p>Se enfoca en el estudio de la mente, centrándose en la convergencia entre lenguaje, cognición y genealogía de ideas. Su interés abarca el rol del filósofo como piedra angular de la sociedad, en el encaje entre teoría mediática y producción de conocimiento en general.</p>
+                        
+                        <p>Tras estudiar Filosofía y Psicología en Tel Aviv, Muñoz volvió a España para trabajar en La Emboscadura Editorial, curando el archivo multimedial de Antonio Escohotado. Esta labor, aun en YouTube arriesgando una hagiografía auto-inducida, le permitió antropologizar las secuelas del <em>Zeitgeist</em> hippie-ibicenco desde una óptica paradójicamente conservadora; pero su regreso a España, su sangre, unió esta iniciación en el pasaje forestal jüngeriano con el aprendizaje de filosofía en territorio ibérico, por españoles, en castellano, por primera vez.</p>
+                        
+                        <p>Impulsado por la insatisfacción con la instrucción recibida en su licenciatura, Muñoz desarrolla su teorización filosófica con alma enciclopédica en su (cripto-)escritura; aun velada por lo que achaca él a "una providencial desidia e incendios ciberespaciales". En su segundo año de carrera, se encontró con una profesora erudita, "el único docente con una visión de 360 grados de la historia de las ideas" que le reveló el mundo del psicoanálisis. Esto transformó radicalmente su pensamiento sobre el lenguaje, pasando de un enredo con las confusiones lingüísticas a hacer un giro quirúrgico de la observación hacia la función en sí del habla - como un espejismo persistente de la mismidad - que refleja la inconsciencia de los instintos de nuestra dimensión animal. El método psicoanalítico, que exige conocimientos de diversas fuentes, se alineó bien con la actitud interdisciplinaria de Muñoz. Así, continuará "aportando valor" dice él, "como lacaniano fascinado por el lenguaje, como filósofo consciente de la complejidad de la mente y como estudioso interesado en los gigantes intelectuales del pasado".</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+                </div>
+            </div>
+        </div>
+    </section>
+        </div>
+    </section>
+    
+    <!-- Free PDF Download Section (hidden initially) -->
+    <div class="download-link" id="downloadSection">
+        <h3>¡Gracias por tu interés!</h3>
+        <p>Para descargar tu PDF gratuito, por favor ingresa tu correo electrónico:</p>
+        
+        <form id="downloadForm" action="https://formsubmit.co/psitekphi@gmail.com" method="POST">
+            <div class="form-group">
+                <input type="email" name="email" id="downloadEmail" placeholder="Tu correo electrónico" required>
+                <input type="hidden" name="_next" value="https://yourusername.github.io/inconscientelunfardo/#downloadSuccess">
+                <input type="hidden" name="_subject" value="Nueva descarga de libro: Inconsciente Lunfardo">
+                <input type="hidden" name="_captcha" value="false">
+            </div>
+            <button type="submit" class="btn">Obtener PDF</button>
+        </form>
+        
+        <div id="downloadSuccess" style="display: none; margin-top: 1.5rem;">
+            <p style="margin-bottom: 1rem;">¡Listo! Tu PDF gratuito está disponible ahora:</p>
+            <p><a href="documents/muestra-inconsciente-lunfardo.pdf" class="btn" id="pdfLink">Descargar PDF</a></p>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 J. Abraham Muñoz Bravo. Todos los derechos reservados.</p>
+            <div class="social-links">
+                <a href="https://www.youtube.com/@PSITEKPHI/videos" target="_blank" class="youtube-link" aria-label="Canal de YouTube">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="#ffffff">
+                        <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Buy Modal -->
+    <div class="modal" id="buyModal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Comprar "Inconsciente Lunfardo"</h2>
+            <p>Por favor, completa el formulario para finalizar tu compra.</p>
+            
+            <div class="success-message" id="successMessage">
+                ¡Gracias por tu compra! Hemos enviado un correo electrónico de confirmación con los detalles. Recibirás tu libro en breve.
+            </div>
+            
+            <form id="purchaseForm">
+                <div class="form-group">
+                    <label for="name">Nombre Completo</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Correo Electrónico</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="address">Dirección de Envío</label>
+                    <textarea id="address" name="address" rows="3" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="city">Ciudad</label>
+                    <input type="text" id="city" name="city" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="postalCode">Código Postal</label>
+                    <input type="text" id="postalCode" name="postalCode" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="country">País</label>
+                    <input type="text" id="country" name="country" required>
+                </div>
+                
+                <button type="submit" class="btn">Proceder al Pago</button>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+        // Get DOM elements
+        const downloadBtn = document.getElementById('downloadBtn');
+        const buyBtn = document.getElementById('buyBtn');
+        const buyModal = document.getElementById('buyModal');
+        const closeBtn = document.querySelector('.close');
+        const purchaseForm = document.getElementById('purchaseForm');
+        const successMessage = document.getElementById('successMessage');
+        const downloadSection = document.getElementById('downloadSection');
+        const pdfLink = document.getElementById('pdfLink');
+        
+        <!-- Free PDF Download button click -->
+        downloadBtn.addEventListener('click', function() {
+            // Show the download section
+            downloadSection.style.display = 'block';
+            
+            // Scroll to the download section
+            downloadSection.scrollIntoView({ behavior: 'smooth' });
+        });
+        
+        // Handle download form submission
+        const downloadForm = document.getElementById('downloadForm');
+        const downloadSuccess = document.getElementById('downloadSuccess');
+        
+        downloadForm.addEventListener('submit', function(e) {
+            // FormSubmit will handle the form submission
+            // This event listener is for any additional client-side handling
+            
+            // If you want to add client-side validation, you can do it here
+            const email = document.getElementById('downloadEmail').value;
+            if (!email || !email.includes('@')) {
+                e.preventDefault();
+                alert('Por favor, introduce un correo electrónico válido.');
+                return false;
+            }
+            
+            // For local testing - prevent form submission and show success message
+            if (window.location.protocol === 'file:') {
+                e.preventDefault();
+                downloadForm.style.display = 'none';
+                downloadSuccess.style.display = 'block';
+                return false;
+            }
+        });
+        
+        // Buy button click
+        buyBtn.addEventListener('click', function() {
+            buyModal.style.display = 'block';
+        });
+        
+        // Close button click
+        closeBtn.addEventListener('click', function() {
+            buyModal.style.display = 'none';
+        });
+        
+        // Close modal when clicking outside of it
+        window.addEventListener('click', function(event) {
+            if (event.target == buyModal) {
+                buyModal.style.display = 'none';
+            }
+        });
+        
+        // Form submission
+        purchaseForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Collect form data
+            const formData = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                address: document.getElementById('address').value,
+                city: document.getElementById('city').value,
+                postalCode: document.getElementById('postalCode').value,
+                country: document.getElementById('country').value
+            };
+            
+            // For demonstration/testing purposes
+            console.log('Order details to be sent to psitekphi@gmail.com:', formData);
+            
+            // Display success message
+            successMessage.style.display = 'block';
+            purchaseForm.style.display = 'none';
+            
+            // Here you would normally send the data to your server or payment processor
+            // When implementing with PayPal, this is where you'd redirect to PayPal
+            
+            // Reset form after submission (for demo purposes)
+            setTimeout(function() {
+                purchaseForm.reset();
+                successMessage.style.display = 'none';
+                purchaseForm.style.display = 'block';
+                buyModal.style.display = 'none';
+            }, 5000);
+        });
+    </script>
+</body>
+</html>
