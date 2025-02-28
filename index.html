@@ -651,12 +651,6 @@
             </div>
         </div>
     </section>
-                </div>
-            </div>
-        </div>
-    </section>
-        </div>
-    </section>
     
     <!-- Free PDF Download Section (hidden initially) -->
     <div class="download-link" id="downloadSection">
@@ -666,7 +660,7 @@
         <form id="downloadForm" action="https://formsubmit.co/psitekphi@gmail.com" method="POST">
             <div class="form-group">
                 <input type="email" name="email" id="downloadEmail" placeholder="Tu correo electrónico" required>
-                <input type="hidden" name="_next" value="https://yourusername.github.io/inconscientelunfardo/#downloadSuccess">
+                <input type="hidden" name="_next" value="https://ambeidetic.github.io/inconscientelunfardo/#downloadSuccess">
                 <input type="hidden" name="_subject" value="Nueva descarga de libro: Inconsciente Lunfardo">
                 <input type="hidden" name="_captcha" value="false">
             </div>
@@ -675,7 +669,7 @@
         
         <div id="downloadSuccess" style="display: none; margin-top: 1.5rem;">
             <p style="margin-bottom: 1rem;">¡Listo! Tu PDF gratuito está disponible ahora:</p>
-            <p><a href="documents/muestra-inconsciente-lunfardo.pdf" class="btn" id="pdfLink">Descargar PDF</a></p>
+            <p><a href="muestra-inconsciente-lunfardo.pdf" class="btn" id="pdfLink">Descargar PDF</a></p>
         </div>
     </div>
     
@@ -751,7 +745,7 @@
         const downloadSection = document.getElementById('downloadSection');
         const pdfLink = document.getElementById('pdfLink');
         
-        <!-- Free PDF Download button click -->
+        // Free PDF Download button click
         downloadBtn.addEventListener('click', function() {
             // Show the download section
             downloadSection.style.display = 'block';
