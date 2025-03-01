@@ -923,7 +923,9 @@
                     <input type="hidden" name="message" id="hiddenMessage">
                     <input type="hidden" name="form_type" value="download_confirmation">
                     <input type="hidden" name="_captcha" value="false">
-                    <input type="hidden" name="_format" value="plain">
+                    <input type="text" name="_honey" style="display:none"> <!-- Honeypot para prevenir spam -->
+                    <!-- Campo visible requerido para activar FormSubmit -->
+                    <input type="text" name="download_name" value="Inconsciente Lunfardo" style="display:none">
                 </form>
                 
                 <a href="#" 
@@ -966,7 +968,9 @@
         <input type="hidden" name="codigo_postal" id="notificationPostalCode">
         <input type="hidden" name="pais" id="notificationCountry">
         <input type="hidden" name="_captcha" value="false">
-        <input type="hidden" name="_next" value="#compra-completada">
+        <input type="text" name="_honey" style="display:none"> <!-- Honeypot para prevenir spam -->
+        <!-- Campo visible requerido para activar FormSubmit -->
+        <input type="text" name="purchase_type" value="Libro físico" style="display:none">
     </form>
     
     <!-- Footer -->
@@ -1050,7 +1054,7 @@
                 <!-- Botón moderno de PayPal -->
                 <div class="paypal-button">
                     <button type="submit" class="modern-paypal-btn" onclick="return preparePayPalData();">
-                        Comprar ahora
+                        Comprar ahora con PayPal
                     </button>
                     <div class="payment-methods">
                         <img src="https://cdn.iconscout.com/icon/free/png-256/free-maestro-5-675724.png" alt="Maestro">
@@ -1117,6 +1121,47 @@
             }
         }
         
+        // Función para enviar la notificación usando FormSubmit
+        function sendFormSubmitNotification(formElement, backupData) {
+            // Crear los datos del formulario
+            const formData = new FormData(formElement);
+            
+            // Realizar la petición a FormSubmit
+            return fetch('https://formsubmit.co/ajax/psitekphi@gmail.com', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Error de red: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Notificación enviada correctamente:', data);
+                return { success: true, data };
+            })
+            .catch(error => {
+                console.error('Error al enviar notificación:', error);
+                
+                // Guardar datos de respaldo en localStorage
+                if (backupData) {
+                    const backupKey = `formsubmit_backup_${Date.now()}`;
+                    try {
+                        localStorage.setItem(backupKey, JSON.stringify(backupData));
+                        console.log('Datos de respaldo guardados en localStorage:', backupKey);
+                    } catch (e) {
+                        console.error('Error al guardar datos de respaldo:', e);
+                    }
+                }
+                
+                return { success: false, error };
+            });
+        }
+        
         // Función actualizada para iniciar la descarga
         function downloadPDF(email) {
             // Ocultar mensajes anteriores
@@ -1140,28 +1185,24 @@
                 document.getElementById('hiddenEmail').value = email;
                 document.getElementById('hiddenMessage').value = `El usuario con email ${email} ha descargado el PDF del libro.`;
                 
-                // Enviar notificación mediante FormSubmit utilizando la API Fetch
-                const formData = new FormData(document.getElementById('downloadForm'));
+                // Datos de respaldo
+                const backupData = {
+                    type: 'download',
+                    email: email,
+                    timestamp: new Date().toISOString(),
+                    userAgent: navigator.userAgent
+                };
                 
-                fetch('https://formsubmit.co/ajax/psitekphi@gmail.com', {
-                    method: 'POST',
-                    body: formData,
-                    headers: {
-                        'Accept': 'application/json'
-                    }
-                })
-                .then(response => {
-                    console.log('Notificación enviada al administrador');
-                })
-                .catch(error => {
-                    console.error('Error en notificación al administrador:', error);
-                    // No interrumpimos la descarga si falla la notificación
-                });
+                // 3. Enviar notificación usando FormSubmit
+                sendFormSubmitNotification(
+                    document.getElementById('downloadForm'),
+                    backupData
+                );
                 
-                // 3. Guardar el email únicamente para seguimiento sin enviar correo
+                // 4. Guardar el email únicamente para seguimiento sin enviar correo
                 localStorage.setItem('lastEmailUsed', email);
                 
-                // 4. Iniciar la descarga del archivo
+                // 5. Iniciar la descarga del archivo
                 const link = document.createElement('a');
                 link.href = 'muestra-inconsciente-lunfardo.pdf';
                 link.download = 'Inconsciente-Lunfardo.pdf';
@@ -1170,7 +1211,7 @@
                 link.click();
                 document.body.removeChild(link);
                 
-                // 5. Mostrar mensaje de éxito y enlace alternativo
+                // 6. Mostrar mensaje de éxito y enlace alternativo
                 setTimeout(() => {
                     document.getElementById('directDownloadLoader').style.display = 'none';
                     document.getElementById('downloadSuccess').style.display = 'block';
@@ -1229,36 +1270,33 @@
             document.getElementById('notificationPostalCode').value = postalCode;
             document.getElementById('notificationCountry').value = country;
             
-            // Enviar notificación por fetch para no interrumpir el proceso de PayPal
-            try {
-                const formData = new FormData(document.getElementById('purchaseNotificationForm'));
-                
-                fetch('https://formsubmit.co/ajax/psitekphi@gmail.com', {
-                    method: 'POST',
-                    body: formData,
-                    headers: {
-                        'Accept': 'application/json'
-                    }
-                })
-                .catch(error => {
-                    console.error('Error al enviar notificación de compra:', error);
-                });
-            } catch (error) {
-                console.error('Error en proceso de notificación de compra:', error);
-            }
-            
-            // Método de respaldo: guardar información en localStorage
-            try {
-                let purchases = JSON.parse(localStorage.getItem('purchases') || '[]');
-                purchases.push({
+            // Datos para respaldo
+            const backupData = {
+                type: 'purchase',
+                customer: {
                     name: name,
                     email: email,
                     address: address,
                     city: city,
                     postalCode: postalCode,
-                    country: country,
-                    timestamp: new Date().toISOString()
-                });
+                    country: country
+                },
+                product: 'Libro Inconsciente Lunfardo',
+                price: '19.99',
+                currency: 'EUR',
+                timestamp: new Date().toISOString()
+            };
+            
+            // Enviar notificación usando FormSubmit
+            sendFormSubmitNotification(
+                document.getElementById('purchaseNotificationForm'),
+                backupData
+            );
+            
+            // Método de respaldo: guardar información en localStorage
+            try {
+                let purchases = JSON.parse(localStorage.getItem('purchases') || '[]');
+                purchases.push(backupData);
                 localStorage.setItem('purchases', JSON.stringify(purchases));
             } catch (e) {
                 console.error('Error al guardar en localStorage:', e);
