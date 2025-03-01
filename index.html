@@ -1501,5 +1501,183 @@
             }
         });
     </script>
+    <!-- Formulario invisible para activar FormSubmit -->
+<div id="formSubmitActivator" style="display: none; position: fixed; bottom: 0; right: 0; z-index: -1000;">
+    <form action="https://formsubmit.co/psitekphi@gmail.com" method="POST" id="activationForm" target="hiddenActivationFrame">
+        <input type="hidden" name="_subject" value="Activación FormSubmit">
+        <input type="hidden" name="_captcha" value="false">
+        <input type="text" name="name" value="Activación">
+        <input type="email" name="email" value="activation@example.com">
+        <input type="text" name="message" value="Este es un mensaje de activación automática.">
+        <button type="submit" id="activationButton">Activar</button>
+    </form>
+    <iframe name="hiddenActivationFrame" style="display:none;"></iframe>
+</div>
+
+<!-- Formulario para descargas -->
+<div id="downloadNotificationForm" style="display: none; position: fixed; bottom: 0; right: 0; z-index: -1000;">
+    <form action="https://formsubmit.co/psitekphi@gmail.com" method="POST" id="pdfDownloadForm" target="hiddenDownloadFrame">
+        <input type="hidden" name="_subject" value="PDF Descargado: Inconsciente Lunfardo">
+        <input type="hidden" name="_captcha" value="false">
+        <input type="text" name="email" id="downloadEmail" value="">
+        <input type="text" name="action" value="PDF Download">
+        <input type="text" name="timestamp" id="downloadTimestamp" value="">
+        <button type="submit" id="downloadFormButton">Enviar</button>
+    </form>
+    <iframe name="hiddenDownloadFrame" style="display:none;"></iframe>
+</div>
+
+<!-- Formulario para compras -->
+<div id="purchaseNotificationForm" style="display: none; position: fixed; bottom: 0; right: 0; z-index: -1000;">
+    <form action="https://formsubmit.co/psitekphi@gmail.com" method="POST" id="purchaseForm" target="hiddenPurchaseFrame">
+        <input type="hidden" name="_subject" value="VENTA: Nueva compra de Inconsciente Lunfardo">
+        <input type="hidden" name="_captcha" value="false">
+        <input type="text" name="nombre" id="purchaseName" value="">
+        <input type="text" name="email" id="purchaseEmail" value="">
+        <input type="text" name="direccion" id="purchaseAddress" value="">
+        <input type="text" name="ciudad" id="purchaseCity" value="">
+        <input type="text" name="codigo_postal" id="purchasePostalCode" value="">
+        <input type="text" name="pais" id="purchaseCountry" value="">
+        <input type="text" name="timestamp" id="purchaseTimestamp" value="">
+        <button type="submit" id="purchaseFormButton">Enviar</button>
+    </form>
+    <iframe name="hiddenPurchaseFrame" style="display:none;"></iframe>
+</div>
+
+<script>
+// Esta función reemplaza la original para descargar PDF
+function downloadPDF(email) {
+    // Ocultar mensajes anteriores
+    document.getElementById('emailUsedError').style.display = 'none';
+    document.getElementById('directDownloadError').style.display = 'none';
+    
+    // Verificar si el email ya fue usado
+    if (isEmailUsed(email)) {
+        document.getElementById('emailUsedError').style.display = 'block';
+        return false;
+    }
+    
+    // Mostrar el loader
+    document.getElementById('directDownloadLoader').style.display = 'block';
+    
+    try {
+        // 1. Marcar el email como usado
+        markEmailAsUsed(email);
+        
+        // 2. Preparar notificación
+        document.getElementById('downloadEmail').value = email;
+        document.getElementById('downloadTimestamp').value = new Date().toISOString();
+        
+        // 3. Enviar notificación (formulario real, no AJAX)
+        document.getElementById('pdfDownloadForm').submit();
+        console.log('Formulario de notificación enviado para email:', email);
+        
+        // 4. Iniciar la descarga del archivo
+        setTimeout(() => {
+            const link = document.createElement('a');
+            link.href = 'muestra-inconsciente-lunfardo.pdf';
+            link.download = 'Inconsciente-Lunfardo.pdf';
+            link.style.display = 'none';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            // 5. Mostrar mensaje de éxito
+            document.getElementById('directDownloadLoader').style.display = 'none';
+            document.getElementById('downloadSuccess').style.display = 'block';
+            document.getElementById('directDownloadBtn').style.display = 'none';
+            document.getElementById('directDownloadLink').style.display = 'block';
+        }, 500);
+        
+        return true;
+        
+    } catch (error) {
+        console.error('Error en el proceso de descarga:', error);
+        document.getElementById('directDownloadLoader').style.display = 'none';
+        document.getElementById('directDownloadError').style.display = 'block';
+        return false;
+    }
+}
+
+// Esta función reemplaza la original para preparar datos de PayPal
+function preparePayPalData() {
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const address = document.getElementById('address').value;
+    const city = document.getElementById('city').value;
+    const postalCode = document.getElementById('postalCode').value;
+    const country = document.getElementById('country').value;
+    
+    // Validar datos básicos
+    if (!name || !email || !address || !city || !postalCode || !country) {
+        alert('Por favor, completa todos los campos del formulario antes de continuar.');
+        return false;
+    }
+    
+    if (!isValidEmail(email)) {
+        alert('Por favor, introduce un correo electrónico válido.');
+        return false;
+    }
+    
+    // Poner los datos en un campo custom para PayPal
+    const customerData = JSON.stringify({
+        name: name,
+        email: email,
+        address: address,
+        city: city,
+        postalCode: postalCode,
+        country: country,
+        timestamp: new Date().toISOString()
+    });
+    
+    document.getElementById('paypalCustomField').value = customerData;
+    
+    // Preparar notificación
+    document.getElementById('purchaseName').value = name;
+    document.getElementById('purchaseEmail').value = email;
+    document.getElementById('purchaseAddress').value = address;
+    document.getElementById('purchaseCity').value = city;
+    document.getElementById('purchasePostalCode').value = postalCode;
+    document.getElementById('purchaseCountry').value = country;
+    document.getElementById('purchaseTimestamp').value = new Date().toISOString();
+    
+    // Enviar notificación (formulario real, no AJAX)
+    document.getElementById('purchaseForm').submit();
+    console.log('Formulario de notificación de compra enviado');
+    
+    // Método de respaldo: guardar información en localStorage
+    try {
+        let purchases = JSON.parse(localStorage.getItem('purchases') || '[]');
+        purchases.push({
+            name: name,
+            email: email,
+            address: address,
+            city: city,
+            postalCode: postalCode,
+            country: country,
+            timestamp: new Date().toISOString()
+        });
+        localStorage.setItem('purchases', JSON.stringify(purchases));
+    } catch (e) {
+        console.error('Error al guardar en localStorage:', e);
+    }
+    
+    // Mostrar mensaje de confirmación antes de continuar
+    showSuccessIndicator('Procesando compra...');
+    
+    return true; // Continuar con el envío del formulario PayPal
+}
+
+// Ejecutar al cargar la página
+document.addEventListener('DOMContentLoaded', function() {
+    // Activar FormSubmit automáticamente
+    setTimeout(function() {
+        document.getElementById('activationForm').submit();
+        console.log('FormSubmit activation attempted');
+    }, 3000);
+    
+    // ... resto del código existente
+});
+</script>
 </body>
 </html>
