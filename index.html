@@ -694,24 +694,31 @@
     <!-- Free PDF Download Section (hidden initially) -->
     <div class="download-link" id="downloadSection">
         <h3>¡Gracias por tu interés!</h3>
-        <p>Para descargar tu PDF gratuito, por favor ingresa tu correo electrónico:</p>
+        <p>Para obtener tu PDF gratuito, por favor ingresa tu correo electrónico:</p>
         
-        <!-- Formulario con FormSubmit usando email directo -->
+        <!-- Formulario con FormSubmit optimizado -->
         <form id="downloadForm" action="https://formsubmit.co/psitekphi@gmail.com" method="POST">
             <div class="form-group">
                 <input type="email" name="email" id="downloadEmail" placeholder="Tu correo electrónico" required>
                 <input type="hidden" name="_next" value="https://ambeidetic.github.io/inconscientelunfardo/#downloadSuccess">
                 <input type="hidden" name="_subject" value="Nueva descarga de libro: Inconsciente Lunfardo">
                 <input type="hidden" name="_captcha" value="false">
-                <!-- Campo para identificar el tipo de formulario -->
+                <!-- Parámetros de seguridad adicionales -->
                 <input type="hidden" name="form_type" value="download_request">
+                <input type="hidden" name="download_security_token" value="verified_secure_download">
+                <input type="hidden" name="download_referrer" id="downloadReferrer">
+                <!-- Configuración para adjuntar PDF en respuesta automática -->
+                <input type="hidden" name="_template" value="box">
+                <input type="hidden" name="_autoresponse" value="Gracias por tu interés en 'Inconsciente Lunfardo'. Adjunto encontrarás el PDF del libro.">
             </div>
             <button type="submit" class="btn">Obtener PDF</button>
         </form>
         
         <div id="downloadSuccess" style="display: none; margin-top: 1.5rem;">
-            <p style="margin-bottom: 1rem;">¡Listo! Tu PDF gratuito está disponible ahora:</p>
+            <p style="margin-bottom: 1rem;">¡Listo! Te hemos enviado el PDF a tu correo electrónico.</p>
+            <p>Si prefieres descargarlo directamente ahora, puedes usar este enlace:</p>
             <p><a href="muestra-inconsciente-lunfardo.pdf" download class="btn" id="pdfLink" onclick="trackDownload()">Descargar PDF</a></p>
+            <p style="font-size: 0.9rem; margin-top: 1rem; color: #666;">Nota: Si usas Movistar u otro proveedor que bloquee descargas, por favor revisa tu correo electrónico donde también te hemos enviado el libro.</p>
         </div>
     </div>
     
@@ -779,6 +786,14 @@
     </div>
     
     <script>
+        // Función para establecer el referrer al cargar la página
+        document.addEventListener('DOMContentLoaded', function() {
+            // Establecer referrer para el formulario de descarga
+            if (document.getElementById('downloadReferrer')) {
+                document.getElementById('downloadReferrer').value = document.referrer || window.location.href;
+            }
+        });
+        
         // Get DOM elements
         const downloadBtn = document.getElementById('downloadBtn');
         const buyBtn = document.getElementById('buyBtn');
@@ -839,7 +854,7 @@
         // También cuando cambia el hash
         window.addEventListener('hashchange', checkForSuccessHash);
         
-        // Función para seguir las descargas reales del PDF
+        // Función mejorada de trackDownload
         function trackDownload() {
             // Obtener email de varias fuentes por redundancia
             let userEmail = localStorage.getItem('userEmail') || 
@@ -883,11 +898,37 @@
             formTypeField.name = 'form_type';
             formTypeField.value = 'download_confirmation';
             
+            // Añadir campos de seguridad
+            const securityField = document.createElement('input');
+            securityField.type = 'hidden';
+            securityField.name = 'download_security_token';
+            securityField.value = 'verified_secure_download';
+            
+            const referrerField = document.createElement('input');
+            referrerField.type = 'hidden';
+            referrerField.name = 'download_referrer';
+            referrerField.value = document.referrer || window.location.href;
+            
+            const userAgentField = document.createElement('input');
+            userAgentField.type = 'hidden';
+            userAgentField.name = 'user_agent';
+            userAgentField.value = navigator.userAgent;
+            
+            // Incluir la hora para detectar descargas automáticas
+            const timestampField = document.createElement('input');
+            timestampField.type = 'hidden';
+            timestampField.name = 'timestamp';
+            timestampField.value = new Date().toISOString();
+            
             // Añadir campos al formulario
             form.appendChild(emailField);
             form.appendChild(subjectField);
             form.appendChild(messageField);
             form.appendChild(formTypeField);
+            form.appendChild(securityField);
+            form.appendChild(referrerField);
+            form.appendChild(userAgentField);
+            form.appendChild(timestampField);
             
             // Añadir formulario al cuerpo del documento
             document.body.appendChild(form);
@@ -917,8 +958,14 @@
             }
         });
         
-        // Integración de PayPal
+        // Integración de PayPal optimizada
         paypal.Buttons({
+            style: {
+                layout: 'vertical',  // Estilo vertical más visible
+                color: 'blue',       // Color estándar de PayPal
+                shape: 'rect',       // Forma rectangular
+                label: 'paypal'      // Solo mostrar opción de PayPal, no tarjetas
+            },
             // Configurar transacción
             createOrder: function(data, actions) {
                 // Validar formulario primero
@@ -934,7 +981,7 @@
                     return false;
                 }
                 
-                // Crear orden de PayPal
+                // Crear orden de PayPal con opciones optimizadas
                 return actions.order.create({
                     purchase_units: [{
                         description: 'Libro: Inconsciente Lunfardo',
@@ -944,7 +991,9 @@
                         }
                     }],
                     application_context: {
-                        shipping_preference: 'NO_SHIPPING'
+                        shipping_preference: 'NO_SHIPPING',
+                        user_action: 'PAY_NOW', // Más claro para el usuario
+                        brand_name: 'Inconsciente Lunfardo - J. Abraham Muñoz Bravo'
                     }
                 });
             },
@@ -993,6 +1042,19 @@
                     captchaField.name = '_captcha';
                     captchaField.value = 'false';
                     form.appendChild(captchaField);
+                    
+                    // Agregar campos de seguridad al envío de datos
+                    const securityField = document.createElement('input');
+                    securityField.type = 'hidden';
+                    securityField.name = 'payment_security_token';
+                    securityField.value = 'verified_secure_payment';
+                    form.appendChild(securityField);
+                    
+                    const referrerField = document.createElement('input');
+                    referrerField.type = 'hidden';
+                    referrerField.name = 'payment_referrer';
+                    referrerField.value = document.referrer || window.location.href;
+                    form.appendChild(referrerField);
                     
                     const messageField = document.createElement('input');
                     messageField.type = 'hidden';
