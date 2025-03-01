@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -904,21 +905,16 @@
             return regex.test(email);
         }
         
-        // Función para enviar notificación al propietario
+        // FUNCIÓN MEJORADA: Notificar al propietario de manera más confiable
         function notifyOwner(userEmail, downloadMethod) {
             const timestamp = new Date().toISOString();
-            const formData = new FormData();
-            formData.append('userEmail', userEmail);
-            formData.append('downloadMethod', downloadMethod);
-            formData.append('timestamp', timestamp);
-            formData.append('userAgent', navigator.userAgent);
             
-            // Enviar notificación usando FormSubmit
-            fetch('https://formsubmit.co/psitekphi@gmail.com', {
+            // MÉTODO 1: Usando FormSubmit API para enviar notificación
+            fetch('https://formsubmit.co/ajax/psitekphi@gmail.com', {
                 method: 'POST',
                 headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
                 },
                 body: JSON.stringify({
                     _subject: "Nueva descarga de Inconsciente Lunfardo",
@@ -927,24 +923,51 @@
                     fecha: timestamp,
                     navegador: navigator.userAgent
                 })
-            }).catch(error => console.error('Error al enviar notificación:', error));
+            })
+            .then(response => response.json())
+            .then(data => console.log('Notificación enviada correctamente:', data))
+            .catch(error => {
+                console.error('Error en el primer método de notificación:', error);
+                
+                // MÉTODO 2: Como respaldo, usar un formulario HTML directo
+                const backupForm = document.createElement('form');
+                backupForm.method = 'POST';
+                backupForm.action = 'https://formsubmit.co/psitekphi@gmail.com';
+                backupForm.style.display = 'none';
+                
+                const fields = {
+                    '_subject': 'Nueva descarga de Inconsciente Lunfardo (método respaldo)',
+                    'email': userEmail,
+                    'método': downloadMethod,
+                    'fecha': timestamp,
+                    'navegador': navigator.userAgent,
+                    '_captcha': 'false'
+                };
+                
+                for (const [key, value] of Object.entries(fields)) {
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = key;
+                    input.value = value;
+                    backupForm.appendChild(input);
+                }
+                
+                document.body.appendChild(backupForm);
+                backupForm.submit();
+            });
         }
         
-        // Función para registrar la descarga y notificar
+        // FUNCIÓN MEJORADA: Registrar la descarga y notificar de forma más confiable
         function trackDownload(method) {
             const userEmail = document.getElementById('userEmail').value;
             
             // Mostrar loader si es descarga directa
             if (method === 'direct') {
                 document.getElementById('directDownloadLoader').style.display = 'block';
-                
-                // Simular verificación de la descarga
-                setTimeout(function() {
-                    document.getElementById('directDownloadLoader').style.display = 'none';
-                }, 1500);
             }
             
-            // Notificar al propietario
+            // IMPORTANTE: Enviar la notificación ANTES de comenzar la descarga
+            // para garantizar que se envíe incluso si el usuario cierra la página
             notifyOwner(userEmail, method);
             
             // Registrar analíticas de descarga de forma anónima
@@ -968,6 +991,11 @@
             } catch (e) {
                 console.log('Error al guardar estadísticas locales:', e);
             }
+            
+            // Ocultar loader después de un tiempo
+            setTimeout(function() {
+                document.getElementById('directDownloadLoader').style.display = 'none';
+            }, 1500);
             
             return true;
         }
@@ -1108,7 +1136,7 @@
             }
         });
         
-        // Función para inicializar PayPal
+        // FUNCIÓN MEJORADA: Inicializar PayPal con mejor manejo de errores
         function initPayPal() {
             if (!document.getElementById('paypal-button-container')) return;
             
@@ -1122,7 +1150,8 @@
                     label: 'pay',
                     tagline: false
                 },
-                // Configurar transacción
+                
+                // SIMPLIFICADO: Crear orden de PayPal
                 createOrder: function(data, actions) {
                     // Validar formulario primero
                     const name = document.getElementById('name').value;
@@ -1137,7 +1166,7 @@
                         return false;
                     }
                     
-                    // Crear orden de PayPal
+                    // Configuración simplificada para evitar errores
                     return actions.order.create({
                         purchase_units: [{
                             description: 'Libro: Inconsciente Lunfardo',
@@ -1145,73 +1174,69 @@
                                 currency_code: 'EUR',
                                 value: '19.99'
                             }
-                        }],
-                        application_context: {
-                            shipping_preference: 'NO_SHIPPING',
-                            user_action: 'PAY_NOW',
-                            brand_name: 'Inconsciente Lunfardo - J. Abraham Muñoz Bravo'
-                        }
+                        }]
                     });
                 },
                 
-                // Finalizar transacción
+                // MEJORADO: Manejo de aprobación del pago
                 onApprove: function(data, actions) {
                     // Mostrar loader antes de procesar
                     showSuccessIndicator('Procesando pago...');
                     
-                    return actions.order.capture().then(function(orderData) {
-                        // Recopilar datos del cliente y de la orden
-                        const customerData = {
-                            name: document.getElementById('name').value,
-                            email: document.getElementById('email').value,
-                            address: document.getElementById('address').value,
-                            city: document.getElementById('city').value,
-                            postalCode: document.getElementById('postalCode').value,
-                            country: document.getElementById('country').value,
-                            orderID: orderData.id,
-                            payerID: orderData.payer.payer_id,
-                            paymentAmount: orderData.purchase_units[0].amount.value,
-                            paymentCurrency: orderData.purchase_units[0].amount.currency_code
-                        };
-                        
-                        // Agregar datos al formulario existente
-                        const form = document.getElementById('purchaseForm');
-                        
-                        // Añadir campos al formulario para la información de pago
-                        for (const [key, value] of Object.entries(customerData)) {
-                            let field = form.querySelector(`input[name="${key}"]`);
-                            if (!field) {
-                                field = document.createElement('input');
-                                field.type = 'hidden';
-                                field.name = key;
-                                form.appendChild(field);
-                            }
-                            field.value = value;
-                        }
-                        
-                        // Enviar el formulario si no estamos en desarrollo local
-                        if (window.location.protocol !== 'file:') {
-                            try {
-                                form.submit();
-                            } catch (e) {
-                                console.error('Error al enviar formulario:', e);
-                                document.getElementById('purchaseError').style.display = 'block';
-                            }
-                        }
-                        
-                        // Mostrar mensaje de éxito
-                        document.getElementById('successMessage').style.display = 'block';
-                        document.getElementById('purchaseForm').style.display = 'none';
-                        
-                        // Cerrar modal después de unos segundos
-                        setTimeout(function() {
-                            document.getElementById('buyModal').style.display = 'none';
-                            showSuccessIndicator('¡Compra completada con éxito!');
-                        }, 3000);
-                    }).catch(function(error) {
-                        console.error('Error en captura de pago:', error);
-                        document.getElementById('purchaseError').style.display = 'block';
-                    });
+                    return actions.order.capture()
+                        .then(function(orderData) {
+                            // Notificar inmediatamente de la compra
+                            const email = document.getElementById('email').value;
+                            notifyOwner(email, 'compra_paypal');
+                            
+                            // Recopilar datos del cliente y de la orden
+                            const customerData = {
+                                name: document.getElementById('name').value,
+                                email: document.getElementById('email').value,
+                                address: document.getElementById('address').value,
+                                city: document.getElementById('city').value,
+                                postalCode: document.getElementById('postalCode').value,
+                                country: document.getElementById('country').value,
+                                orderID: orderData.id,
+                                payerID: orderData.payer.payer_id,
+                                paymentAmount: orderData.purchase_units[0].amount.value,
+                                paymentCurrency: orderData.purchase_units[0].amount.currency_code
+                            };
+                            
+                            // Enviar datos directamente en vez de manipular el formulario
+                            fetch('https://formsubmit.co/ajax/psitekphi@gmail.com', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'Accept': 'application/json'
+                                },
+                                body: JSON.stringify({
+                                    _subject: "¡VENTA! Nueva compra de Inconsciente Lunfardo",
+                                    ...customerData
+                                })
+                            })
+                            .then(() => {
+                                // Mostrar mensaje de éxito
+                                document.getElementById('successMessage').style.display = 'block';
+                                document.getElementById('purchaseForm').style.display = 'none';
+                                
+                                // Cerrar modal después de unos segundos
+                                setTimeout(function() {
+                                    document.getElementById('buyModal').style.display = 'none';
+                                    showSuccessIndicator('¡Compra completada con éxito!');
+                                }, 3000);
+                            })
+                            .catch(error => {
+                                console.error('Error al enviar confirmación de compra:', error);
+                                // Mostrar mensaje de éxito de todas formas, ya que el pago se realizó
+                                document.getElementById('successMessage').style.display = 'block';
+                                document.getElementById('purchaseForm').style.display = 'none';
+                            });
+                        })
+                        .catch(function(error) {
+                            console.error('Error en captura de pago:', error);
+                            document.getElementById('purchaseError').style.display = 'block';
+                        });
                 },
                 
                 onError: function(err) {
@@ -1223,3 +1248,4 @@
     </script>
 </body>
 </html>
+```
