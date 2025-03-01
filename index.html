@@ -566,7 +566,7 @@
                     </div>
                 </div>
                 
-                <!-- Gustavo Dessal Review -->
+                <!-- Otros testimonios se mantienen igual -->
                 <div class="post-container" style="margin-top: 2rem;">
                     <div class="post-header">
                         <div class="profile-img" style="background-color: #a67f83; display: flex; justify-content: center; align-items: center;">
@@ -584,7 +584,7 @@
                     </div>
                 </div>
                 
-                <!-- Shirley Sharon-Zisser Review -->
+                <!-- Otros testimonios se mantienen igual -->
                 <div class="post-container" style="margin-top: 2rem;">
                     <div class="post-header">
                         <div class="profile-img" style="background-color: #a67f83; display: flex; justify-content: center; align-items: center;">
@@ -607,7 +607,7 @@
                     </div>
                 </div>
                 
-                <!-- Santiago Molina Ruiz Review -->
+                <!-- Otro testimonio se mantiene igual -->
                 <div class="post-container" style="margin-top: 2rem;">
                     <div class="post-header">
                         <div class="profile-img" style="background-color: #a67f83; display: flex; justify-content: center; align-items: center;">
@@ -669,7 +669,7 @@
         
         <div id="downloadSuccess" style="display: none; margin-top: 1.5rem;">
             <p style="margin-bottom: 1rem;">¡Listo! Tu PDF gratuito está disponible ahora:</p>
-            <p><a href="muestra-inconsciente-lunfardo.pdf" class="btn" id="pdfLink">Descargar PDF</a></p>
+            <p><a href="muestra-inconsciente-lunfardo.pdf" class="btn" id="pdfLink" onclick="trackDownload()">Descargar PDF</a></p>
         </div>
     </div>
     
@@ -695,7 +695,7 @@
             <p>Por favor, completa el formulario para finalizar tu compra.</p>
             
             <div class="success-message" id="successMessage">
-                ¡Gracias por tu compra! Hemos enviado un correo electrónico de confirmación con los detalles. Recibirás tu libro en breve.
+                ¡Gracias por tu compra! Recibirás tu libro en breve.
             </div>
             
             <form id="purchaseForm">
@@ -729,7 +729,16 @@
                     <input type="text" id="country" name="country" required>
                 </div>
                 
-                <button type="submit" class="btn">Proceder al Pago</button>
+                <!-- PayPal Buttons Container -->
+                <div class="form-group" style="margin-top: 20px;">
+                    <script src="https://www.paypal.com/sdk/js?client-id=BAAdRV7C5FUyz96apa7dJl8TA3ix6co5d2eSZemQDukJ1zr-icCerFqRoGw091RLR5SwB-DjCrmkq6pjCI&components=hosted-buttons&disable-funding=venmo&currency=EUR"></script>
+                    <div id="paypal-container-F2LTF9T3RSHJ4"></div>
+                    <script>
+                    paypal.HostedButtons({
+                        hostedButtonId: "F2LTF9T3RSHJ4",
+                    }).render("#paypal-container-F2LTF9T3RSHJ4")
+                    </script>
+                </div>
             </form>
         </div>
     </div>
@@ -759,25 +768,54 @@
         const downloadSuccess = document.getElementById('downloadSuccess');
         
         downloadForm.addEventListener('submit', function(e) {
-            // FormSubmit will handle the form submission
-            // This event listener is for any additional client-side handling
-            
-            // If you want to add client-side validation, you can do it here
-            const email = document.getElementById('downloadEmail').value;
-            if (!email || !email.includes('@')) {
-                e.preventDefault();
-                alert('Por favor, introduce un correo electrónico válido.');
-                return false;
-            }
-            
-            // For local testing - prevent form submission and show success message
+            // Si estamos en desarrollo local, evitamos el envío real
             if (window.location.protocol === 'file:') {
                 e.preventDefault();
                 downloadForm.style.display = 'none';
                 downloadSuccess.style.display = 'block';
                 return false;
             }
+            
+            // Almacenar el correo para usarlo en el seguimiento de descarga
+            const userEmail = document.getElementById('downloadEmail').value;
+            if (userEmail) {
+                localStorage.setItem('userEmail', userEmail);
+            }
         });
+        
+        // Verificar si estamos en la url con el hash #downloadSuccess
+        if (window.location.hash === '#downloadSuccess') {
+            downloadForm.style.display = 'none';
+            downloadSuccess.style.display = 'block';
+            
+            // Hacer visible la sección de descarga si no lo está
+            if (downloadSection.style.display !== 'block') {
+                downloadSection.style.display = 'block';
+                downloadSection.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+        
+        // Función para seguir las descargas reales del PDF
+        function trackDownload() {
+            const userEmail = localStorage.getItem('userEmail') || 'usuario-desconocido@ejemplo.com';
+            
+            // Enviar una notificación adicional de descarga completada usando FormSubmit
+            fetch('https://formsubmit.co/ajax/psitekphi@gmail.com', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    email: userEmail,
+                    _subject: 'PDF Descargado: Inconsciente Lunfardo',
+                    message: `El usuario con email ${userEmail} ha descargado el PDF del libro.`
+                })
+            })
+            .then(response => response.json())
+            .then(data => console.log('Descarga registrada'))
+            .catch(error => console.error('Error al registrar descarga:', error));
+        }
         
         // Buy button click
         buyBtn.addEventListener('click', function() {
@@ -796,37 +834,55 @@
             }
         });
         
-        // Form submission
-        purchaseForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Collect form data
-            const formData = {
-                name: document.getElementById('name').value,
-                email: document.getElementById('email').value,
-                address: document.getElementById('address').value,
-                city: document.getElementById('city').value,
-                postalCode: document.getElementById('postalCode').value,
-                country: document.getElementById('country').value
-            };
-            
-            // For demonstration/testing purposes
-            console.log('Order details to be sent to psitekphi@gmail.com:', formData);
-            
-            // Display success message
-            successMessage.style.display = 'block';
-            purchaseForm.style.display = 'none';
-            
-            // Here you would normally send the data to your server or payment processor
-            // When implementing with PayPal, this is where you'd redirect to PayPal
-            
-            // Reset form after submission (for demo purposes)
-            setTimeout(function() {
-                purchaseForm.reset();
-                successMessage.style.display = 'none';
-                purchaseForm.style.display = 'block';
-                buyModal.style.display = 'none';
-            }, 5000);
+        // Escuchar eventos de PayPal para transacciones completadas
+        window.addEventListener('message', function(event) {
+            if (event.data.type === 'CHECKOUT_COMPLETE') {
+                // Recopilar datos del formulario
+                const customerData = {
+                    name: document.getElementById('name').value,
+                    email: document.getElementById('email').value,
+                    address: document.getElementById('address').value,
+                    city: document.getElementById('city').value,
+                    postalCode: document.getElementById('postalCode').value,
+                    country: document.getElementById('country').value
+                };
+                
+                // Enviar información adicional del cliente a tu email
+                fetch('https://formsubmit.co/ajax/psitekphi@gmail.com', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        _subject: 'Detalles del comprador: Inconsciente Lunfardo',
+                        ...customerData,
+                        message: `Detalles adicionales del comprador:
+                                  Nombre: ${customerData.name}
+                                  Email: ${customerData.email}
+                                  Dirección: ${customerData.address}
+                                  Ciudad: ${customerData.city}
+                                  Código Postal: ${customerData.postalCode}
+                                  País: ${customerData.country}`
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Datos del comprador enviados correctamente');
+                    
+                    // Mostrar mensaje de éxito
+                    successMessage.style.display = 'block';
+                    purchaseForm.style.display = 'none';
+                    
+                    // Cerrar modal después de unos segundos
+                    setTimeout(function() {
+                        buyModal.style.display = 'none';
+                    }, 5000);
+                })
+                .catch(error => {
+                    console.error('Error al enviar datos del comprador:', error);
+                });
+            }
         });
     </script>
 </body>
