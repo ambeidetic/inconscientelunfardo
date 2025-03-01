@@ -641,32 +641,23 @@
             display: none;
         }
         
-        /* Nuevo estilo para botón de PayPal */
+        /* Estilos oficiales para botón de PayPal */
         .paypal-button {
             text-align: center;
             margin-top: 20px;
+            text-align: center;
         }
         
-        .paypal-btn {
-            display: inline-block;
-            background-color: var(--paypal-yellow);
-            color: var(--paypal-blue);
-            font-weight: bold;
-            font-size: 1.1rem;
-            padding: 12px 24px;
-            border-radius: 4px;
-            border: none;
-            cursor: pointer;
+        .paypal-button input[type="image"] {
             transition: all 0.3s ease;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            text-decoration: none;
-            width: 100%;
-            max-width: 250px;
+            border-radius: 4px;
+            cursor: pointer;
         }
         
-        .paypal-btn:hover {
+        .paypal-button input[type="image"]:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+            opacity: 0.95;
         }
 
         /* Estilos para el iframe de descarga */
@@ -898,7 +889,7 @@
                     <input type="hidden" name="message" id="hiddenMessage">
                     <input type="hidden" name="form_type" value="download_confirmation">
                     <input type="hidden" name="_captcha" value="false">
-                    <input type="hidden" name="_next" value="https://tudominio.com/gracias">
+                    <input type="hidden" name="_format" value="plain">
                 </form>
                 
                 <a href="#" 
@@ -914,13 +905,13 @@
                 </a>
                 
                 <!-- Mensaje de descarga exitosa -->
-                <div class="download-message" id="downloadSuccess">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#155724" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <div class="download-message" id="downloadSuccess" style="background-color: #d4edda; padding: 20px; margin-top: 20px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#155724" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin: 0 auto 15px auto; display: block;">
                         <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
                         <polyline points="22 4 12 14.01 9 11.01"></polyline>
                     </svg>
-                    <h4>¡Tu descarga ha comenzado!</h4>
-                    <p>También hemos enviado una copia a tu correo electrónico.</p>
+                    <h4 style="color: #155724; text-align: center; margin-bottom: 10px; font-size: 1.4rem;">¡Tu descarga ha comenzado!</h4>
+                    <p style="text-align: center;">También hemos enviado una copia a tu correo electrónico.</p>
                 </div>
                 
                 <!-- Iframe oculto para descargar sin redirección -->
@@ -1005,14 +996,14 @@
                     <input type="text" id="country" name="country" required>
                 </div>
                 
-                <!-- Botón de PayPal mejorado -->
+                <!-- Botón oficial de PayPal -->
                 <div class="paypal-button">
-                    <button type="submit" class="paypal-btn" onclick="return preparePayPalData();">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="#0070e0" style="vertical-align: -4px; margin-right: 8px;">
-                            <path d="M20.067 8.478c.492.315.695.73.695 1.47 0 1.514-1.409 2.885-3.881 2.885h-.237a.636.636 0 0 0-.633.604l-.525 3.340a.635.635 0 0 1-.632.604H12.22a.47.47 0 0 1-.492-.573l.086-.352.228-1.461.131-.835a.47.47 0 0 1 .492-.573h.352c2.013 0 3.975-.756 4.741-3.276a2.876 2.876 0 0 0-.76-3.147l.69.314zm-7.518-5.484c.217-.198.544-.299 1.006-.299h3.152c.602 0 1.155.073 1.655.217.149.044.285.093.416.147.132.053.259.11.379.172.081.042.16.086.236.131.149.089.287.184.416.287.49.315.878.722 1.133 1.259.273.572.363 1.223.27 1.945-.414 2.111-1.68 3.307-4.117 3.834a5.286 5.286 0 0 1-1.191.123h-1.064a.884.884 0 0 0-.877.798l-.597 3.786a.762.762 0 0 1-.764.674H11.05a.63.63 0 0 1-.657-.768l1.584-10.047a.762.762 0 0 1 .764-.674h3.443c.217 0 .416.024.602.073a.797.797 0 0 1-.237-.158z"/>
-                        </svg>
-                        PayPal
-                    </button>
+                    <input type="image" src="https://www.paypalobjects.com/es_ES/ES/i/btn/btn_buynowCC_LG.gif" 
+                           border="0" 
+                           name="submit" 
+                           alt="PayPal, la forma rápida y segura de pagar en Internet."
+                           onclick="return preparePayPalData();">
+                    <img alt="" border="0" src="https://www.paypalobjects.com/es_ES/i/scr/pixel.gif" width="1" height="1">
                 </div>
                 
                 <!-- Formulario para FormSubmit oculto (notificación de compra) -->
@@ -1120,21 +1111,37 @@
             document.getElementById('hiddenEmail').value = email;
             document.getElementById('hiddenMessage').value = `El usuario con email ${email} ha descargado el PDF del libro.`;
             
-            // 3. Enviar el formulario FormSubmit en segundo plano (usando fetch)
-            const formData = new FormData(document.getElementById('downloadForm'));
-            fetch(document.getElementById('downloadForm').action, {
-                method: 'POST',
-                body: formData,
-                mode: 'no-cors'
-            }).catch(error => {
-                console.error('Error al enviar notificación:', error);
-                // No interrumpimos la descarga aunque haya error en notificación
-            });
+            // 3. Enviar el formulario FormSubmit a través de fetch para no redirigir
+            try {
+                const formData = new FormData(document.getElementById('downloadForm'));
+                
+                // Enviar mediante fetch
+                fetch('https://formsubmit.co/ajax/psitekphi@gmail.com', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Problema al enviar el formulario');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Notificación enviada con éxito', data);
+                })
+                .catch(error => {
+                    console.error('Error al enviar notificación:', error);
+                    // No interrumpimos la descarga aunque haya error en notificación
+                });
+            } catch (error) {
+                console.error('Error en proceso de notificación:', error);
+            }
             
-            // 4. Iniciar la descarga del PDF sin redirigir (después de un breve retraso)
-            setTimeout(() => {
-                initiateDownload('muestra-inconsciente-lunfardo.pdf');
-            }, 800);
+            // 4. Iniciar la descarga del PDF inmediatamente - no retrasar más la descarga
+            initiateDownload('muestra-inconsciente-lunfardo.pdf');
             
             return false; // Evitar comportamiento por defecto del enlace
         }
@@ -1180,16 +1187,37 @@
             document.getElementById('notificationPostalCode').value = postalCode;
             document.getElementById('notificationCountry').value = country;
             
-            // Enviar notificación en segundo plano
-            const formData = new FormData(document.getElementById('purchaseNotificationForm'));
-            fetch(document.getElementById('purchaseNotificationForm').action, {
-                method: 'POST',
-                body: formData,
-                mode: 'no-cors'
-            }).catch(error => {
-                console.error('Error al enviar notificación de compra:', error);
-                // No interrumpimos el proceso de PayPal aunque falle la notificación
-            });
+            // Enviar notificación a través de FormSubmit usando el endpoint AJAX
+            try {
+                const formData = new FormData();
+                formData.append('_subject', 'VENTA: Nueva compra de Inconsciente Lunfardo');
+                formData.append('nombre', name);
+                formData.append('email', email);
+                formData.append('direccion', address);
+                formData.append('ciudad', city);
+                formData.append('codigo_postal', postalCode);
+                formData.append('pais', country);
+                formData.append('_captcha', 'false');
+                
+                // Enviar mediante fetch
+                fetch('https://formsubmit.co/ajax/psitekphi@gmail.com', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Notificación de compra enviada con éxito', data);
+                })
+                .catch(error => {
+                    console.error('Error al enviar notificación de compra:', error);
+                    // Seguimos con el proceso de PayPal aunque falle la notificación
+                });
+            } catch (error) {
+                console.error('Error en proceso de notificación de compra:', error);
+            }
             
             // Método de respaldo: registro en localStorage
             try {
@@ -1207,6 +1235,9 @@
             } catch (e) {
                 console.error('Error al guardar en localStorage:', e);
             }
+            
+            // Mostrar mensaje de confirmación antes de continuar
+            showSuccessIndicator('Procesando compra...');
             
             return true; // Continuar con el envío del formulario PayPal
         }
