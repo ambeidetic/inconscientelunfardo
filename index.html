@@ -1,12 +1,11 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inconsciente Lunfardo - J. Abraham Muñoz Bravo</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Literata:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+    <!-- Añadir Google Fonts para combinar fuentes con serifa -->
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary-color: #c89a9e;
@@ -22,11 +21,18 @@
             box-sizing: border-box;
         }
         
+        /* Modificación con fuente con serifa */
         body {
-            font-family: 'Literata', 'Helvetica Neue', Arial, serif;
+            font-family: 'Roboto', 'Helvetica Neue', Arial, sans-serif;
             line-height: 1.6;
             color: var(--text-color);
             background-color: var(--background-color);
+        }
+        
+        /* Aplicar fuente con serifa a los títulos */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Merriweather', Georgia, serif;
+            font-weight: 300;
         }
         
         .container {
@@ -37,23 +43,8 @@
         
         /* Header styles */
         header {
-            padding: 1rem 0;
-            text-align: right;
-        }
-        
-        header nav a {
-            display: inline-block;
-            padding: 8px 16px;
-            color: var(--secondary-color);
-            text-decoration: none;
-            border-radius: 20px;
-            font-weight: 500;
-            transition: all 0.3s ease;
-        }
-        
-        header nav a:hover {
-            background-color: var(--primary-color);
-            color: var(--light-color);
+            padding: 2rem 0;
+            text-align: center;
         }
         
         .hero {
@@ -193,10 +184,10 @@
             margin-top: 1.5rem;
             display: flex;
             justify-content: center;
-            gap: 1.5rem;
+            gap: 1rem;
         }
         
-        .social-icon {
+        .youtube-link, .linkedin-share {
             display: flex;
             align-items: center;
             justify-content: center;
@@ -206,17 +197,17 @@
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
         
-        .social-icon:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-        }
-        
         .youtube-link {
             background-color: #FF0000;
         }
         
-        .linkedin-link-icon {
-            background-color: #0077b5;
+        .linkedin-share {
+            background-color: #0077B5;
+        }
+        
+        .youtube-link:hover, .linkedin-share:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
         
         /* Modal styles */
@@ -288,48 +279,26 @@
             display: none;
         }
         
-        /* Download section */
-        #downloadSection {
+        /* Download link */
+        .download-link {
             background-color: rgba(200, 154, 158, 0.1);
             color: var(--secondary-color);
-            padding: 3rem 1rem;
+            padding: 2rem;
             margin: 3rem auto;
             border-radius: 10px;
             text-align: center;
-            max-width: 800px;
+            display: none;
+            max-width: 600px;
         }
         
-        #downloadSection h2 {
-            margin-bottom: 1.5rem;
-            font-weight: 300;
-            color: var(--secondary-color);
-        }
-        
-        .download-content {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 1.5rem;
-        }
-        
-        .download-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
+        .download-link a {
             color: var(--primary-color);
             font-weight: bold;
             text-decoration: none;
-            padding: 12px 30px;
-            border: 1px solid var(--primary-color);
-            border-radius: 30px;
-            transition: all 0.3s ease;
         }
         
-        .download-link:hover {
-            background-color: var(--primary-color);
-            color: var(--light-color);
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        .download-link a:hover {
+            text-decoration: underline;
         }
         
         /* Media Section Styles */
@@ -368,7 +337,6 @@
             width: 100%;
             height: 100%;
             border-radius: 10px;
-            border: none;
         }
         
         .linkedin-post {
@@ -400,10 +368,6 @@
             height: 60px;
             border-radius: 50%;
             margin-right: 1rem;
-            background-color: #a67f83;
-            display: flex;
-            justify-content: center;
-            align-items: center;
         }
         
         .post-author h3 {
@@ -424,28 +388,49 @@
             color: var(--text-color);
         }
         
-        .linkedin-btn {
-            display: inline-flex;
-            align-items: center;
-            background-color: #0077b5;
-            color: white;
+        .linkedin-link {
+            display: inline-block;
+            color: var(--primary-color);
             text-decoration: none;
             font-weight: 500;
-            padding: 8px 16px;
+            padding: 0.5rem 0;
+            transition: color 0.3s ease;
+        }
+        
+        .linkedin-link:hover {
+            color: var(--secondary-color);
+            text-decoration: underline;
+        }
+        
+        /* Nuevo: botón de compartir en LinkedIn */
+        .share-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        
+        .linkedin-share-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 15px;
+            background-color: #0077B5;
+            color: #fff;
             border-radius: 5px;
+            text-decoration: none;
+            font-size: 0.9rem;
             transition: all 0.3s ease;
         }
         
-        .linkedin-btn:hover {
-            background-color: #005e93;
-            transform: translateY(-2px);
-            box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+        .linkedin-share-btn svg {
+            margin-right: 8px;
         }
         
-        .linkedin-btn svg {
-            width: 16px;
-            height: 16px;
-            margin-right: 8px;
+        .linkedin-share-btn:hover {
+            background-color: #005e8c;
+            transform: translateY(-2px);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
         }
         
         @media (max-width: 768px) {
@@ -548,29 +533,6 @@
             color: var(--secondary-color);
             text-decoration: underline;
         }
-
-        /* Formulario de contacto */
-        .contact-section {
-            padding: 4rem 0;
-            background-color: rgba(200, 154, 158, 0.05);
-        }
-
-        .contact-section h2 {
-            text-align: center;
-            margin-bottom: 2rem;
-            font-weight: 300;
-            color: var(--secondary-color);
-            font-size: 2rem;
-        }
-
-        .contact-form {
-            max-width: 600px;
-            margin: 0 auto;
-            background-color: white;
-            padding: 2rem;
-            border-radius: 10px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
-        }
     </style>
     
     <!-- Script de PayPal SDK -->
@@ -580,9 +542,7 @@
     <!-- Header section -->
     <header>
         <div class="container">
-            <nav>
-                <a href="#downloadSection">Descargar</a>
-            </nav>
+            <!-- Minimalist header with no navigation -->
         </div>
     </header>
     
@@ -591,10 +551,10 @@
         <div class="book-cover">
             <div class="book-inner">
                 <div class="book-front">
-                    <img src="/api/placeholder/350/525" alt="Inconsciente Lunfardo by J. Abraham Muñoz Bravo">
+                    <img src="portada.jpg" alt="Inconsciente Lunfardo by J. Abraham Muñoz Bravo">
                 </div>
                 <div class="book-back">
-                    <img src="/api/placeholder/350/525" alt="Contraportada - Inconsciente Lunfardo">
+                    <img src="contraportada.jpg" alt="Contraportada - Inconsciente Lunfardo">
                 </div>
             </div>
         </div>
@@ -617,30 +577,6 @@
         </div>
     </section>
     
-    <!-- Download Section -->
-    <section id="downloadSection" class="container">
-        <h2>Descarga tu copia del libro</h2>
-        <div class="download-content">
-            <p>Puedes descargar una copia en formato PDF o EPUB. Si te gusta el libro, considera apoyar al autor con una compra.</p>
-            <a href="#" class="download-link" id="downloadPdf">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                    <polyline points="14 2 14 8 20 8"></polyline>
-                    <line x1="12" y1="18" x2="12" y2="12"></line>
-                    <line x1="9" y1="15" x2="15" y2="15"></line>
-                </svg>
-                Descargar PDF
-            </a>
-            <a href="#" class="download-link" id="downloadEpub">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
-                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
-                </svg>
-                Descargar EPUB
-            </a>
-        </div>
-    </section>
-    
     <!-- Media Section -->
     <section class="media-section">
         <div class="container">
@@ -657,12 +593,25 @@
                 </div>
             </div>
             
+            <!-- Botón de compartir en LinkedIn -->
+            <div class="share-buttons">
+                <a href="https://www.linkedin.com/sharing/share-offsite/?url=https://ambeidetic.github.io/inconscientelunfardo/&title=Inconsciente%20Lunfardo%20por%20J.%20Abraham%20Muñoz%20Bravo&summary=Un%20análisis%20filosófico%20que%20revela%20cómo%20el%20lunfardo%20constituye%20la%20síntesis%20única%20de%20las%20grandes%20corrientes%20occidentales" 
+                   class="linkedin-share-btn" 
+                   target="_blank"
+                   rel="noopener noreferrer">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="#ffffff">
+                        <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                    </svg>
+                    Compartir en LinkedIn
+                </a>
+            </div>
+            
             <!-- LinkedIn Post -->
             <div class="linkedin-post">
                 <h2>Lo que dicen del libro</h2>
                 <div class="post-container">
                     <div class="post-header">
-                        <div class="profile-img">
+                        <div class="profile-img" style="background-color: #a67f83; display: flex; justify-content: center; align-items: center;">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="36" height="36" fill="#ffffff">
                                 <path d="M12 12C14.21 12 16 10.21 16 8C16 5.79 14.21 4 12 4C9.79 4 8 5.79 8 8C8 10.21 9.79 12 12 12ZM12 14C9.33 14 4 15.34 4 18V20H20V18C20 15.34 14.67 14 12 14Z"/>
                             </svg>
@@ -676,12 +625,7 @@
                         <p>"Inconsciente Lunfardo - J. Abraham Muñoz Bravo presenta una exploración fascinante del inconsciente colectivo a través del prisma del lunfardo. Una lectura imprescindible para entender la intersección entre psicología y lenguaje."</p>
                         <a href="https://www.linkedin.com/posts/ezequielmurina_inconsciente-lunfardo-abraham-mu%C3%B1oz-bravo-activity-7290076382259269634-Hje3?utm_source=share&utm_medium=member_desktop" 
                            target="_blank" 
-                           class="linkedin-btn">
-                           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="#ffffff">
-                                <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
-                                <rect x="2" y="9" width="4" height="12"></rect>
-                                <circle cx="4" cy="4" r="2"></circle>
-                            </svg>
+                           class="linkedin-link">
                            Ver publicación original en LinkedIn
                         </a>
                     </div>
@@ -690,7 +634,7 @@
                 <!-- Gustavo Dessal Review -->
                 <div class="post-container">
                     <div class="post-header">
-                        <div class="profile-img">
+                        <div class="profile-img" style="background-color: #a67f83; display: flex; justify-content: center; align-items: center;">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="36" height="36" fill="#ffffff">
                                 <path d="M12 12C14.21 12 16 10.21 16 8C16 5.79 14.21 4 12 4C9.79 4 8 5.79 8 8C8 10.21 9.79 12 12 12ZM12 14C9.33 14 4 15.34 4 18V20H20V18C20 15.34 14.67 14 12 14Z"/>
                             </svg>
@@ -708,9 +652,14 @@
                 <!-- Shirley Sharon-Zisser Review -->
                 <div class="post-container">
                     <div class="post-header">
-                        <div class="profile-img">
+                        <div class="profile-img" style="background-color: #a67f83; display: flex; justify-content: center; align-items: center;">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="36" height="36" fill="#ffffff">
                                 <path d="M12,2C6.48,2,2,6.48,2,12c0,5.52,4.48,10,10,10s10-4.48,10-10C22,6.48,17.52,2,12,2z M12,6c1.93,0,3.5,1.57,3.5,3.5 S13.93,13,12,13s-3.5-1.57-3.5-3.5S10.07,6,12,6z M12,20c-2.03,0-4.43-0.82-6.14-2.88C7.55,15.8,9.68,15,12,15 s4.45,0.8,6.14,2.12C16.43,19.18,14.03,20,12,20z"/>
+                                <path d="M12,11c-0.83,0-1.5-0.67-1.5-1.5c0-0.83,0.67-1.5,1.5-1.5s1.5,0.67,1.5,1.5C13.5,10.33,12.83,11,12,11z"/>
+                                <path d="M12,11c0.83,0,1.5-0.67,1.5-1.5c0-0.83-0.67-1.5-1.5-1.5s-1.5,0.67-1.5,1.5C10.5,10.33,11.17,11,12,11z"/>
+                                <path d="M11.55,14h0.9v-2.5c0-0.28-0.22-0.5-0.5-0.5h0c-0.28,0-0.5,0.22-0.5,0.5V14H11.55z"/>
+                                <path d="M13.95,14h0.1c0.83,0,1.5-0.67,1.5-1.5V11h-1.5v1.5C14.05,13.33,14.01,13.66,13.95,14z"/>
+                                <path d="M9.95,14h0.1c-0.05-0.34-0.1-0.67-0.1-1V11h-1.5v1.5C8.45,13.33,9.12,14,9.95,14z"/>
                             </svg>
                         </div>
                         <div class="post-author">
@@ -726,7 +675,7 @@
                 <!-- Santiago Molina Ruiz Review -->
                 <div class="post-container">
                     <div class="post-header">
-                        <div class="profile-img">
+                        <div class="profile-img" style="background-color: #a67f83; display: flex; justify-content: center; align-items: center;">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="36" height="36" fill="#ffffff">
                                 <path d="M12 12C14.21 12 16 10.21 16 8C16 5.79 14.21 4 12 4C9.79 4 8 5.79 8 8C8 10.21 9.79 12 12 12ZM12 14C9.33 14 4 15.34 4 18V20H20V18C20 15.34 14.67 14 12 14Z"/>
                             </svg>
@@ -750,7 +699,7 @@
             <h2>Sobre el autor</h2>
             <div class="author-profile">
                 <div class="author-image">
-                    <img src="/api/placeholder/300/300" alt="J. Abraham Muñoz Bravo">
+                    <img src="autor.jpg" alt="J. Abraham Muñoz Bravo">
                 </div>
                 <div class="author-bio">
                     <h3>J. Abraham Muñoz Bravo</h3>
@@ -761,170 +710,360 @@
                         
                         <p>Tras estudiar Filosofía y Psicología en Tel Aviv, Muñoz volvió a España para trabajar en La Emboscadura Editorial, curando el archivo multimedial de Antonio Escohotado. Esta labor, aun en YouTube arriesgando una hagiografía auto-inducida, le permitió antropologizar las secuelas del <em>Zeitgeist</em> hippie-ibicenco desde una óptica paradójicamente conservadora; pero su regreso a España, su sangre, unió esta iniciación en el pasaje forestal jüngeriano con el aprendizaje de filosofía en territorio ibérico, por españoles, en castellano, por primera vez.</p>
                         
-                        <p>Impulsado por la insatisfacción con la instrucción recibida en su licenciatura, Muñoz desarrolla su teorización filosófica con alma enciclopédica en su (cripto-)escritura; aun velada por lo que achaca él a "una providencial desidia e incendios ciberespaciales". En su segundo año de carrera, se encontró con una profesora erudita, "el único docente con una visión de 360 grados de la historia de las ideas" que le reveló el mundo del psicoanálisis. Esto transformó radicalmente su pensamiento sobre el lenguaje, pasando de un enredo con las confusiones lingüísticas a hacer un giro quirúrgico de la observación clínica.</p>
-                    </div>
-                    
-                    <div class="author-resources">
-                        <h4>Recursos adicionales</h4>
-                        <ul>
-                            <li><a href="#" target="_blank">Entrevista en Radio Nacional</a></li>
-                            <li><a href="#" target="_blank">Artículos académicos</a></li>
-                            <li><a href="https://www.youtube.com/channel/UCU7QXAK1QEohjgcJEPtU_pQ" target="_blank">Canal de YouTube</a></li>
-                        </ul>
+                        <p>Impulsado por la insatisfacción con la instrucción recibida en su licenciatura, Muñoz desarrolla su teorización filosófica con alma enciclopédica en su (cripto-)escritura; aun velada por lo que achaca él a "una providencial desidia e incendios ciberespaciales". En su segundo año de carrera, se encontró con una profesora erudita, "el único docente con una visión de 360 grados de la historia de las ideas" que le reveló el mundo del psicoanálisis. Esto transformó radicalmente su pensamiento sobre el lenguaje, pasando de un enredo con las confusiones lingüísticas a hacer un giro quirúrgico de la observación hacia la función en sí del habla - como un espejismo persistente de la mismidad - que refleja la inconsciencia de los instintos de nuestra dimensión animal. El método psicoanalítico, que exige conocimientos de diversas fuentes, se alineó bien con la actitud interdisciplinaria de Muñoz. Así, continuará "aportando valor" dice él, "como lacaniano fascinado por el lenguaje, como filósofo consciente de la complejidad de la mente y como estudioso interesado en los gigantes intelectuales del pasado".</p>
                     </div>
                 </div>
             </div>
         </div>
     </section>
     
-    <!-- Contact Form Section using FormSubmit -->
-    <section class="contact-section">
-        <div class="container">
-            <h2>Contacta con el autor</h2>
-            <div class="contact-form">
-                <div class="success-message" id="formSuccess">¡Gracias por tu mensaje! El autor se pondrá en contacto contigo pronto.</div>
-                <form action="https://formsubmit.co/tu-email@ejemplo.com" method="POST" id="contactForm">
-                    <!-- FormSubmit Configuration -->
-                    <input type="hidden" name="_captcha" value="false">
-                    <input type="hidden" name="_next" value="https://tudominio.com/thanks.html">
-                    <input type="hidden" name="_subject" value="Nuevo contacto desde web del libro">
-                    
-                    <div class="form-group">
-                        <label for="name">Nombre</label>
-                        <input type="text" id="name" name="name" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="email">Email</label>
-                        <input type="email" id="email" name="email" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="message">Mensaje</label>
-                        <textarea id="message" name="message" rows="5" required></textarea>
-                    </div>
-                    <button type="submit" class="btn">Enviar Mensaje</button>
-                </form>
+    <!-- Free PDF Download Section (hidden initially) -->
+    <div class="download-link" id="downloadSection">
+        <h3>¡Gracias por tu interés!</h3>
+        <p>Para descargar tu PDF gratuito, por favor ingresa tu correo electrónico:</p>
+        
+        <!-- Formulario con FormSubmit -->
+        <form id="downloadForm" action="https://formsubmit.co/7077c99d34e5023cc608701b21c8e56d" method="POST">
+            <div class="form-group">
+                <input type="email" name="email" id="downloadEmail" placeholder="Tu correo electrónico" required>
+                <input type="hidden" name="_next" value="https://ambeidetic.github.io/inconscientelunfardo/#downloadSuccess">
+                <input type="hidden" name="_subject" value="Nueva descarga de libro: Inconsciente Lunfardo">
+                <input type="hidden" name="_captcha" value="false">
+                <!-- Campo para identificar el tipo de formulario -->
+                <input type="hidden" name="form_type" value="download_request">
             </div>
+            <button type="submit" class="btn">Obtener PDF</button>
+        </form>
+        
+        <div id="downloadSuccess" style="display: none; margin-top: 1.5rem;">
+            <p style="margin-bottom: 1rem;">¡Listo! Tu PDF gratuito está disponible ahora:</p>
+            <p><a href="muestra-inconsciente-lunfardo.pdf" download class="btn" id="pdfLink" onclick="trackDownload()">Descargar PDF</a></p>
         </div>
-    </section>
+    </div>
     
     <!-- Footer -->
     <footer>
         <div class="container">
             <p>&copy; 2025 J. Abraham Muñoz Bravo. Todos los derechos reservados.</p>
             <div class="social-links">
-                <a href="https://www.youtube.com/channel/UCU7QXAK1QEohjgcJEPtU_pQ" target="_blank" class="social-icon youtube-link">
+                <a href="https://www.youtube.com/@PSITEKPHI/videos" target="_blank" class="youtube-link" aria-label="Canal de YouTube">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="#ffffff">
-                        <path d="M22.54 6.42a2.78 2.78 0 00-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 00-1.94 2A29 29 0 001 11.75a29 29 0 00.46 5.33A2.78 2.78 0 003.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 001.94-2 29 29 0 00.46-5.25 29 29 0 00-.46-5.33z"></path>
-                        <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02" fill="#a67f83"></polygon>
+                        <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/>
                     </svg>
                 </a>
-                <a href="https://www.linkedin.com/in/abraham-mu%C3%B1oz-bravo-b31a87193/" target="_blank" class="social-icon linkedin-link-icon">
+                <!-- Agregando un enlace a LinkedIn -->
+                <a href="https://www.linkedin.com/in/tu-perfil/" target="_blank" class="linkedin-share" aria-label="Perfil de LinkedIn">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="#ffffff">
-                        <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
-                        <rect x="2" y="9" width="4" height="12"></rect>
-                        <circle cx="4" cy="4" r="2"></circle>
+                        <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
                     </svg>
                 </a>
             </div>
         </div>
     </footer>
     
-    <!-- PayPal Modal -->
-    <div id="paypalModal" class="modal">
+    <!-- Buy Modal -->
+    <div class="modal" id="buyModal">
         <div class="modal-content">
-            <span class="close" id="closeModal">&times;</span>
-            <h2 style="text-align: center; margin-bottom: 2rem;">Comprar Inconsciente Lunfardo</h2>
-            <p style="margin-bottom: 2rem; text-align: center;">Precio: €19.99</p>
-            <div id="paypal-button-container"></div>
+            <span class="close">&times;</span>
+            <h2>Comprar "Inconsciente Lunfardo"</h2>
+            <p>Por favor, completa el formulario para finalizar tu compra.</p>
+            
+            <div class="success-message" id="successMessage">
+                ¡Gracias por tu compra! Recibirás tu libro en breve.
+            </div>
+            
+            <!-- Formulario con el segundo código de FormSubmit -->
+            <form id="purchaseForm" action="https://formsubmit.co/b001928c4b4c47475f33fd537c5bc651" method="POST" onsubmit="return false;">
+                <div class="form-group">
+                    <label for="name">Nombre Completo</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Correo Electrónico</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="address">Dirección de Envío</label>
+                    <textarea id="address" name="address" rows="3" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="city">Ciudad</label>
+                    <input type="text" id="city" name="city" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="postalCode">Código Postal</label>
+                    <input type="text" id="postalCode" name="postalCode" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="country">País</label>
+                    <input type="text" id="country" name="country" required>
+                </div>
+                
+                <!-- Contenedor para el botón de PayPal -->
+                <div id="paypal-button-container" style="margin-top: 20px;"></div>
+            </form>
         </div>
     </div>
     
-    <!-- Scripts -->
     <script>
-        // Mostrar modal de PayPal
+        // Get DOM elements
+        const downloadBtn = document.getElementById('downloadBtn');
         const buyBtn = document.getElementById('buyBtn');
-        const paypalModal = document.getElementById('paypalModal');
-        const closeModal = document.getElementById('closeModal');
+        const buyModal = document.getElementById('buyModal');
+        const closeBtn = document.querySelector('.close');
+        const purchaseForm = document.getElementById('purchaseForm');
+        const successMessage = document.getElementById('successMessage');
+        const downloadSection = document.getElementById('downloadSection');
+        const pdfLink = document.getElementById('pdfLink');
+        const downloadForm = document.getElementById('downloadForm');
+        const downloadSuccess = document.getElementById('downloadSuccess');
         
-        buyBtn.addEventListener('click', function() {
-            paypalModal.style.display = 'block';
+        // Free PDF Download button click
+        downloadBtn.addEventListener('click', function() {
+            downloadSection.style.display = 'block';
+            downloadSection.scrollIntoView({ behavior: 'smooth' });
         });
         
-        closeModal.addEventListener('click', function() {
-            paypalModal.style.display = 'none';
-        });
-        
-        window.addEventListener('click', function(event) {
-            if (event.target === paypalModal) {
-                paypalModal.style.display = 'none';
+        // Handle download form submission
+        downloadForm.addEventListener('submit', function(e) {
+            // No necesitamos prevenir el envío porque queremos que FormSubmit lo procese
+            
+            // Almacenar el email para usarlo en el seguimiento de descarga
+            const userEmail = document.getElementById('downloadEmail').value;
+            if (userEmail) {
+                localStorage.setItem('userEmail', userEmail);
+                sessionStorage.setItem('userEmail', userEmail);
+                
+                // También guardar en una cookie
+                const date = new Date();
+                date.setTime(date.getTime() + (7 * 24 * 60 * 60 * 1000)); // Expira en 7 días
+                document.cookie = `userEmail=${userEmail}; expires=${date.toUTCString()}; path=/`;
+            }
+            
+            // Para pruebas locales
+            if (window.location.protocol === 'file:') {
+                e.preventDefault();
+                downloadForm.style.display = 'none';
+                downloadSuccess.style.display = 'block';
+                return false;
             }
         });
         
-        // Configuración de PayPal
+        // Verificar si estamos en la URL con el hash #downloadSuccess
+        function checkForSuccessHash() {
+            if (window.location.hash === '#downloadSuccess') {
+                downloadForm.style.display = 'none';
+                downloadSuccess.style.display = 'block';
+                
+                if (downloadSection.style.display !== 'block') {
+                    downloadSection.style.display = 'block';
+                }
+            }
+        }
+        
+        // Ejecutar cuando se carga la página
+        window.addEventListener('load', checkForSuccessHash);
+        // También cuando cambia el hash
+        window.addEventListener('hashchange', checkForSuccessHash);
+        
+        // Función para seguir las descargas reales del PDF
+        function trackDownload() {
+            // Obtener email de varias fuentes por redundancia
+            let userEmail = localStorage.getItem('userEmail') || 
+                           sessionStorage.getItem('userEmail') ||
+                           'usuario-desconocido@ejemplo.com';
+            
+            // Verificar si hay una cookie con el email
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.startsWith('userEmail=')) {
+                    const cookieEmail = cookie.substring('userEmail='.length, cookie.length);
+                    if (cookieEmail) userEmail = cookieEmail;
+                    break;
+                }
+            }
+            
+            // Crear un formulario y enviarlo (más confiable que fetch)
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = 'https://formsubmit.co/7077c99d34e5023cc608701b21c8e56d';
+            form.style.display = 'none';
+            
+            const emailField = document.createElement('input');
+            emailField.type = 'email';
+            emailField.name = 'email';
+            emailField.value = userEmail;
+            
+            const subjectField = document.createElement('input');
+            subjectField.type = 'hidden';
+            subjectField.name = '_subject';
+            subjectField.value = 'PDF Descargado: Inconsciente Lunfardo';
+            
+            const messageField = document.createElement('input');
+            messageField.type = 'hidden';
+            messageField.name = 'message';
+            messageField.value = `El usuario con email ${userEmail} ha descargado el PDF del libro.`;
+            
+            const formTypeField = document.createElement('input');
+            formTypeField.type = 'hidden';
+            formTypeField.name = 'form_type';
+            formTypeField.value = 'download_confirmation';
+            
+            // Añadir campos al formulario
+            form.appendChild(emailField);
+            form.appendChild(subjectField);
+            form.appendChild(messageField);
+            form.appendChild(formTypeField);
+            
+            // Añadir formulario al cuerpo del documento
+            document.body.appendChild(form);
+            
+            // Enviar formulario si no estamos en desarrollo local
+            if (window.location.protocol !== 'file:') {
+                form.submit();
+            } else {
+                console.log('Descarga registrada (modo desarrollo)');
+            }
+        }
+        
+        // Buy button click
+        buyBtn.addEventListener('click', function() {
+            buyModal.style.display = 'block';
+        });
+        
+        // Close button click
+        closeBtn.addEventListener('click', function() {
+            buyModal.style.display = 'none';
+        });
+        
+        // Close modal when clicking outside of it
+        window.addEventListener('click', function(event) {
+            if (event.target == buyModal) {
+                buyModal.style.display = 'none';
+            }
+        });
+        
+        // Integración de PayPal
         paypal.Buttons({
+            // Configurar transacción
             createOrder: function(data, actions) {
+                // Validar formulario primero
+                const name = document.getElementById('name').value;
+                const email = document.getElementById('email').value;
+                const address = document.getElementById('address').value;
+                const city = document.getElementById('city').value;
+                const postalCode = document.getElementById('postalCode').value;
+                const country = document.getElementById('country').value;
+                
+                if (!name || !email || !address || !city || !postalCode || !country) {
+                    alert('Por favor, completa todos los campos del formulario antes de continuar con el pago.');
+                    return false;
+                }
+                
+                // Crear orden de PayPal
                 return actions.order.create({
                     purchase_units: [{
-                        description: 'Inconsciente Lunfardo - J. Abraham Muñoz Bravo',
+                        description: 'Libro: Inconsciente Lunfardo',
                         amount: {
                             currency_code: 'EUR',
                             value: '19.99'
                         }
-                    }]
+                    }],
+                    application_context: {
+                        shipping_preference: 'NO_SHIPPING'
+                    }
                 });
             },
+            
+            // Finalizar transacción
             onApprove: function(data, actions) {
                 return actions.order.capture().then(function(orderData) {
-                    // Captura completada exitosamente
-                    console.log('Captura completada', orderData);
+                    // Recopilar datos del cliente y de la orden
+                    const customerData = {
+                        name: document.getElementById('name').value,
+                        email: document.getElementById('email').value,
+                        address: document.getElementById('address').value,
+                        city: document.getElementById('city').value,
+                        postalCode: document.getElementById('postalCode').value,
+                        country: document.getElementById('country').value,
+                        orderID: orderData.id,
+                        payerID: orderData.payer.payer_id,
+                        paymentAmount: orderData.purchase_units[0].amount.value,
+                        paymentCurrency: orderData.purchase_units[0].amount.currency_code
+                    };
+                    
+                    // Crear formulario para enviar datos a FormSubmit
+                    const form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = 'https://formsubmit.co/b001928c4b4c47475f33fd537c5bc651';
+                    form.style.display = 'none';
+                    
+                    // Añadir campos al formulario
+                    for (const [key, value] of Object.entries(customerData)) {
+                        const field = document.createElement('input');
+                        field.type = 'hidden';
+                        field.name = key;
+                        field.value = value;
+                        form.appendChild(field);
+                    }
+                    
+                    // Campos adicionales para FormSubmit
+                    const subjectField = document.createElement('input');
+                    subjectField.type = 'hidden';
+                    subjectField.name = '_subject';
+                    subjectField.value = 'Venta Completada: Inconsciente Lunfardo';
+                    form.appendChild(subjectField);
+                    
+                    const captchaField = document.createElement('input');
+                    captchaField.type = 'hidden';
+                    captchaField.name = '_captcha';
+                    captchaField.value = 'false';
+                    form.appendChild(captchaField);
+                    
+                    const messageField = document.createElement('input');
+                    messageField.type = 'hidden';
+                    messageField.name = 'message';
+                    messageField.value = `Venta completada:
+                                          Nombre: ${customerData.name}
+                                          Email: ${customerData.email}
+                                          Dirección: ${customerData.address}
+                                          Ciudad: ${customerData.city}
+                                          Código Postal: ${customerData.postalCode}
+                                          País: ${customerData.country}
+                                          ID de Orden: ${customerData.orderID}
+                                          Monto: ${customerData.paymentAmount} ${customerData.paymentCurrency}`;
+                    form.appendChild(messageField);
+                    
+                    // Añadir formulario al cuerpo del documento
+                    document.body.appendChild(form);
+                    
+                    // Enviar el formulario si no estamos en desarrollo local
+                    if (window.location.protocol !== 'file:') {
+                        form.submit();
+                    }
                     
                     // Mostrar mensaje de éxito
-                    paypalModal.style.display = 'none';
-                    alert('¡Gracias por tu compra! Recibirás el libro en tu correo electrónico en breve.');
+                    successMessage.style.display = 'block';
+                    purchaseForm.style.display = 'none';
+                    
+                    // Cerrar modal después de unos segundos
+                    setTimeout(function() {
+                        buyModal.style.display = 'none';
+                    }, 5000);
                 });
+            },
+            
+            onError: function(err) {
+                console.error('Error en el pago:', err);
+                alert('Ha ocurrido un error en el proceso de pago. Por favor, inténtelo nuevamente o contacte con nosotros.');
             }
         }).render('#paypal-button-container');
-        
-        // Botón de descarga
-        const downloadBtn = document.getElementById('downloadBtn');
-        const downloadPdf = document.getElementById('downloadPdf');
-        const downloadEpub = document.getElementById('downloadEpub');
-        
-        downloadBtn.addEventListener('click', function() {
-            document.getElementById('downloadSection').scrollIntoView({
-                behavior: 'smooth'
-            });
-        });
-        
-        // Enlaces de descarga (aquí podrías poner los enlaces reales a los archivos)
-        downloadPdf.addEventListener('click', function(e) {
-            e.preventDefault();
-            // Aquí puedes poner el código para la descarga real
-            alert('Descarga del PDF iniciada. ¡Gracias por tu interés en el libro!');
-        });
-        
-        downloadEpub.addEventListener('click', function(e) {
-            e.preventDefault();
-            // Aquí puedes poner el código para la descarga real
-            alert('Descarga del EPUB iniciada. ¡Gracias por tu interés en el libro!');
-        });
-        
-        // FormSubmit integración
-        const contactForm = document.getElementById('contactForm');
-        const formSuccess = document.getElementById('formSuccess');
-        
-        contactForm.addEventListener('submit', function(e) {
-            // Si quieres manejar el envío mediante AJAX en lugar del comportamiento predeterminado
-            // puedes descomentar lo siguiente y prevenir el envío normal del formulario:
-            /*
-            e.preventDefault();
-            
-            // Aquí puedes añadir lógica para enviar el formulario mediante AJAX
-            // Y luego mostrar el mensaje de éxito
-            formSuccess.style.display = 'block';
-            contactForm.reset();
-            */
-        });
     </script>
 </body>
 </html>
