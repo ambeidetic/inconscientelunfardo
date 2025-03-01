@@ -823,8 +823,7 @@
                     Descargar PDF
                 </a>
             </div>
-            
-        <p style="margin-top: 2rem; font-size: 0.9rem; color: #666; font-style: italic;">Nota: Si utilizas Movistar y experimentas problemas con la descarga, recomendamos la opción de Google Drive o solicitar por correo.</p>
+        </div>
     </div>
     
     <!-- Footer -->
@@ -1020,9 +1019,7 @@
                 userEmail: document.getElementById('userEmail'),
                 emailError: document.getElementById('emailError'),
                 downloadOptions: document.getElementById('downloadOptions'),
-                directDownloadBtn: document.getElementById('directDownloadBtn'),
-                driveDownloadBtn: document.getElementById('driveDownloadBtn'),
-                emailRequestBtn: document.getElementById('emailRequestBtn')
+                directDownloadBtn: document.getElementById('directDownloadBtn')
             };
             
             // Botón de descarga gratuita muestra la sección de descarga
@@ -1089,26 +1086,6 @@
             if (elements.directDownloadBtn) {
                 elements.directDownloadBtn.addEventListener('click', function() {
                     trackDownload('direct');
-                });
-            }
-            
-            if (elements.driveDownloadBtn) {
-                elements.driveDownloadBtn.addEventListener('click', function() {
-                    trackDownload('drive');
-                });
-            }
-            
-            if (elements.emailRequestBtn) {
-                elements.emailRequestBtn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const email = elements.userEmail.value.trim();
-                    if (isValidEmail(email)) {
-                        const mailtoUrl = `mailto:psitekphi@gmail.com?subject=Solicitud%20PDF%3A%20Inconsciente%20Lunfardo&body=Hola%2C%0A%0APor%20favor%20env%C3%ADame%20el%20PDF%20del%20libro%20%22Inconsciente%20Lunfardo%22.%0A%0AMi%20correo%20es%3A%20${encodeURIComponent(email)}%0A%0AGracias`;
-                        window.location.href = mailtoUrl;
-                        trackDownload('email');
-                    } else {
-                        alert('Por favor, introduce un correo electrónico válido primero.');
-                    }
                 });
             }
             
