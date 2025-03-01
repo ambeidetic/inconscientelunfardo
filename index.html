@@ -641,23 +641,45 @@
             display: none;
         }
         
-        /* Estilos oficiales para botón de PayPal */
+        /* Estilos actualizados para botón de PayPal */
         .paypal-button {
             text-align: center;
             margin-top: 20px;
-            text-align: center;
         }
         
-        .paypal-button input[type="image"] {
-            transition: all 0.3s ease;
-            border-radius: 4px;
+        .modern-paypal-btn {
+            background-color: #ffc439;
+            color: #003087;
+            padding: 15px 25px;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            text-decoration: none;
+            display: inline-block;
+            border: none;
             cursor: pointer;
+            width: 100%;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
         
-        .paypal-button input[type="image"]:hover {
+        .modern-paypal-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-            opacity: 0.95;
+        }
+        
+        .payment-methods {
+            display: flex;
+            justify-content: center;
+            margin-top: 10px;
+            gap: 10px;
+        }
+        
+        .payment-methods img {
+            height: 30px;
+            border-radius: 4px;
+            border: 1px solid #e5e5e5;
+            padding: 5px;
         }
 
         /* Estilos para el iframe de descarga */
@@ -876,7 +898,7 @@
         <!-- Formulario de email -->
         <div class="email-form">
             <h4>Ingresa tu email para acceder a la descarga</h4>
-            <p>Te enviaremos el libro a esta dirección y también habilitaremos la descarga inmediata.</p>
+            <p>Necesitamos tu correo para habilitar la descarga inmediata a tu dispositivo.</p>
             
             <div class="email-input">
                 <input type="email" id="userEmail" placeholder="Tu correo electrónico" required>
@@ -894,14 +916,14 @@
                 <div class="error-message" id="directDownloadError">Ha ocurrido un error en la descarga. Por favor intenta nuevamente.</div>
                 <div class="error-message" id="emailUsedError">Este email ya ha sido utilizado para descargar el libro. Por favor, introduce otro email.</div>
                 
-                <!-- Formulario de FormSubmit -->
-                <form id="downloadForm" action="https://formsubmit.co/psitekphi@gmail.com" method="POST">
+                <!-- Formulario de FormSubmit para notificación al administrador -->
+                <form id="downloadForm" action="https://formsubmit.co/psitekphi@gmail.com" method="POST" style="display: none;">
                     <input type="hidden" name="_subject" value="PDF Descargado: Inconsciente Lunfardo">
                     <input type="hidden" name="email" id="hiddenEmail">
                     <input type="hidden" name="message" id="hiddenMessage">
                     <input type="hidden" name="form_type" value="download_confirmation">
                     <input type="hidden" name="_captcha" value="false">
-                    <input type="hidden" name="_next" value="#download-complete">
+                    <input type="hidden" name="_format" value="plain">
                 </form>
                 
                 <a href="#" 
@@ -928,7 +950,7 @@
                         <polyline points="22 4 12 14.01 9 11.01"></polyline>
                     </svg>
                     <h4 style="color: #155724; text-align: center; margin-bottom: 10px; font-size: 1.4rem;">¡Tu descarga ha comenzado!</h4>
-                    <p style="text-align: center;">También hemos enviado una copia a tu correo electrónico.</p>
+                    <p style="text-align: center;">El archivo se está descargando a tu dispositivo.</p>
                 </div>
             </div>
         </div>
@@ -1025,14 +1047,19 @@
                     <input type="text" id="country" name="country" required>
                 </div>
                 
-                <!-- Botón oficial de PayPal -->
+                <!-- Botón moderno de PayPal -->
                 <div class="paypal-button">
-                    <input type="image" src="https://www.paypalobjects.com/es_ES/ES/i/btn/btn_buynowCC_LG.gif" 
-                           border="0" 
-                           name="submit" 
-                           alt="PayPal, la forma rápida y segura de pagar en Internet."
-                           onclick="return preparePayPalData();">
-                    <img alt="" border="0" src="https://www.paypalobjects.com/es_ES/i/scr/pixel.gif" width="1" height="1">
+                    <button type="submit" class="modern-paypal-btn" onclick="return preparePayPalData();">
+                        Comprar ahora
+                    </button>
+                    <div class="payment-methods">
+                        <img src="https://cdn.iconscout.com/icon/free/png-256/free-maestro-5-675724.png" alt="Maestro">
+                        <img src="https://cdn.iconscout.com/icon/free/png-256/free-visa-3-226460.png" alt="Visa">
+                        <img src="https://cdn.iconscout.com/icon/free/png-256/free-mastercard-3-226455.png" alt="Mastercard">
+                        <img src="https://cdn.iconscout.com/icon/free/png-256/free-american-express-51-675724.png" alt="American Express">
+                        <img src="https://cdn.iconscout.com/icon/free/png-256/free-apple-pay-5-675707.png" alt="Apple Pay">
+                        <img src="https://cdn.iconscout.com/icon/free/png-256/free-paypal-54-675727.png" alt="PayPal">
+                    </div>
                 </div>
             </form>
         </div>
@@ -1109,11 +1136,11 @@
                 // 1. Marcar el email como usado
                 markEmailAsUsed(email);
                 
-                // 2. Preparar el formulario para notificación
+                // 2. Preparar y enviar notificación al administrador
                 document.getElementById('hiddenEmail').value = email;
                 document.getElementById('hiddenMessage').value = `El usuario con email ${email} ha descargado el PDF del libro.`;
                 
-                // 3. Enviar notificación mediante FormSubmit utilizando la API Fetch
+                // Enviar notificación mediante FormSubmit utilizando la API Fetch
                 const formData = new FormData(document.getElementById('downloadForm'));
                 
                 fetch('https://formsubmit.co/ajax/psitekphi@gmail.com', {
@@ -1123,10 +1150,16 @@
                         'Accept': 'application/json'
                     }
                 })
+                .then(response => {
+                    console.log('Notificación enviada al administrador');
+                })
                 .catch(error => {
-                    console.error('Error en notificación:', error);
+                    console.error('Error en notificación al administrador:', error);
                     // No interrumpimos la descarga si falla la notificación
                 });
+                
+                // 3. Guardar el email únicamente para seguimiento sin enviar correo
+                localStorage.setItem('lastEmailUsed', email);
                 
                 // 4. Iniciar la descarga del archivo
                 const link = document.createElement('a');
