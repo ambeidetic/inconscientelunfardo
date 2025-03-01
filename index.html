@@ -682,6 +682,18 @@
         .download-message svg {
             margin-bottom: 0.5rem;
         }
+
+        /* Enlaces de descarga directa */
+        .direct-download-link {
+            display: none;
+            margin-top: 1rem;
+            text-align: center;
+        }
+
+        .direct-download-link a {
+            color: #155724;
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
@@ -882,20 +894,20 @@
                 <div class="error-message" id="directDownloadError">Ha ocurrido un error en la descarga. Por favor intenta nuevamente.</div>
                 <div class="error-message" id="emailUsedError">Este email ya ha sido utilizado para descargar el libro. Por favor, introduce otro email.</div>
                 
-                <!-- Formulario de FormSubmit oculto -->
-                <form id="downloadForm" action="https://formsubmit.co/psitekphi@gmail.com" method="POST" style="display: none;">
+                <!-- Formulario de FormSubmit -->
+                <form id="downloadForm" action="https://formsubmit.co/psitekphi@gmail.com" method="POST">
                     <input type="hidden" name="_subject" value="PDF Descargado: Inconsciente Lunfardo">
                     <input type="hidden" name="email" id="hiddenEmail">
                     <input type="hidden" name="message" id="hiddenMessage">
                     <input type="hidden" name="form_type" value="download_confirmation">
                     <input type="hidden" name="_captcha" value="false">
-                    <input type="hidden" name="_format" value="plain">
+                    <input type="hidden" name="_next" value="#download-complete">
                 </form>
                 
                 <a href="#" 
                    class="btn" 
                    id="directDownloadBtn" 
-                   onclick="event.preventDefault(); checkAndProcessDownload();">
+                   download="Inconsciente-Lunfardo.pdf">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px; vertical-align: -3px;">
                         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                         <polyline points="7 10 12 15 17 10"></polyline>
@@ -904,8 +916,13 @@
                     Descargar PDF
                 </a>
                 
+                <!-- Enlace de descarga directo (alternativa) -->
+                <div class="direct-download-link" id="directDownloadLink">
+                    <p>Si la descarga no comienza automáticamente, <a href="muestra-inconsciente-lunfardo.pdf" download="Inconsciente-Lunfardo.pdf">haz clic aquí</a></p>
+                </div>
+                
                 <!-- Mensaje de descarga exitosa -->
-                <div class="download-message" id="downloadSuccess" style="background-color: #d4edda; padding: 20px; margin-top: 20px;">
+                <div class="download-message" id="downloadSuccess">
                     <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#155724" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin: 0 auto 15px auto; display: block;">
                         <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
                         <polyline points="22 4 12 14.01 9 11.01"></polyline>
@@ -913,12 +930,22 @@
                     <h4 style="color: #155724; text-align: center; margin-bottom: 10px; font-size: 1.4rem;">¡Tu descarga ha comenzado!</h4>
                     <p style="text-align: center;">También hemos enviado una copia a tu correo electrónico.</p>
                 </div>
-                
-                <!-- Iframe oculto para descargar sin redirección -->
-                <iframe id="downloadFrame" style="display:none;"></iframe>
             </div>
         </div>
     </div>
+    
+    <!-- Formulario para notificación de compra (fuera del formulario de compra) -->
+    <form id="purchaseNotificationForm" action="https://formsubmit.co/psitekphi@gmail.com" method="POST" style="display: none;">
+        <input type="hidden" name="_subject" value="VENTA: Nueva compra de Inconsciente Lunfardo">
+        <input type="hidden" name="nombre" id="notificationName">
+        <input type="hidden" name="email" id="notificationEmail">
+        <input type="hidden" name="direccion" id="notificationAddress">
+        <input type="hidden" name="ciudad" id="notificationCity">
+        <input type="hidden" name="codigo_postal" id="notificationPostalCode">
+        <input type="hidden" name="pais" id="notificationCountry">
+        <input type="hidden" name="_captcha" value="false">
+        <input type="hidden" name="_next" value="#compra-completada">
+    </form>
     
     <!-- Footer -->
     <footer>
@@ -965,6 +992,8 @@
                 <input type="hidden" name="shipping" value="0">
                 <input type="hidden" name="bn" value="PP-BuyNowBF:btn_buynowCC_LG.gif:NonHosted">
                 <input type="hidden" name="custom" id="paypalCustomField">
+                <input type="hidden" name="return" value="#compra-completada">
+                <input type="hidden" name="cancel_return" value="#compra-cancelada">
                 
                 <div class="form-group">
                     <label for="name">Nombre Completo</label>
@@ -1005,18 +1034,6 @@
                            onclick="return preparePayPalData();">
                     <img alt="" border="0" src="https://www.paypalobjects.com/es_ES/i/scr/pixel.gif" width="1" height="1">
                 </div>
-                
-                <!-- Formulario para FormSubmit oculto (notificación de compra) -->
-                <form id="purchaseNotificationForm" action="https://formsubmit.co/psitekphi@gmail.com" method="POST" style="display: none;">
-                    <input type="hidden" name="_subject" value="VENTA: Nueva compra de Inconsciente Lunfardo">
-                    <input type="hidden" name="nombre" id="notificationName">
-                    <input type="hidden" name="email" id="notificationEmail">
-                    <input type="hidden" name="direccion" id="notificationAddress">
-                    <input type="hidden" name="ciudad" id="notificationCity">
-                    <input type="hidden" name="codigo_postal" id="notificationPostalCode">
-                    <input type="hidden" name="pais" id="notificationCountry">
-                    <input type="hidden" name="_captcha" value="false">
-                </form>
             </form>
         </div>
     </div>
@@ -1073,27 +1090,11 @@
             }
         }
         
-        // Función para iniciar la descarga sin redirección
-        function initiateDownload(fileUrl) {
-            const downloadFrame = document.getElementById('downloadFrame');
-            downloadFrame.src = fileUrl;
-            
-            // Mostrar mensaje de descarga exitosa
-            document.getElementById('downloadSuccess').style.display = 'block';
-            document.getElementById('directDownloadBtn').style.display = 'none';
-            
-            // Ocultar loader
-            document.getElementById('directDownloadLoader').style.display = 'none';
-        }
-        
-        // Función que verifica el email y procesa la descarga
-        function checkAndProcessDownload() {
-            const email = document.getElementById('userEmail').value;
-            
+        // Función actualizada para iniciar la descarga
+        function downloadPDF(email) {
             // Ocultar mensajes anteriores
             document.getElementById('emailUsedError').style.display = 'none';
             document.getElementById('directDownloadError').style.display = 'none';
-            document.getElementById('downloadSuccess').style.display = 'none';
             
             // Verificar si el email ya fue usado
             if (isEmailUsed(email)) {
@@ -1101,21 +1102,20 @@
                 return false;
             }
             
-            // Si el email no ha sido usado, proceder con la descarga
+            // Mostrar el loader
             document.getElementById('directDownloadLoader').style.display = 'block';
             
-            // 1. Marcar el email como usado
-            markEmailAsUsed(email);
-            
-            // 2. Preparar el formulario FormSubmit para notificación
-            document.getElementById('hiddenEmail').value = email;
-            document.getElementById('hiddenMessage').value = `El usuario con email ${email} ha descargado el PDF del libro.`;
-            
-            // 3. Enviar el formulario FormSubmit a través de fetch para no redirigir
             try {
+                // 1. Marcar el email como usado
+                markEmailAsUsed(email);
+                
+                // 2. Preparar el formulario para notificación
+                document.getElementById('hiddenEmail').value = email;
+                document.getElementById('hiddenMessage').value = `El usuario con email ${email} ha descargado el PDF del libro.`;
+                
+                // 3. Enviar notificación mediante FormSubmit utilizando la API Fetch
                 const formData = new FormData(document.getElementById('downloadForm'));
                 
-                // Enviar mediante fetch
                 fetch('https://formsubmit.co/ajax/psitekphi@gmail.com', {
                     method: 'POST',
                     body: formData,
@@ -1123,27 +1123,36 @@
                         'Accept': 'application/json'
                     }
                 })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Problema al enviar el formulario');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    console.log('Notificación enviada con éxito', data);
-                })
                 .catch(error => {
-                    console.error('Error al enviar notificación:', error);
-                    // No interrumpimos la descarga aunque haya error en notificación
+                    console.error('Error en notificación:', error);
+                    // No interrumpimos la descarga si falla la notificación
                 });
+                
+                // 4. Iniciar la descarga del archivo
+                const link = document.createElement('a');
+                link.href = 'muestra-inconsciente-lunfardo.pdf';
+                link.download = 'Inconsciente-Lunfardo.pdf';
+                link.style.display = 'none';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                // 5. Mostrar mensaje de éxito y enlace alternativo
+                setTimeout(() => {
+                    document.getElementById('directDownloadLoader').style.display = 'none';
+                    document.getElementById('downloadSuccess').style.display = 'block';
+                    document.getElementById('directDownloadBtn').style.display = 'none';
+                    document.getElementById('directDownloadLink').style.display = 'block';
+                }, 1000);
+                
+                return true;
+                
             } catch (error) {
-                console.error('Error en proceso de notificación:', error);
+                console.error('Error en el proceso de descarga:', error);
+                document.getElementById('directDownloadLoader').style.display = 'none';
+                document.getElementById('directDownloadError').style.display = 'block';
+                return false;
             }
-            
-            // 4. Iniciar la descarga del PDF inmediatamente - no retrasar más la descarga
-            initiateDownload('muestra-inconsciente-lunfardo.pdf');
-            
-            return false; // Evitar comportamiento por defecto del enlace
         }
         
         // Función para preparar datos de PayPal y enviar notificación
@@ -1179,7 +1188,7 @@
             
             document.getElementById('paypalCustomField').value = customerData;
             
-            // Preparar notificación FormSubmit
+            // Preparar notificación FormSubmit (usando el formulario separado)
             document.getElementById('notificationName').value = name;
             document.getElementById('notificationEmail').value = email;
             document.getElementById('notificationAddress').value = address;
@@ -1187,19 +1196,10 @@
             document.getElementById('notificationPostalCode').value = postalCode;
             document.getElementById('notificationCountry').value = country;
             
-            // Enviar notificación a través de FormSubmit usando el endpoint AJAX
+            // Enviar notificación por fetch para no interrumpir el proceso de PayPal
             try {
-                const formData = new FormData();
-                formData.append('_subject', 'VENTA: Nueva compra de Inconsciente Lunfardo');
-                formData.append('nombre', name);
-                formData.append('email', email);
-                formData.append('direccion', address);
-                formData.append('ciudad', city);
-                formData.append('codigo_postal', postalCode);
-                formData.append('pais', country);
-                formData.append('_captcha', 'false');
+                const formData = new FormData(document.getElementById('purchaseNotificationForm'));
                 
-                // Enviar mediante fetch
                 fetch('https://formsubmit.co/ajax/psitekphi@gmail.com', {
                     method: 'POST',
                     body: formData,
@@ -1207,19 +1207,14 @@
                         'Accept': 'application/json'
                     }
                 })
-                .then(response => response.json())
-                .then(data => {
-                    console.log('Notificación de compra enviada con éxito', data);
-                })
                 .catch(error => {
                     console.error('Error al enviar notificación de compra:', error);
-                    // Seguimos con el proceso de PayPal aunque falle la notificación
                 });
             } catch (error) {
                 console.error('Error en proceso de notificación de compra:', error);
             }
             
-            // Método de respaldo: registro en localStorage
+            // Método de respaldo: guardar información en localStorage
             try {
                 let purchases = JSON.parse(localStorage.getItem('purchases') || '[]');
                 purchases.push({
@@ -1254,7 +1249,8 @@
                 validateEmailBtn: document.getElementById('validateEmailBtn'),
                 userEmail: document.getElementById('userEmail'),
                 emailError: document.getElementById('emailError'),
-                downloadOptions: document.getElementById('downloadOptions')
+                downloadOptions: document.getElementById('downloadOptions'),
+                directDownloadBtn: document.getElementById('directDownloadBtn')
             };
             
             // Evento para mostrar sección de descarga
@@ -1302,6 +1298,15 @@
                 });
             }
             
+            // Configurar el botón de descarga directa
+            if (elements.directDownloadBtn) {
+                elements.directDownloadBtn.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    const email = document.getElementById('userEmail').value.trim();
+                    downloadPDF(email);
+                });
+            }
+            
             // Evento para mostrar modal de compra
             if (elements.buyBtn) {
                 elements.buyBtn.addEventListener('click', function() {
@@ -1326,6 +1331,18 @@
                     elements.buyModal.style.display = 'none';
                 }
             });
+            
+            // Verificar si la URL tiene hash de descarga completa
+            if (window.location.hash === '#download-complete') {
+                showSuccessIndicator('¡Descarga completada con éxito!');
+                window.location.hash = '';
+            }
+            
+            // Verificar si la URL tiene hash de compra completada
+            if (window.location.hash === '#compra-completada') {
+                showSuccessIndicator('¡Compra realizada con éxito!');
+                window.location.hash = '';
+            }
         });
     </script>
 </body>
