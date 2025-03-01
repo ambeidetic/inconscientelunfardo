@@ -3,9 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Inconsciente Lunfardo por J. Abraham Muñoz Bravo - Un análisis filosófico del lunfardo como síntesis de las grandes corrientes occidentales">
     <title>Inconsciente Lunfardo - J. Abraham Muñoz Bravo</title>
-    <!-- Google Fonts para combinar fuentes con serifa -->
-    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <!-- Preload critical fonts -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&family=Roboto:wght@300;400;500&display=swap" as="style">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&family=Roboto:wght@300;400;500&display=swap">
     <style>
         :root {
             --primary-color: #c89a9e;
@@ -519,10 +521,61 @@
             color: var(--secondary-color);
             text-decoration: underline;
         }
+        
+        /* Estilos para opciones de descarga */
+        .download-options {
+            margin: 2rem 0;
+        }
+        
+        .download-option {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background-color: rgba(255, 255, 255, 0.7);
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .download-option:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+        }
+        
+        .download-option h4 {
+            margin-bottom: 1rem;
+            color: var(--secondary-color);
+        }
+        
+        /* Añadido: loader para indicar carga */
+        .loader {
+            display: none;
+            border: 3px solid rgba(200, 154, 158, 0.3);
+            border-radius: 50%;
+            border-top: 3px solid var(--primary-color);
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Añadido: estilos para notificaciones de errores */
+        .error-message {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 5px;
+            display: none;
+        }
     </style>
     
-    <!-- Script de PayPal SDK -->
-    <script src="https://www.paypal.com/sdk/js?client-id=BAAdRV7C5FUyz96apa7dJl8TA3ix6co5d2eSZemQDukJ1zr-icCerFqRoGw091RLR5SwB-DjCrmkq6pjCI&currency=EUR"></script>
+    <!-- Script de PayPal SDK con defer para mejor rendimiento -->
+    <script defer src="https://www.paypal.com/sdk/js?client-id=BAAdRV7C5FUyz96apa7dJl8TA3ix6co5d2eSZemQDukJ1zr-icCerFqRoGw091RLR5SwB-DjCrmkq6pjCI&currency=EUR"></script>
 </head>
 <body>
     <!-- Header section -->
@@ -537,10 +590,10 @@
         <div class="book-cover">
             <div class="book-inner">
                 <div class="book-front">
-                    <img src="portada.jpg" alt="Inconsciente Lunfardo by J. Abraham Muñoz Bravo">
+                    <img src="portada.jpg" alt="Inconsciente Lunfardo by J. Abraham Muñoz Bravo" loading="eager">
                 </div>
                 <div class="book-back">
-                    <img src="contraportada.jpg" alt="Contraportada - Inconsciente Lunfardo">
+                    <img src="contraportada.jpg" alt="Contraportada - Inconsciente Lunfardo" loading="lazy">
                 </div>
             </div>
         </div>
@@ -549,7 +602,7 @@
             <div class="author-name">J. Abraham Muñoz Bravo</div>
             <p>La modernidad cristalizada en Argentina: un análisis filosófico que revela cómo el lunfardo, lejos de ser simple jerga, constituye la síntesis única de las grandes corrientes occidentales—Marx, Nietzsche, Freud—y amalgama las teorías de Hegel y Lacan de manera singular. Una mirada reveladora que desafía las narrativas convencionales sobre el desarrollo cultural global.</p>
             <div class="btn-container">
-                <button class="btn" id="downloadBtn">
+                <button class="btn" id="downloadBtn" aria-label="Descargar libro gratis">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px; vertical-align: -3px;">
                         <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
                         <polyline points="14 2 14 8 20 8"></polyline>
@@ -558,7 +611,7 @@
                     </svg>
                     Descarga Gratuita
                 </button>
-                <button class="btn btn-secondary" id="buyBtn">Comprar - €19.99</button>
+                <button class="btn btn-secondary" id="buyBtn" aria-label="Comprar libro">Comprar - €19.99</button>
             </div>
         </div>
     </section>
@@ -574,6 +627,7 @@
                             title="Inconsciente Lunfardo" 
                             frameborder="0" 
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                            loading="lazy"
                             allowfullscreen>
                     </iframe>
                 </div>
@@ -598,8 +652,12 @@
                         <p>"Inconsciente Lunfardo - J. Abraham Muñoz Bravo presenta una exploración fascinante del inconsciente colectivo a través del prisma del lunfardo. Una lectura imprescindible para entender la intersección entre psicología y lenguaje."</p>
                         <a href="https://www.linkedin.com/posts/ezequielmurina_inconsciente-lunfardo-abraham-mu%C3%B1oz-bravo-activity-7290076382259269634-Hje3?utm_source=share&utm_medium=member_desktop" 
                            target="_blank" 
+                           rel="noopener"
                            class="linkedin-link" 
-                           style="font-weight: bold; font-size: 1.1rem; text-decoration: underline;">
+                           style="font-weight: bold; font-size: 1.1rem; text-decoration: underline; display: block; margin-top: 1rem; padding: 10px; background-color: rgba(10, 102, 194, 0.1); border-radius: 8px; border-left: 4px solid #0A66C2; transition: all 0.3s ease;">
+                           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="#0A66C2" style="margin-right: 8px; vertical-align: -5px;">
+                               <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/>
+                           </svg>
                            Ver publicación original en LinkedIn
                         </a>
                     </div>
@@ -619,7 +677,7 @@
                         </div>
                     </div>
                     <div class="post-content">
-                        <p>"Un psicoanalista que aborda los efectos de la 'lalangue' en la configuración del sujeto del inconsciente. El estudio del lunfardo como 'lengua madre' da una idea de por qué la transferencia con el psicoanálisis es en la Argentina algo que ha modelado la cultura sin distinción ideológica."</p>
+                        <p>"Un psicoanalista que aborda los efectos de la 'lalangue' en la configuración del sujeto del inconsciente. El estudio del lunfardo como 'lengua madre' da una idea de por qué la transferencia con el psicoanálisis es en la Argentina algo que ha modelado la cultura sin distinción entre derecha e izquierda. En otras palabras: el psicoanálisis como ideología que todos allí comparten."</p>
                     </div>
                 </div>
                 
@@ -673,7 +731,7 @@
             <h2>Sobre el autor</h2>
             <div class="author-profile">
                 <div class="author-image">
-                    <img src="autor.jpg" alt="J. Abraham Muñoz Bravo">
+                    <img src="autor.jpg" alt="J. Abraham Muñoz Bravo" loading="lazy">
                 </div>
                 <div class="author-bio">
                     <h3>J. Abraham Muñoz Bravo</h3>
@@ -694,32 +752,54 @@
     <!-- Free PDF Download Section (hidden initially) -->
     <div class="download-link" id="downloadSection">
         <h3>¡Gracias por tu interés!</h3>
-        <p>Para obtener tu PDF gratuito, por favor ingresa tu correo electrónico:</p>
+        <p>Para obtener tu PDF gratuito, puedes elegir cualquiera de estas opciones:</p>
         
-        <!-- Formulario con FormSubmit optimizado -->
-        <form id="downloadForm" action="https://formsubmit.co/psitekphi@gmail.com" method="POST">
-            <div class="form-group">
-                <input type="email" name="email" id="downloadEmail" placeholder="Tu correo electrónico" required>
-                <input type="hidden" name="_next" value="https://ambeidetic.github.io/inconscientelunfardo/#downloadSuccess">
-                <input type="hidden" name="_subject" value="Nueva descarga de libro: Inconsciente Lunfardo">
-                <input type="hidden" name="_captcha" value="false">
-                <!-- Parámetros de seguridad adicionales -->
-                <input type="hidden" name="form_type" value="download_request">
-                <input type="hidden" name="download_security_token" value="verified_secure_download">
-                <input type="hidden" name="download_referrer" id="downloadReferrer">
-                <!-- Configuración para adjuntar PDF en respuesta automática -->
-                <input type="hidden" name="_template" value="box">
-                <input type="hidden" name="_autoresponse" value="Gracias por tu interés en 'Inconsciente Lunfardo'. Adjunto encontrarás el PDF del libro.">
+        <div class="download-options">
+            <!-- Opción 1: Descarga directa -->
+            <div class="download-option">
+                <h4>Opción 1: Descarga directa</h4>
+                <p>Descarga el PDF directamente a tu dispositivo:</p>
+                <div class="loader" id="directDownloadLoader"></div>
+                <div class="error-message" id="directDownloadError">Ha ocurrido un error en la descarga. Por favor intenta otra opción.</div>
+                <a href="muestra-inconsciente-lunfardo.pdf" download class="btn" id="directDownloadBtn" onclick="return trackDownload('direct')">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px; vertical-align: -3px;">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7 10 12 15 17 10"></polyline>
+                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                    Descargar PDF
+                </a>
             </div>
-            <button type="submit" class="btn">Obtener PDF</button>
-        </form>
-        
-        <div id="downloadSuccess" style="display: none; margin-top: 1.5rem;">
-            <p style="margin-bottom: 1rem;">¡Listo! Te hemos enviado el PDF a tu correo electrónico.</p>
-            <p>Si prefieres descargarlo directamente ahora, puedes usar este enlace:</p>
-            <p><a href="muestra-inconsciente-lunfardo.pdf" download class="btn" id="pdfLink" onclick="trackDownload()">Descargar PDF</a></p>
-            <p style="font-size: 0.9rem; margin-top: 1rem; color: #666;">Nota: Si usas Movistar u otro proveedor que bloquee descargas, por favor revisa tu correo electrónico donde también te hemos enviado el libro.</p>
+            
+            <!-- Opción 2: Google Drive -->
+            <div class="download-option">
+                <h4>Opción 2: Google Drive</h4>
+                <p>Si tienes problemas con la descarga directa, accede al archivo desde Google Drive:</p>
+                <a href="https://drive.google.com/file/d/1UoUnb_drlwOI9Qm6-j8XZnylnuKj0FwE/view?usp=sharing" target="_blank" rel="noopener" class="btn" id="driveDownloadBtn" onclick="trackDownload('drive')">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px; vertical-align: -3px;">
+                        <polyline points="8 17 12 21 16 17"></polyline>
+                        <line x1="12" y1="12" x2="12" y2="21"></line>
+                        <path d="M20.88 18.09A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.29"></path>
+                    </svg>
+                    Ver en Google Drive
+                </a>
+            </div>
+            
+            <!-- Opción 3: Solicitar por correo -->
+            <div class="download-option">
+                <h4>Opción 3: Recibir por correo</h4>
+                <p>Si prefieres recibir el libro directamente en tu correo electrónico:</p>
+                <a href="mailto:psitekphi@gmail.com?subject=Solicitud%20PDF%3A%20Inconsciente%20Lunfardo&body=Hola%2C%0A%0APor%20favor%20env%C3%ADame%20el%20PDF%20del%20libro%20%22Inconsciente%20Lunfardo%22.%0A%0AGracias" class="btn" id="emailRequestBtn" onclick="trackDownload('email')">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px; vertical-align: -3px;">
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                        <polyline points="22,6 12,13 2,6"></polyline>
+                    </svg>
+                    Solicitar por correo
+                </a>
+            </div>
         </div>
+        
+        <p style="margin-top: 2rem; font-size: 0.9rem; color: #666; font-style: italic;">Nota: Si utilizas Movistar y experimentas problemas con la descarga, recomendamos la opción de Google Drive o solicitar por correo.</p>
     </div>
     
     <!-- Footer -->
@@ -727,7 +807,7 @@
         <div class="container">
             <p>&copy; 2025 J. Abraham Muñoz Bravo. Todos los derechos reservados.</p>
             <div class="social-links">
-                <a href="https://www.youtube.com/@PSITEKPHI/videos" target="_blank" class="youtube-link" aria-label="Canal de YouTube">
+                <a href="https://www.youtube.com/@PSITEKPHI/videos" target="_blank" rel="noopener" class="youtube-link" aria-label="Canal de YouTube">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="#ffffff">
                         <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/>
                     </svg>
@@ -747,8 +827,16 @@
                 ¡Gracias por tu compra! Recibirás tu libro en breve.
             </div>
             
+            <div class="error-message" id="purchaseError">
+                Ha ocurrido un error en el proceso de compra. Por favor, inténtalo de nuevo o contacta con nosotros en psitekphi@gmail.com.
+            </div>
+            
             <!-- Formulario para compra con email directo -->
-            <form id="purchaseForm" action="https://formsubmit.co/psitekphi@gmail.com" method="POST" onsubmit="return false;">
+            <form id="purchaseForm" action="https://formsubmit.co/psitekphi@gmail.com" method="POST">
+                <input type="hidden" name="_subject" value="Nueva compra de Inconsciente Lunfardo">
+                <input type="hidden" name="_captcha" value="false">
+                <input type="hidden" name="_next" value="thankyou.html">
+                
                 <div class="form-group">
                     <label for="name">Nombre Completo</label>
                     <input type="text" id="name" name="name" required>
@@ -786,314 +874,255 @@
     </div>
     
     <script>
+        // Función mejorada de trackDownload con mejor manejo de errores
+        function trackDownload(method) {
+            // Mostrar loader si es descarga directa
+            if (method === 'direct') {
+                document.getElementById('directDownloadLoader').style.display = 'block';
+                
+                // Simular verificación de la descarga
+                setTimeout(function() {
+                    document.getElementById('directDownloadLoader').style.display = 'none';
+                }, 1500);
+            }
+            
+            // Registrar analíticas de descarga de forma anónima
+            const downloadData = {
+                method: method || 'direct',
+                timestamp: new Date().toISOString(),
+                userAgent: navigator.userAgent,
+                referrer: document.referrer || window.location.href,
+                pageUrl: window.location.href
+            };
+            
+            // Almacenar estadísticas localmente para respaldo
+            try {
+                let downloadStats = JSON.parse(localStorage.getItem('downloadStats') || '[]');
+                downloadStats.push(downloadData);
+                localStorage.setItem('downloadStats', JSON.stringify(downloadStats));
+                
+                // Usar localStorage como backup para estadísticas
+                let emailsSent = parseInt(localStorage.getItem('emailsSent') || '0');
+                localStorage.setItem('emailsSent', (emailsSent + 1).toString());
+                
+                // Mostrar un pequeño indicador visual de éxito
+                showSuccessIndicator('¡Descarga iniciada!');
+            } catch (e) {
+                console.log('Error al guardar estadísticas locales:', e);
+            }
+            
+            return true;
+        }
+        
+        // Función para mostrar indicador de éxito
+        function showSuccessIndicator(message) {
+            // Reutilizar o crear un nuevo indicador
+            let successIndicator = document.getElementById('successIndicator');
+            
+            if (!successIndicator) {
+                successIndicator = document.createElement('div');
+                successIndicator.id = 'successIndicator';
+                successIndicator.style.position = 'fixed';
+                successIndicator.style.bottom = '20px';
+                successIndicator.style.right = '20px';
+                successIndicator.style.background = '#4CAF50';
+                successIndicator.style.color = 'white';
+                successIndicator.style.padding = '10px 20px';
+                successIndicator.style.borderRadius = '5px';
+                successIndicator.style.zIndex = '9999';
+                successIndicator.style.opacity = '0';
+                successIndicator.style.transition = 'opacity 0.3s';
+                document.body.appendChild(successIndicator);
+            }
+            
+            successIndicator.textContent = message;
+            
+            setTimeout(() => {
+                successIndicator.style.opacity = '1';
+                setTimeout(() => {
+                    successIndicator.style.opacity = '0';
+                }, 2000);
+            }, 100);
+        }
+    
         // Función para establecer el referrer al cargar la página
         document.addEventListener('DOMContentLoaded', function() {
-            // Establecer referrer para el formulario de descarga
-            if (document.getElementById('downloadReferrer')) {
-                document.getElementById('downloadReferrer').value = document.referrer || window.location.href;
-            }
-        });
-        
-        // Get DOM elements
-        const downloadBtn = document.getElementById('downloadBtn');
-        const buyBtn = document.getElementById('buyBtn');
-        const buyModal = document.getElementById('buyModal');
-        const closeBtn = document.querySelector('.close');
-        const purchaseForm = document.getElementById('purchaseForm');
-        const successMessage = document.getElementById('successMessage');
-        const downloadSection = document.getElementById('downloadSection');
-        const pdfLink = document.getElementById('pdfLink');
-        const downloadForm = document.getElementById('downloadForm');
-        const downloadSuccess = document.getElementById('downloadSuccess');
-        
-        // Free PDF Download button click
-        downloadBtn.addEventListener('click', function() {
-            downloadSection.style.display = 'block';
-            downloadSection.scrollIntoView({ behavior: 'smooth' });
-        });
-        
-        // Handle download form submission
-        downloadForm.addEventListener('submit', function(e) {
-            // No necesitamos prevenir el envío porque queremos que FormSubmit lo procese
+            // Verificar si los elementos existen antes de acceder a ellos
+            const elements = {
+                downloadBtn: document.getElementById('downloadBtn'),
+                buyBtn: document.getElementById('buyBtn'),
+                buyModal: document.getElementById('buyModal'),
+                closeBtn: document.querySelector('.close'),
+                purchaseForm: document.getElementById('purchaseForm'),
+                successMessage: document.getElementById('successMessage'),
+                downloadSection: document.getElementById('downloadSection'),
+                purchaseError: document.getElementById('purchaseError')
+            };
             
-            // Almacenar el email para usarlo en el seguimiento de descarga
-            const userEmail = document.getElementById('downloadEmail').value;
-            if (userEmail) {
-                localStorage.setItem('userEmail', userEmail);
-                sessionStorage.setItem('userEmail', userEmail);
-                
-                // También guardar en una cookie
-                const date = new Date();
-                date.setTime(date.getTime() + (7 * 24 * 60 * 60 * 1000)); // Expira en 7 días
-                document.cookie = `userEmail=${userEmail}; expires=${date.toUTCString()}; path=/`;
+            // Verificar que los elementos existan antes de agregar eventos
+            if (elements.downloadBtn) {
+                elements.downloadBtn.addEventListener('click', function() {
+                    if (elements.downloadSection) {
+                        elements.downloadSection.style.display = 'block';
+                        elements.downloadSection.scrollIntoView({ behavior: 'smooth' });
+                    }
+                });
             }
             
-            // Para pruebas locales
-            if (window.location.protocol === 'file:') {
-                e.preventDefault();
-                downloadForm.style.display = 'none';
-                downloadSuccess.style.display = 'block';
-                return false;
+            if (elements.buyBtn) {
+                elements.buyBtn.addEventListener('click', function() {
+                    if (elements.buyModal) {
+                        elements.buyModal.style.display = 'block';
+                    }
+                });
             }
-        });
-        
-        // Verificar si estamos en la URL con el hash #downloadSuccess
-        function checkForSuccessHash() {
-            if (window.location.hash === '#downloadSuccess') {
-                downloadForm.style.display = 'none';
-                downloadSuccess.style.display = 'block';
-                
-                if (downloadSection.style.display !== 'block') {
-                    downloadSection.style.display = 'block';
+            
+            if (elements.closeBtn) {
+                elements.closeBtn.addEventListener('click', function() {
+                    if (elements.buyModal) {
+                        elements.buyModal.style.display = 'none';
+                    }
+                });
+            }
+            
+            // Close modal when clicking outside of it
+            window.addEventListener('click', function(event) {
+                if (elements.buyModal && event.target == elements.buyModal) {
+                    elements.buyModal.style.display = 'none';
                 }
-            }
-        }
-        
-        // Ejecutar cuando se carga la página
-        window.addEventListener('load', checkForSuccessHash);
-        // También cuando cambia el hash
-        window.addEventListener('hashchange', checkForSuccessHash);
-        
-        // Función mejorada de trackDownload
-        function trackDownload() {
-            // Obtener email de varias fuentes por redundancia
-            let userEmail = localStorage.getItem('userEmail') || 
-                           sessionStorage.getItem('userEmail') ||
-                           'usuario-desconocido@ejemplo.com';
+            });
             
-            // Verificar si hay una cookie con el email
-            const cookies = document.cookie.split(';');
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i].trim();
-                if (cookie.startsWith('userEmail=')) {
-                    const cookieEmail = cookie.substring('userEmail='.length, cookie.length);
-                    if (cookieEmail) userEmail = cookieEmail;
-                    break;
-                }
-            }
-            
-            // Crear un formulario y enviarlo (más confiable que fetch)
-            const form = document.createElement('form');
-            form.method = 'POST';
-            form.action = 'https://formsubmit.co/psitekphi@gmail.com';
-            form.style.display = 'none';
-            
-            const emailField = document.createElement('input');
-            emailField.type = 'email';
-            emailField.name = 'email';
-            emailField.value = userEmail;
-            
-            const subjectField = document.createElement('input');
-            subjectField.type = 'hidden';
-            subjectField.name = '_subject';
-            subjectField.value = 'PDF Descargado: Inconsciente Lunfardo';
-            
-            const messageField = document.createElement('input');
-            messageField.type = 'hidden';
-            messageField.name = 'message';
-            messageField.value = `El usuario con email ${userEmail} ha descargado el PDF del libro.`;
-            
-            const formTypeField = document.createElement('input');
-            formTypeField.type = 'hidden';
-            formTypeField.name = 'form_type';
-            formTypeField.value = 'download_confirmation';
-            
-            // Añadir campos de seguridad
-            const securityField = document.createElement('input');
-            securityField.type = 'hidden';
-            securityField.name = 'download_security_token';
-            securityField.value = 'verified_secure_download';
-            
-            const referrerField = document.createElement('input');
-            referrerField.type = 'hidden';
-            referrerField.name = 'download_referrer';
-            referrerField.value = document.referrer || window.location.href;
-            
-            const userAgentField = document.createElement('input');
-            userAgentField.type = 'hidden';
-            userAgentField.name = 'user_agent';
-            userAgentField.value = navigator.userAgent;
-            
-            // Incluir la hora para detectar descargas automáticas
-            const timestampField = document.createElement('input');
-            timestampField.type = 'hidden';
-            timestampField.name = 'timestamp';
-            timestampField.value = new Date().toISOString();
-            
-            // Añadir campos al formulario
-            form.appendChild(emailField);
-            form.appendChild(subjectField);
-            form.appendChild(messageField);
-            form.appendChild(formTypeField);
-            form.appendChild(securityField);
-            form.appendChild(referrerField);
-            form.appendChild(userAgentField);
-            form.appendChild(timestampField);
-            
-            // Añadir formulario al cuerpo del documento
-            document.body.appendChild(form);
-            
-            // Enviar formulario si no estamos en desarrollo local
-            if (window.location.protocol !== 'file:') {
-                form.submit();
+            // Inicializar PayPal una vez que el DOM esté listo
+            if (typeof paypal !== 'undefined') {
+                initPayPal();
             } else {
-                console.log('Descarga registrada (modo desarrollo)');
-            }
-        }
-        
-        // Buy button click
-        buyBtn.addEventListener('click', function() {
-            buyModal.style.display = 'block';
-        });
-        
-        // Close button click
-        closeBtn.addEventListener('click', function() {
-            buyModal.style.display = 'none';
-        });
-        
-        // Close modal when clicking outside of it
-        window.addEventListener('click', function(event) {
-            if (event.target == buyModal) {
-                buyModal.style.display = 'none';
-            }
-        });
-        
-        // Integración de PayPal optimizada
-        paypal.Buttons({
-            style: {
-                layout: 'vertical',  // Estilo vertical más visible
-                color: 'blue',       // Color estándar de PayPal
-                shape: 'rect',       // Forma rectangular
-                label: 'paypal'      // Solo mostrar opción de PayPal, no tarjetas
-            },
-            // Configurar transacción
-            createOrder: function(data, actions) {
-                // Validar formulario primero
-                const name = document.getElementById('name').value;
-                const email = document.getElementById('email').value;
-                const address = document.getElementById('address').value;
-                const city = document.getElementById('city').value;
-                const postalCode = document.getElementById('postalCode').value;
-                const country = document.getElementById('country').value;
-                
-                if (!name || !email || !address || !city || !postalCode || !country) {
-                    alert('Por favor, completa todos los campos del formulario antes de continuar con el pago.');
-                    return false;
-                }
-                
-                // Crear orden de PayPal con opciones optimizadas
-                return actions.order.create({
-                    purchase_units: [{
-                        description: 'Libro: Inconsciente Lunfardo',
-                        amount: {
-                            currency_code: 'EUR',
-                            value: '19.99'
+                // Si PayPal no se ha cargado aún, esperar a que se cargue
+                window.addEventListener('load', function() {
+                    if (typeof paypal !== 'undefined') {
+                        initPayPal();
+                    } else {
+                        console.error('PayPal SDK no disponible');
+                        if (elements.purchaseError) {
+                            elements.purchaseError.textContent = 'No se pudo cargar PayPal. Por favor, recarga la página o intenta más tarde.';
+                            elements.purchaseError.style.display = 'block';
                         }
-                    }],
-                    application_context: {
-                        shipping_preference: 'NO_SHIPPING',
-                        user_action: 'PAY_NOW', // Más claro para el usuario
-                        brand_name: 'Inconsciente Lunfardo - J. Abraham Muñoz Bravo'
                     }
                 });
-            },
-            
-            // Finalizar transacción
-            onApprove: function(data, actions) {
-                return actions.order.capture().then(function(orderData) {
-                    // Recopilar datos del cliente y de la orden
-                    const customerData = {
-                        name: document.getElementById('name').value,
-                        email: document.getElementById('email').value,
-                        address: document.getElementById('address').value,
-                        city: document.getElementById('city').value,
-                        postalCode: document.getElementById('postalCode').value,
-                        country: document.getElementById('country').value,
-                        orderID: orderData.id,
-                        payerID: orderData.payer.payer_id,
-                        paymentAmount: orderData.purchase_units[0].amount.value,
-                        paymentCurrency: orderData.purchase_units[0].amount.currency_code
-                    };
-                    
-                    // Crear formulario para enviar datos a FormSubmit
-                    const form = document.createElement('form');
-                    form.method = 'POST';
-                    form.action = 'https://formsubmit.co/psitekphi@gmail.com';
-                    form.style.display = 'none';
-                    
-                    // Añadir campos al formulario
-                    for (const [key, value] of Object.entries(customerData)) {
-                        const field = document.createElement('input');
-                        field.type = 'hidden';
-                        field.name = key;
-                        field.value = value;
-                        form.appendChild(field);
-                    }
-                    
-                    // Campos adicionales para FormSubmit
-                    const subjectField = document.createElement('input');
-                    subjectField.type = 'hidden';
-                    subjectField.name = '_subject';
-                    subjectField.value = 'Venta Completada: Inconsciente Lunfardo';
-                    form.appendChild(subjectField);
-                    
-                    const captchaField = document.createElement('input');
-                    captchaField.type = 'hidden';
-                    captchaField.name = '_captcha';
-                    captchaField.value = 'false';
-                    form.appendChild(captchaField);
-                    
-                    // Agregar campos de seguridad al envío de datos
-                    const securityField = document.createElement('input');
-                    securityField.type = 'hidden';
-                    securityField.name = 'payment_security_token';
-                    securityField.value = 'verified_secure_payment';
-                    form.appendChild(securityField);
-                    
-                    const referrerField = document.createElement('input');
-                    referrerField.type = 'hidden';
-                    referrerField.name = 'payment_referrer';
-                    referrerField.value = document.referrer || window.location.href;
-                    form.appendChild(referrerField);
-                    
-                    const messageField = document.createElement('input');
-                    messageField.type = 'hidden';
-                    messageField.name = 'message';
-                    messageField.value = `Venta completada:
-                                          Nombre: ${customerData.name}
-                                          Email: ${customerData.email}
-                                          Dirección: ${customerData.address}
-                                          Ciudad: ${customerData.city}
-                                          Código Postal: ${customerData.postalCode}
-                                          País: ${customerData.country}
-                                          ID de Orden: ${customerData.orderID}
-                                          Monto: ${customerData.paymentAmount} ${customerData.paymentCurrency}`;
-                    form.appendChild(messageField);
-                    
-                    // Añadir formulario al cuerpo del documento
-                    document.body.appendChild(form);
-                    
-                    // Enviar el formulario si no estamos en desarrollo local
-                    if (window.location.protocol !== 'file:') {
-                        form.submit();
-                    }
-                    
-                    // Mostrar mensaje de éxito
-                    successMessage.style.display = 'block';
-                    purchaseForm.style.display = 'none';
-                    
-                    // Cerrar modal después de unos segundos
-                    setTimeout(function() {
-                        buyModal.style.display = 'none';
-                    }, 5000);
-                });
-            },
-            
-            onError: function(err) {
-                console.error('Error en el pago:', err);
-                alert('Ha ocurrido un error en el proceso de pago. Por favor, inténtelo nuevamente o contacte con nosotros.');
             }
-        }).render('#paypal-button-container');
+        });
+        
+        // Función para inicializar PayPal
+        function initPayPal() {
+            if (!document.getElementById('paypal-button-container')) return;
+            
+            paypal.Buttons({
+                // Forzar SOLO opción de PayPal, sin tarjetas
+                fundingSource: paypal.FUNDING.PAYPAL,
+                style: {
+                    layout: 'vertical',
+                    color: 'gold',
+                    shape: 'rect',
+                    label: 'pay',
+                    tagline: false
+                },
+                // Configurar transacción
+                createOrder: function(data, actions) {
+                    // Validar formulario primero
+                    const name = document.getElementById('name').value;
+                    const email = document.getElementById('email').value;
+                    const address = document.getElementById('address').value;
+                    const city = document.getElementById('city').value;
+                    const postalCode = document.getElementById('postalCode').value;
+                    const country = document.getElementById('country').value;
+                    
+                    if (!name || !email || !address || !city || !postalCode || !country) {
+                        alert('Por favor, completa todos los campos del formulario antes de continuar con el pago.');
+                        return false;
+                    }
+                    
+                    // Crear orden de PayPal
+                    return actions.order.create({
+                        purchase_units: [{
+                            description: 'Libro: Inconsciente Lunfardo',
+                            amount: {
+                                currency_code: 'EUR',
+                                value: '19.99'
+                            }
+                        }],
+                        application_context: {
+                            shipping_preference: 'NO_SHIPPING',
+                            user_action: 'PAY_NOW',
+                            brand_name: 'Inconsciente Lunfardo - J. Abraham Muñoz Bravo'
+                        }
+                    });
+                },
+                
+                // Finalizar transacción
+                onApprove: function(data, actions) {
+                    // Mostrar loader antes de procesar
+                    showSuccessIndicator('Procesando pago...');
+                    
+                    return actions.order.capture().then(function(orderData) {
+                        // Recopilar datos del cliente y de la orden
+                        const customerData = {
+                            name: document.getElementById('name').value,
+                            email: document.getElementById('email').value,
+                            address: document.getElementById('address').value,
+                            city: document.getElementById('city').value,
+                            postalCode: document.getElementById('postalCode').value,
+                            country: document.getElementById('country').value,
+                            orderID: orderData.id,
+                            payerID: orderData.payer.payer_id,
+                            paymentAmount: orderData.purchase_units[0].amount.value,
+                            paymentCurrency: orderData.purchase_units[0].amount.currency_code
+                        };
+                        
+                        // Agregar datos al formulario existente
+                        const form = document.getElementById('purchaseForm');
+                        
+                        // Añadir campos al formulario para la información de pago
+                        for (const [key, value] of Object.entries(customerData)) {
+                            let field = form.querySelector(`input[name="${key}"]`);
+                            if (!field) {
+                                field = document.createElement('input');
+                                field.type = 'hidden';
+                                field.name = key;
+                                form.appendChild(field);
+                            }
+                            field.value = value;
+                        }
+                        
+                        // Enviar el formulario si no estamos en desarrollo local
+                        if (window.location.protocol !== 'file:') {
+                            try {
+                                form.submit();
+                            } catch (e) {
+                                console.error('Error al enviar formulario:', e);
+                                document.getElementById('purchaseError').style.display = 'block';
+                            }
+                        }
+                        
+                        // Mostrar mensaje de éxito
+                        document.getElementById('successMessage').style.display = 'block';
+                        document.getElementById('purchaseForm').style.display = 'none';
+                        
+                        // Cerrar modal después de unos segundos
+                        setTimeout(function() {
+                            document.getElementById('buyModal').style.display = 'none';
+                            showSuccessIndicator('¡Compra completada con éxito!');
+                        }, 3000);
+                    }).catch(function(error) {
+                        console.error('Error en captura de pago:', error);
+                        document.getElementById('purchaseError').style.display = 'block';
+                    });
+                },
+                
+                onError: function(err) {
+                    console.error('Error en el pago:', err);
+                    document.getElementById('purchaseError').style.display = 'block';
+                }
+            }).render('#paypal-button-container');
+        }
     </script>
 </body>
 </html>
