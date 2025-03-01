@@ -8,17 +8,13 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Nunito+Sans:wght@300;400;600&display=swap" rel="stylesheet">
-    <script src="https://www.paypal.com/sdk/js?client-id=BAAdRV7C5FUyz96apa7dJl8TA3ix6co5d2eSZemQDukJ1zr-icCerFqRoGw091RLR5SwB-DjCrmkq6pjCI&currency=EUR"></script>
     <style>
         :root {
-            --primary-color: #986a6f;
-            --secondary-color: #7a565a;
-            --background-color: #f8f5f6;
+            --primary-color: #c89a9e;
+            --secondary-color: #a67f83;
+            --background-color: #f5f1f2;
             --text-color: #333;
             --light-color: #fff;
-            --border-radius: 8px;
-            --box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-            --transition: all 0.3s ease;
         }
         
         * {
@@ -28,97 +24,69 @@
         }
         
         body {
-            font-family: 'Nunito Sans', sans-serif;
+            font-family: 'Nunito Sans', Arial, sans-serif;
             line-height: 1.6;
             color: var(--text-color);
             background-color: var(--background-color);
         }
         
-        h1, h2, h3, h4 {
-            font-family: 'Cormorant Garamond', serif;
-            font-weight: 500;
-        }
-        
         .container {
-            max-width: 1200px;
+            max-width: 1100px;
             margin: 0 auto;
             padding: 0 20px;
         }
         
-        /* Header */
+        /* Header styles */
         header {
-            padding: 1.5rem 0;
-            position: sticky;
+            padding: 1rem 0;
+            text-align: right;
+            position: fixed;
+            width: 100%;
             top: 0;
-            background-color: var(--background-color);
-            z-index: 100;
-            border-bottom: 1px solid rgba(0,0,0,0.05);
+            background-color: rgba(245, 241, 242, 0.95);
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         }
         
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .logo {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: var(--secondary-color);
-        }
-        
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-        }
-        
-        .nav-links a {
-            color: var(--text-color);
+        header nav a {
+            display: inline-block;
             text-decoration: none;
-            transition: var(--transition);
-            font-size: 0.95rem;
+            color: var(--secondary-color);
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            transition: all 0.3s ease;
+            border-radius: 20px;
         }
         
-        .nav-links a:hover {
-            color: var(--primary-color);
+        header nav a:hover {
+            background-color: var(--primary-color);
+            color: var(--light-color);
         }
         
-        /* Hero section */
         .hero {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 3rem;
-            padding: 5rem 1rem;
+            justify-content: center;
+            gap: 4rem;
+            padding: 7rem 1rem 5rem;
         }
         
-        @media (min-width: 992px) {
+        @media (min-width: 768px) {
             .hero {
                 flex-direction: row;
-                justify-content: space-between;
-                align-items: center;
-                gap: 4rem;
                 text-align: left;
-                padding: 6rem 1rem 8rem;
             }
         }
         
         .book-cover {
-            width: 280px;
-            height: 420px;
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
+            width: 350px;
+            height: 525px;
+            border-radius: 5px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
             overflow: hidden;
             perspective: 1000px;
-            flex-shrink: 0;
-        }
-        
-        @media (min-width: 768px) {
-            .book-cover {
-                width: 350px;
-                height: 525px;
-            }
+            margin: 0 auto;
         }
         
         .book-inner {
@@ -139,7 +107,7 @@
             width: 100%;
             height: 100%;
             backface-visibility: hidden;
-            border-radius: var(--border-radius);
+            border-radius: 5px;
             overflow: hidden;
         }
         
@@ -158,34 +126,29 @@
         }
         
         .hero-content {
-            max-width: 600px;
+            max-width: 500px;
         }
         
         .hero h1 {
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
-            color: var(--secondary-color);
-        }
-        
-        @media (min-width: 768px) {
-            .hero h1 {
-                font-size: 3.5rem;
-            }
-        }
-        
-        .author-name {
-            font-style: italic;
-            color: var(--secondary-color);
-            margin-bottom: 1.5rem;
-            font-size: 1.2rem;
             font-family: 'Cormorant Garamond', serif;
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            font-weight: 300;
+            color: var(--secondary-color);
         }
         
         .hero p {
             font-size: 1.1rem;
             margin-bottom: 2.5rem;
             line-height: 1.8;
-            color: #555;
+        }
+        
+        .author-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            color: var(--secondary-color);
+            margin-bottom: 2rem;
+            font-size: 1.3rem;
         }
         
         /* Button styles */
@@ -196,15 +159,14 @@
         }
         
         .btn {
-            display: inline-flex;
-            align-items: center;
+            display: inline-block;
             padding: 12px 30px;
             background-color: var(--primary-color);
             color: var(--light-color);
             text-decoration: none;
             border-radius: 30px;
             font-weight: 500;
-            transition: var(--transition);
+            transition: all 0.3s ease;
             border: none;
             cursor: pointer;
             font-size: 1rem;
@@ -213,12 +175,8 @@
         
         .btn:hover {
             transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
             background-color: var(--secondary-color);
-        }
-        
-        .btn svg {
-            margin-right: 8px;
         }
         
         .btn-secondary {
@@ -232,64 +190,141 @@
             color: var(--light-color);
         }
         
-        /* Featured Section */
-        .featured-section {
-            padding: 4rem 0;
-            background-color: #fff;
-        }
-        
-        .section-title {
+        /* Footer */
+        footer {
+            background-color: var(--secondary-color);
+            color: var(--light-color);
+            padding: 2rem 0;
             text-align: center;
-            margin-bottom: 3rem;
-            font-size: 2.2rem;
-            color: var(--secondary-color);
+            margin-top: 5rem;
         }
         
-        .features {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 2rem;
+        .social-links {
+            margin-top: 1.5rem;
+            display: flex;
+            justify-content: center;
         }
         
-        @media (min-width: 768px) {
-            .features {
-                grid-template-columns: repeat(3, 1fr);
-            }
-        }
-        
-        .feature-card {
-            background-color: var(--background-color);
-            padding: 2rem;
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
-            transition: var(--transition);
-        }
-        
-        .feature-card:hover {
-            transform: translateY(-5px);
-        }
-        
-        .feature-icon {
-            width: 60px;
-            height: 60px;
+        .youtube-link {
             display: flex;
             align-items: center;
             justify-content: center;
-            background-color: rgba(150, 106, 111, 0.1);
+            width: 48px;
+            height: 48px;
+            background-color: #FF0000;
             border-radius: 50%;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .youtube-link:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            z-index: 100;
+            overflow: auto;
+        }
+        
+        .modal-content {
+            background-color: var(--light-color);
+            margin: 10% auto;
+            padding: 2.5rem;
+            width: 90%;
+            max-width: 500px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            position: relative;
+        }
+        
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        /* Form styles */
+        .form-group {
             margin-bottom: 1.5rem;
         }
         
-        .feature-card h3 {
-            margin-bottom: 0.75rem;
-            font-size: 1.4rem;
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
             color: var(--secondary-color);
         }
         
-        /* Media Section */
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-family: inherit;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+        
+        /* Success message */
+        .success-message {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 5px;
+            display: none;
+        }
+        
+        /* Download link */
+        .download-link {
+            background-color: rgba(200, 154, 158, 0.1);
+            color: var(--secondary-color);
+            padding: 2rem;
+            margin: 3rem auto;
+            border-radius: 10px;
+            text-align: center;
+            display: none;
+            max-width: 600px;
+        }
+        
+        .download-link a {
+            color: var(--primary-color);
+            font-weight: bold;
+            text-decoration: none;
+        }
+        
+        .download-link a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Media Section Styles */
         .media-section {
             padding: 5rem 0;
-            background-color: rgba(150, 106, 111, 0.05);
+            background-color: rgba(200, 154, 158, 0.05);
+        }
+        
+        .media-section h2 {
+            font-family: 'Cormorant Garamond', serif;
+            text-align: center;
+            margin-bottom: 2.5rem;
+            font-weight: 300;
+            color: var(--secondary-color);
+            font-size: 2rem;
         }
         
         .video-container {
@@ -303,8 +338,8 @@
             overflow: hidden;
             max-width: 800px;
             margin: 0 auto;
-            box-shadow: var(--box-shadow);
-            border-radius: var(--border-radius);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+            border-radius: 10px;
         }
         
         .responsive-video iframe {
@@ -313,38 +348,28 @@
             left: 0;
             width: 100%;
             height: 100%;
-            border-radius: var(--border-radius);
+            border-radius: 10px;
             border: none;
         }
         
-        /* Testimonials */
-        .testimonials {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 2rem;
-            max-width: 900px;
+        .linkedin-post {
+            max-width: 600px;
             margin: 0 auto;
         }
         
-        @media (min-width: 768px) {
-            .testimonials {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-        
-        .testimonial-card {
+        .post-container {
             background-color: white;
-            border-radius: var(--border-radius);
+            border-radius: 10px;
             padding: 2rem;
-            box-shadow: var(--box-shadow);
-            transition: var(--transition);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease;
         }
         
-        .testimonial-card:hover {
+        .post-container:hover {
             transform: translateY(-5px);
         }
         
-        .testimonial-header {
+        .post-header {
             display: flex;
             align-items: center;
             margin-bottom: 1.5rem;
@@ -355,60 +380,77 @@
             height: 60px;
             border-radius: 50%;
             margin-right: 1rem;
+            background-color: #a67f83;
             display: flex;
-            align-items: center;
             justify-content: center;
-            background-color: var(--primary-color);
-            flex-shrink: 0;
+            align-items: center;
         }
         
-        .testimonial-author h3 {
+        .post-author h3 {
             margin: 0;
             color: var(--text-color);
             font-size: 1.1rem;
+            font-family: 'Nunito Sans', Arial, sans-serif;
+            font-weight: 600;
         }
         
-        .testimonial-author p {
+        .post-author p {
             margin: 0;
             color: #666;
             font-size: 0.9rem;
         }
         
-        .testimonial-content p {
+        .post-content p {
             line-height: 1.8;
-            color: #444;
-            font-style: italic;
+            margin-bottom: 1.5rem;
+            color: var(--text-color);
         }
         
         .linkedin-link {
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            background-color: #0077b5;
             color: white;
-            background-color: var(--primary-color);
             text-decoration: none;
             font-weight: 500;
-            margin-top: 1rem;
-            transition: var(--transition);
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 0.9rem;
+            padding: 0.7rem 1.2rem;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            margin-top: 0.5rem;
+            font-size: 0.95rem;
         }
         
         .linkedin-link:hover {
-            background-color: var(--secondary-color);
+            background-color: #00669c;
             transform: translateY(-2px);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
         }
         
         .linkedin-link svg {
             width: 16px;
             height: 16px;
-            vertical-align: middle;
             margin-right: 8px;
         }
         
-        /* Author Section */
+        @media (max-width: 768px) {
+            .post-container {
+                padding: 1.5rem;
+            }
+        }
+        
+        /* Author Section Styles */
         .author-section {
             padding: 5rem 0;
-            background-color: #fff;
+            background-color: rgba(166, 127, 131, 0.05);
+        }
+        
+        .author-section h2 {
+            font-family: 'Cormorant Garamond', serif;
+            text-align: center;
+            margin-bottom: 3rem;
+            font-weight: 300;
+            color: var(--secondary-color);
+            font-size: 2rem;
         }
         
         .author-profile {
@@ -427,18 +469,12 @@
         
         .author-image {
             flex-shrink: 0;
-            width: 280px;
-            height: 280px;
+            width: 300px;
+            height: 300px;
             margin: 0 auto 2rem;
             overflow: hidden;
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
-        }
-        
-        @media (min-width: 768px) {
-            .author-image {
-                margin: 0;
-            }
+            border-radius: 5px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
         }
         
         .author-image img {
@@ -452,338 +488,246 @@
         }
         
         .author-bio h3 {
+            font-family: 'Cormorant Garamond', serif;
             font-size: 1.5rem;
             margin-bottom: 1.5rem;
             color: var(--secondary-color);
+            font-weight: 500;
         }
         
         .author-description p {
             margin-bottom: 1.5rem;
             line-height: 1.8;
-            color: #444;
-        }
-        
-        /* Form styles */
-        .form-section {
-            padding: 5rem 0;
-            background-color: rgba(150, 106, 111, 0.05);
-        }
-        
-        .form-container {
-            background-color: white;
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 2.5rem;
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
-        }
-        
-        .form-header {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-        
-        .form-header h3 {
-            color: var(--secondary-color);
-            font-size: 1.8rem;
-            margin-bottom: 0.5rem;
-        }
-        
-        .form-header p {
-            color: #666;
-        }
-        
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 500;
-            color: var(--secondary-color);
             font-size: 0.95rem;
         }
         
-        input, textarea {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: var(--border-radius);
-            font-family: inherit;
-            font-size: 1rem;
-            transition: border-color 0.3s;
-        }
-        
-        input:focus, textarea:focus {
-            outline: none;
-            border-color: var(--primary-color);
-        }
-        
-        .success-message {
-            background-color: #d4edda;
-            color: #155724;
-            padding: 1rem;
-            margin-bottom: 1rem;
-            border-radius: var(--border-radius);
-            display: none;
-        }
-        
-        /* Footer */
-        footer {
-            background-color: var(--secondary-color);
-            color: var(--light-color);
-            padding: 3rem 0;
-            text-align: center;
-        }
-        
-        footer p {
-            opacity: 0.8;
-            margin-bottom: 1.5rem;
-        }
-        
-        .social-links {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-        }
-        
-        .social-link {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 48px;
-            height: 48px;
-            background-color: #FF0000;
-            border-radius: 50%;
-            transition: var(--transition);
-        }
-        
-        .social-link:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-        }
-        
-        /* Modal styles */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.5);
-            z-index: 1000;
-            overflow: auto;
-            backdrop-filter: blur(5px);
-        }
-        
-        .modal-content {
-            background-color: var(--light-color);
-            margin: 10% auto;
-            padding: 2.5rem;
-            width: 90%;
-            max-width: 500px;
-            border-radius: var(--border-radius);
-            box-shadow: 0 5px 25px rgba(0,0,0,0.2);
-            position: relative;
-            transform: translateY(20px);
-            opacity: 0;
-            transition: all 0.3s ease-out;
-        }
-        
-        .modal.active .modal-content {
-            transform: translateY(0);
-            opacity: 1;
-        }
-        
-        .close {
-            position: absolute;
-            top: 15px;
-            right: 20px;
-            font-size: 1.5rem;
-            cursor: pointer;
-            transition: var(--transition);
-            color: #999;
-        }
-        
-        .close:hover {
-            color: var(--secondary-color);
-        }
-        
-        /* Download link */
-        .download-success {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 1.5rem;
-            text-align: center;
+        .author-resources {
             margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(166, 127, 131, 0.2);
         }
         
-        .download-icon {
-            width: 80px;
-            height: 80px;
-            background-color: rgba(150, 106, 111, 0.1);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .author-resources h4 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: var(--secondary-color);
+            font-weight: 500;
+        }
+        
+        .author-resources ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .author-resources li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .author-resources a {
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: color 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .author-resources a:hover {
+            color: var(--secondary-color);
+            text-decoration: underline;
         }
     </style>
+    
+    <!-- Script de PayPal SDK -->
+    <script src="https://www.paypal.com/sdk/js?client-id=BAAdRV7C5FUyz96apa7dJl8TA3ix6co5d2eSZemQDukJ1zr-icCerFqRoGw091RLR5SwB-DjCrmkq6pjCI&currency=EUR"></script>
 </head>
 <body>
     <!-- Header section -->
     <header>
         <div class="container">
             <nav>
-                <div class="logo">Inconsciente Lunfardo</div>
-                <div class="nav-links">
-                    <a href="#about">Sobre el libro</a>
-                    <a href="#reviews">Reseñas</a>
-                    <a href="#author">Autor</a>
-                    <a href="#download" id="navDownloadBtn">Descargar</a>
-                </div>
+                <a href="#downloadSection">Descargar</a>
             </nav>
         </div>
     </header>
     
     <!-- Hero section -->
-    <section class="hero" id="about">
-        <div class="container">
-            <div class="book-cover">
-                <div class="book-inner">
-                    <div class="book-front">
-                        <img src="/api/placeholder/350/525" alt="Portada - Inconsciente Lunfardo">
-                    </div>
-                    <div class="book-back">
-                        <img src="/api/placeholder/350/525" alt="Contraportada - Inconsciente Lunfardo">
-                    </div>
+    <section class="hero">
+        <div class="book-cover">
+            <div class="book-inner">
+                <div class="book-front">
+                    <img src="/api/placeholder/350/525" alt="Inconsciente Lunfardo by J. Abraham Muñoz Bravo">
                 </div>
-            </div>
-            <div class="hero-content">
-                <h1>Inconsciente Lunfardo</h1>
-                <div class="author-name">J. Abraham Muñoz Bravo</div>
-                <p>La modernidad cristalizada en Argentina: un análisis filosófico que revela cómo el lunfardo, lejos de ser simple jerga, constituye la síntesis única de las grandes corrientes occidentales—Marx, Nietzsche, Freud—y amalgama las teorías de Hegel y Lacan de manera singular. Una mirada reveladora que desafía las narrativas convencionales sobre el desarrollo cultural global.</p>
-                <div class="btn-container">
-                    <button class="btn" id="downloadBtn">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                            <polyline points="14 2 14 8 20 8"></polyline>
-                            <line x1="12" y1="18" x2="12" y2="12"></line>
-                            <line x1="9" y1="15" x2="15" y2="15"></line>
-                        </svg>
-                        Descarga Gratuita
-                    </button>
-                    <button class="btn btn-secondary" id="buyBtn">Comprar - €19.99</button>
+                <div class="book-back">
+                    <img src="/api/placeholder/350/525" alt="Contraportada - Inconsciente Lunfardo">
                 </div>
             </div>
         </div>
-    </section>
-    
-    <!-- Featured Section -->
-    <section class="featured-section">
-        <div class="container">
-            <h2 class="section-title">Por qué leer este libro</h2>
-            <div class="features">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#986a6f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline>
-                            <path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path>
-                        </svg>
-                    </div>
-                    <h3>Perspectiva filosófica única</h3>
-                    <p>Descubre cómo el lunfardo argentino sintetiza las principales corrientes filosóficas occidentales de manera única y reveladora.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#986a6f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                            <polyline points="14 2 14 8 20 8"></polyline>
-                            <line x1="16" y1="13" x2="8" y2="13"></line>
-                            <line x1="16" y1="17" x2="8" y2="17"></line>
-                            <polyline points="10 9 9 9 8 9"></polyline>
-                        </svg>
-                    </div>
-                    <h3>Análisis cultural profundo</h3>
-                    <p>Un estudio meticuloso del inconsciente colectivo argentino a través del prisma del lenguaje y sus implicaciones socioculturales.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#986a6f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                        </svg>
-                    </div>
-                    <h3>Diálogo interdisciplinario</h3>
-                    <p>La obra combina psicoanálisis, filosofía, lingüística y antropología para ofrecer una visión integral del fenómeno del lunfardo.</p>
-                </div>
+        <div class="hero-content">
+            <h1>Inconsciente Lunfardo</h1>
+            <div class="author-name">J. Abraham Muñoz Bravo</div>
+            <p>Tras estudiar Filosofía y Psicología en Tel Aviv, Muñoz volvió a España para trabajar en La Emboscadura Editorial, curando el archivo multimedial de Antonio Escohotado. Esta labor, aun en YouTube arriesgando una hagiografía auto-inducida, le permitió antropologizar las secuelas del <em>Zeitgeist</em> hippie-ibicenco desde una óptica paradójicamente conservadora; pero su regreso a España, su sangre, unió esta iniciación en el pasaje forestal jüngeriano con el aprendizaje de filosofía en territorio ibérico, por españoles, en castellano, por primera vez.</p>
+                        
+                        <p>Impulsado por la insatisfacción con la instrucción recibida en su licenciatura, Muñoz desarrolla su teorización filosófica con alma enciclopédica en su (cripto-)escritura; aun velada por lo que achaca él a "una providencial desidia e incendios ciberespaciales". En su segundo año de carrera, se encontró con una profesora erudita, "el único docente con una visión de 360 grados de la historia de las ideas" que le reveló el mundo del psicoanálisis. Esto transformó radicalmente su pensamiento sobre el lenguaje, pasando de un enredo con las confusiones lingüísticas a hacer un giro quirúrgico de la observación hacia la función en sí del habla - como un espejismo persistente de la mismidad - que refleja la inconsciencia de los instintos de nuestra dimensión animal. El método psicoanalítico, que exige conocimientos de diversas fuentes, se alineó bien con la actitud interdisciplinaria de Muñoz. Así, continuará "aportando valor" dice él, "como lacaniano fascinado por el lenguaje, como filósofo consciente de la complejidad de la mente y como estudioso interesado en los gigantes intelectuales del pasado".</p>La modernidad cristalizada en Argentina: un análisis filosófico que revela cómo el lunfardo, lejos de ser simple jerga, constituye la síntesis única de las grandes corrientes occidentales—Marx, Nietzsche, Freud—y amalgama las teorías de Hegel y Lacan de manera singular. Una mirada reveladora que desafía las narrativas convencionales sobre el desarrollo cultural global.</p>
+            <div class="btn-container">
+                <button class="btn" id="downloadBtn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px; vertical-align: -3px;">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="12" y1="18" x2="12" y2="12"></line>
+                        <line x1="9" y1="15" x2="15" y2="15"></line>
+                    </svg>
+                    Descarga Gratuita
+                </button>
+                <button class="btn btn-secondary" id="buyBtn">Comprar - €19.99</button>
             </div>
         </div>
     </section>
     
     <!-- Media Section -->
-    <section class="media-section" id="reviews">
+    <section class="media-section">
         <div class="container">
             <!-- Video Section -->
             <div class="video-container">
-                <h2 class="section-title">Descubre más sobre el libro</h2>
+                <h2>Descubre más sobre el libro</h2>
                 <div class="responsive-video">
-                    <iframe src="https://www.youtube.com/embed/Si5KjH_tiFI?start=2099" 
+                    <iframe width="560" height="315" src="https://www.youtube.com/embed/Si5KjH_tiFI?start=2099" 
                             title="Inconsciente Lunfardo" 
+                            frameborder="0" 
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
                             allowfullscreen>
                     </iframe>
                 </div>
             </div>
             
-            <!-- Testimonials -->
-            <h2 class="section-title">Lo que dicen los expertos</h2>
-            <div class="testimonials">
-                <div class="testimonial-card">
-                    <div class="testimonial-header">
+            <!-- LinkedIn Post -->
+            <div class="linkedin-post">
+                <h2>Lo que dicen del libro</h2>
+                <div class="post-container">
+                    <div class="post-header">
                         <div class="profile-img">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="#ffffff">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="36" height="36" fill="#ffffff">
                                 <path d="M12 12C14.21 12 16 10.21 16 8C16 5.79 14.21 4 12 4C9.79 4 8 5.79 8 8C8 10.21 9.79 12 12 12ZM12 14C9.33 14 4 15.34 4 18V20H20V18C20 15.34 14.67 14 12 14Z"/>
                             </svg>
                         </div>
-                        <div class="testimonial-author">
+                        <div class="post-author">
                             <h3>Ezequiel Murina</h3>
                             <p>Físico cuántico</p>
                         </div>
                     </div>
-                    <div class="testimonial-content">
-                        <p>"Inconsciente Lunfardo presenta una exploración fascinante del inconsciente colectivo a través del prisma del lunfardo. Una lectura imprescindible para entender la intersección entre psicología y lenguaje."</p>
-                        <a href="https://www.linkedin.com/posts/ezequielmurina_inconsciente-lunfardo-abraham-mu%C3%B1oz-bravo-activity-7290076382259269634-Hje3" target="_blank" class="linkedin-link">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="#ffffff">
+                    <div class="post-content">
+                        <p>"Inconsciente Lunfardo - J. Abraham Muñoz Bravo presenta una exploración fascinante del inconsciente colectivo a través del prisma del lunfardo. Una lectura imprescindible para entender la intersección entre psicología y lenguaje."</p>
+                        <a href="https://www.linkedin.com/posts/ezequielmurina_inconsciente-lunfardo-abraham-mu%C3%B1oz-bravo-activity-7290076382259269634-Hje3?utm_source=share&utm_medium=member_desktop" 
+                           target="_blank" 
+                           class="linkedin-link">
+                           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="#ffffff">
                                 <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
                                 <rect x="2" y="9" width="4" height="12"></rect>
                                 <circle cx="4" cy="4" r="2"></circle>
                             </svg>
-                            Ver publicación original en LinkedIn
+                           Ver publicación original en LinkedIn
                         </a>
                     </div>
                 </div>
                 
-                <div class="testimonial-card">
-                    <div class="testimonial-header">
+                <!-- Gustavo Dessal Review -->
+                <div class="post-container" style="margin-top: 2rem;">
+                    <div class="post-header">
                         <div class="profile-img">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="#ffffff">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="36" height="36" fill="#ffffff">
                                 <path d="M12 12C14.21 12 16 10.21 16 8C16 5.79 14.21 4 12 4C9.79 4 8 5.79 8 8C8 10.21 9.79 12 12 12ZM12 14C9.33 14 4 15.34 4 18V20H20V18C20 15.34 14.67 14 12 14Z"/>
                             </svg>
                         </div>
-                        <div class="testimonial-author">
+                        <div class="post-author">
                             <h3>Gustavo Dessal</h3>
                             <p>Psicoanalista y Escritor</p>
                         </div>
                     </div>
-                    <div class="testimonial-content">
-                        <p>"Un psicoanalista que aborda los efectos de la 'lalangue' en la configuración del sujeto del inconsciente. El estudio del lunfardo como 'lengua madre' da una idea de porqué la transferencia con el psicoanálisis es en la Argentina algo que ha modelado la cultura sin distinción entre derecha e izquierda."</p>
+                    <div class="post-content">
+                        <p>"Un psicoanalista que aborda los efectos de la 'lalangue' en la configuración del sujeto del inconsciente. El estudio del lunfardo como 'lengua madre' da una idea de porqué la transferencia con el psicoanálisis es en la Argentina algo que ha modelado la cultura sin distinción entre derecha e izquierda. En otras palabras: el psicoanálisis como ideología que todos allí comparten."</p>
                     </div>
                 </div>
                 
-                <div class="testimonial-card">
-                    <div class="testimonial-header">
+                <!-- Shirley Sharon-Zisser Review -->
+                <div class="post-container" style="margin-top: 2rem;">
+                    <div class="post-header">
                         <div class="profile-img">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="#ffffff">
-                                <path d="M12 12C14.21 12 16 10.21 16 8C16 5.79 14.21 4 12 4C9.79 4 8 5.79 8 8C8 10.21 9.79 12 12 12ZM12 14C9.33 14 4 15.34 4 18V20H20V18C20 15.34 14.
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="36" height="36" fill="#ffffff">
+                                <path d="M12,2C6.48,2,2,6.48,2,12c0,5.52,4.48,10,10,10s10-4.48,10-10C22,6.48,17.52,2,12,2z M12,6c1.93,0,3.5,1.57,3.5,3.5 S13.93,13,12,13s-3.5-1.57-3.5-3.5S10.07,6,12,6z M12,20c-2.03,0-4.43-0.82-6.14-2.88C7.55,15.8,9.68,15,12,15 s4.45,0.8,6.14,2.12C16.43,19.18,14.03,20,12,20z"/>
+                                <path d="M12,11c-0.83,0-1.5-0.67-1.5-1.5c0-0.83,0.67-1.5,1.5-1.5s1.5,0.67,1.5,1.5C13.5,10.33,12.83,11,12,11z"/>
+                                <path d="M12,11c0.83,0,1.5-0.67,1.5-1.5c0-0.83-0.67-1.5-1.5-1.5s-1.5,0.67-1.5,1.5C10.5,10.33,11.17,11,12,11z"/>
+                                <path d="M11.55,14h0.9v-2.5c0-0.28-0.22-0.5-0.5-0.5h0c-0.28,0-0.5,0.22-0.5,0.5V14H11.55z"/>
+                                <path d="M13.95,14h0.1c0.83,0,1.5-0.67,1.5-1.5V11h-1.5v1.5C14.05,13.33,14.01,13.66,13.95,14z"/>
+                                <path d="M9.95,14h0.1c-0.05-0.34-0.1-0.67-0.1-1V11h-1.5v1.5C8.45,13.33,9.12,14,9.95,14z"/>
+                            </svg>
+                        </div>
+                        <div class="post-author">
+                            <h3>Shirley Sharon-Zisser</h3>
+                            <p>Profesora en literatura comparativa, psicoanálisis freudo-lacaniano y experta semióloga</p>
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        <p>"Brillante, preciso, elegante."</p>
+                    </div>
+                </div>
+                
+                <!-- Santiago Molina Ruiz Review -->
+                <div class="post-container" style="margin-top: 2rem;">
+                    <div class="post-header">
+                        <div class="profile-img">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="36" height="36" fill="#ffffff">
+                                <path d="M12 12C14.21 12 16 10.21 16 8C16 5.79 14.21 4 12 4C9.79 4 8 5.79 8 8C8 10.21 9.79 12 12 12ZM12 14C9.33 14 4 15.34 4 18V20H20V18C20 15.34 14.67 14 12 14Z"/>
+                            </svg>
+                        </div>
+                        <div class="post-author">
+                            <h3>Santiago Molina Ruiz</h3>
+                            <p>Filósofo y Prologuista del libro</p>
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        <p>"Complejo, atrevido, sofisticado e intempestivo en la medida en que pocos poseen la delicadeza de ver la historia pasar mientras está pasando. Abraham ha conseguido fijarse en los lentos pasos de la historia que sólo suelen entenderse con los años, con los procesos ya concluidos y cristalizados en la materia de los historiadores, que es la muerte."</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Free PDF Download Section (hidden initially) -->
+    <div class="download-link" id="downloadSection">
+        <h3>¡Gracias por tu interés!</h3>
+        <p>Para descargar tu PDF gratuito, por favor ingresa tu correo electrónico:</p>
+        
+        <!-- Formulario actualizado con el código FormSubmit -->
+        <form id="downloadForm" action="https://formsubmit.co/7077c99d34e5023cc608701b21c8e56d" method="POST">
+            <div class="form-group">
+                <input type="email" name="email" id="downloadEmail" placeholder="Tu correo electrónico" required>
+                <input type="hidden" name="_next" value="https://ambeidetic.github.io/inconscientelunfardo/#downloadSuccess">
+                <input type="hidden" name="_subject" value="Nueva descarga de libro: Inconsciente Lunfardo">
+                <input type="hidden" name="_captcha" value="false">
+                <!-- Campo para identificar el tipo de formulario -->
+                <input type="hidden" name="form_type" value="download_request">
+            </div>
+            <button type="submit" class="btn">Obtener PDF</button>
+        </form>
+        
+        <div id="downloadSuccess" style="display: none; margin-top: 1.5rem;">
+            <p style="margin-bottom: 1rem;">¡Listo! Tu PDF gratuito está disponible ahora:</p>
+            <p><a href="muestra-inconsciente-lunfardo.pdf" download class="btn" id="pdfLink" onclick="trackDownload()">Descargar PDF</a></p>
+        </div>
+    </div>
+    
+    <!-- Author Section -->
+    <section class="author-section">
+        <div class="container">
+            <h2>Sobre el autor</h2>
+            <div class="author-profile">
+                <div class="author-image">
+                    <img src="/api/placeholder/300/300" alt="J. Abraham Muñoz Bravo">
+                </div>
+                <div class="author-bio">
+                    <h3>J. Abraham Muñoz Bravo</h3>
+                    <div class="author-description">
+                        <p>Como el único freudiano ortodoxo e historiador universal de su generación, con Lacan en una mano y Hegel en la otra, Abraham Muñoz B. aplica la filosofía teórica contemporánea –Realismo Especulativo– y la praxis psicoanalítica a los misterios culturales de Argentina y descubre los pilares psicológicos, antropológicos y lingüísticos de la compleja capital de esta nación: Buenos Aires.</p>
+                        
+                        <p>Se enfoca en el estudio de la mente, centrándose en la convergencia entre lenguaje, cognición y genealogía de ideas. Su interés abarca el rol del filósofo como piedra angular de la sociedad, en el encaje entre teoría mediática y producción de conocimiento en general.</p>
+                        
+                        <p
