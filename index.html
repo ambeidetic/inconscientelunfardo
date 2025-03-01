@@ -525,6 +525,7 @@
         /* Estilos para opciones de descarga */
         .download-options {
             margin: 2rem 0;
+            display: none; /* Inicialmente oculto */
         }
         
         .download-option {
@@ -570,6 +571,46 @@
             padding: 1rem;
             margin-bottom: 1rem;
             border-radius: 5px;
+            display: none;
+        }
+
+        /* Estilos para el formulario de email */
+        .email-form {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .email-form h4 {
+            margin-bottom: 1rem;
+            color: var(--secondary-color);
+        }
+
+        .email-input {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .email-input input {
+            flex-grow: 1;
+        }
+
+        .email-input button {
+            flex-shrink: 0;
+        }
+
+        /* Estilo para la verificación de email */
+        .invalid-email {
+            border-color: #dc3545;
+        }
+
+        #emailError {
+            color: #dc3545;
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
             display: none;
         }
     </style>
@@ -752,16 +793,28 @@
     <!-- Free PDF Download Section (hidden initially) -->
     <div class="download-link" id="downloadSection">
         <h3>¡Gracias por tu interés!</h3>
-        <p>Para obtener tu PDF gratuito, puedes elegir cualquiera de estas opciones:</p>
+        <p>Para obtener tu PDF gratuito, necesitamos tu dirección de correo electrónico:</p>
         
-        <div class="download-options">
+        <!-- Formulario de email -->
+        <div class="email-form">
+            <h4>Ingresa tu email para acceder a la descarga</h4>
+            <p>Te enviaremos el libro a esta dirección y también habilitaremos la descarga inmediata.</p>
+            
+            <div class="email-input">
+                <input type="email" id="userEmail" placeholder="Tu correo electrónico" required>
+                <button class="btn" id="validateEmailBtn">Validar</button>
+            </div>
+            <div id="emailError">Por favor, introduce un correo electrónico válido.</div>
+        </div>
+        
+        <div class="download-options" id="downloadOptions">
             <!-- Opción 1: Descarga directa -->
             <div class="download-option">
                 <h4>Opción 1: Descarga directa</h4>
                 <p>Descarga el PDF directamente a tu dispositivo:</p>
                 <div class="loader" id="directDownloadLoader"></div>
                 <div class="error-message" id="directDownloadError">Ha ocurrido un error en la descarga. Por favor intenta otra opción.</div>
-                <a href="muestra-inconsciente-lunfardo.pdf" download class="btn" id="directDownloadBtn" onclick="return trackDownload('direct')">
+                <a href="muestra-inconsciente-lunfardo.pdf" download class="btn" id="directDownloadBtn">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px; vertical-align: -3px;">
                         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                         <polyline points="7 10 12 15 17 10"></polyline>
@@ -775,7 +828,7 @@
             <div class="download-option">
                 <h4>Opción 2: Google Drive</h4>
                 <p>Si tienes problemas con la descarga directa, accede al archivo desde Google Drive:</p>
-                <a href="https://drive.google.com/file/d/1UoUnb_drlwOI9Qm6-j8XZnylnuKj0FwE/view?usp=sharing" target="_blank" rel="noopener" class="btn" id="driveDownloadBtn" onclick="trackDownload('drive')">
+                <a href="https://drive.google.com/file/d/1UoUnb_drlwOI9Qm6-j8XZnylnuKj0FwE/view?usp=sharing" target="_blank" rel="noopener" class="btn" id="driveDownloadBtn">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px; vertical-align: -3px;">
                         <polyline points="8 17 12 21 16 17"></polyline>
                         <line x1="12" y1="12" x2="12" y2="21"></line>
@@ -789,7 +842,7 @@
             <div class="download-option">
                 <h4>Opción 3: Recibir por correo</h4>
                 <p>Si prefieres recibir el libro directamente en tu correo electrónico:</p>
-                <a href="mailto:psitekphi@gmail.com?subject=Solicitud%20PDF%3A%20Inconsciente%20Lunfardo&body=Hola%2C%0A%0APor%20favor%20env%C3%ADame%20el%20PDF%20del%20libro%20%22Inconsciente%20Lunfardo%22.%0A%0AGracias" class="btn" id="emailRequestBtn" onclick="trackDownload('email')">
+                <a href="#" class="btn" id="emailRequestBtn">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px; vertical-align: -3px;">
                         <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
                         <polyline points="22,6 12,13 2,6"></polyline>
@@ -874,8 +927,42 @@
     </div>
     
     <script>
-        // Función mejorada de trackDownload con mejor manejo de errores
+        // Función para validar email
+        function isValidEmail(email) {
+            const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return regex.test(email);
+        }
+        
+        // Función para enviar notificación al propietario
+        function notifyOwner(userEmail, downloadMethod) {
+            const timestamp = new Date().toISOString();
+            const formData = new FormData();
+            formData.append('userEmail', userEmail);
+            formData.append('downloadMethod', downloadMethod);
+            formData.append('timestamp', timestamp);
+            formData.append('userAgent', navigator.userAgent);
+            
+            // Enviar notificación usando FormSubmit
+            fetch('https://formsubmit.co/psitekphi@gmail.com', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    _subject: "Nueva descarga de Inconsciente Lunfardo",
+                    email: userEmail,
+                    método: downloadMethod,
+                    fecha: timestamp,
+                    navegador: navigator.userAgent
+                })
+            }).catch(error => console.error('Error al enviar notificación:', error));
+        }
+        
+        // Función para registrar la descarga y notificar
         function trackDownload(method) {
+            const userEmail = document.getElementById('userEmail').value;
+            
             // Mostrar loader si es descarga directa
             if (method === 'direct') {
                 document.getElementById('directDownloadLoader').style.display = 'block';
@@ -886,8 +973,12 @@
                 }, 1500);
             }
             
+            // Notificar al propietario
+            notifyOwner(userEmail, method);
+            
             // Registrar analíticas de descarga de forma anónima
             const downloadData = {
+                email: userEmail,
                 method: method || 'direct',
                 timestamp: new Date().toISOString(),
                 userAgent: navigator.userAgent,
@@ -900,10 +991,6 @@
                 let downloadStats = JSON.parse(localStorage.getItem('downloadStats') || '[]');
                 downloadStats.push(downloadData);
                 localStorage.setItem('downloadStats', JSON.stringify(downloadStats));
-                
-                // Usar localStorage como backup para estadísticas
-                let emailsSent = parseInt(localStorage.getItem('emailsSent') || '0');
-                localStorage.setItem('emailsSent', (emailsSent + 1).toString());
                 
                 // Mostrar un pequeño indicador visual de éxito
                 showSuccessIndicator('¡Descarga iniciada!');
@@ -945,9 +1032,9 @@
             }, 100);
         }
     
-        // Función para establecer el referrer al cargar la página
+        // Función para manejar los eventos una vez que el DOM está cargado
         document.addEventListener('DOMContentLoaded', function() {
-            // Verificar si los elementos existen antes de acceder a ellos
+            // Elementos DOM principales
             const elements = {
                 downloadBtn: document.getElementById('downloadBtn'),
                 buyBtn: document.getElementById('buyBtn'),
@@ -956,10 +1043,17 @@
                 purchaseForm: document.getElementById('purchaseForm'),
                 successMessage: document.getElementById('successMessage'),
                 downloadSection: document.getElementById('downloadSection'),
-                purchaseError: document.getElementById('purchaseError')
+                purchaseError: document.getElementById('purchaseError'),
+                validateEmailBtn: document.getElementById('validateEmailBtn'),
+                userEmail: document.getElementById('userEmail'),
+                emailError: document.getElementById('emailError'),
+                downloadOptions: document.getElementById('downloadOptions'),
+                directDownloadBtn: document.getElementById('directDownloadBtn'),
+                driveDownloadBtn: document.getElementById('driveDownloadBtn'),
+                emailRequestBtn: document.getElementById('emailRequestBtn')
             };
             
-            // Verificar que los elementos existan antes de agregar eventos
+            // Botón de descarga gratuita muestra la sección de descarga
             if (elements.downloadBtn) {
                 elements.downloadBtn.addEventListener('click', function() {
                     if (elements.downloadSection) {
@@ -969,6 +1063,32 @@
                 });
             }
             
+            // Botón para validar email
+            if (elements.validateEmailBtn) {
+                elements.validateEmailBtn.addEventListener('click', function() {
+                    const email = elements.userEmail.value.trim();
+                    
+                    if (isValidEmail(email)) {
+                        // Email válido
+                        elements.userEmail.classList.remove('invalid-email');
+                        elements.emailError.style.display = 'none';
+                        elements.downloadOptions.style.display = 'block';
+                        
+                        // Notificar al propietario que alguien ha ingresado su email
+                        notifyOwner(email, 'validación_email');
+                        
+                        // Scroll suave a las opciones de descarga
+                        elements.downloadOptions.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    } else {
+                        // Email inválido
+                        elements.userEmail.classList.add('invalid-email');
+                        elements.emailError.style.display = 'block';
+                        elements.downloadOptions.style.display = 'none';
+                    }
+                });
+            }
+            
+            // Botón de compra muestra el modal
             if (elements.buyBtn) {
                 elements.buyBtn.addEventListener('click', function() {
                     if (elements.buyModal) {
@@ -977,6 +1097,7 @@
                 });
             }
             
+            // Cerrar modal
             if (elements.closeBtn) {
                 elements.closeBtn.addEventListener('click', function() {
                     if (elements.buyModal) {
@@ -985,12 +1106,39 @@
                 });
             }
             
-            // Close modal when clicking outside of it
+            // Cerrar modal al hacer clic fuera de él
             window.addEventListener('click', function(event) {
                 if (elements.buyModal && event.target == elements.buyModal) {
                     elements.buyModal.style.display = 'none';
                 }
             });
+            
+            // Eventos para botones de descarga
+            if (elements.directDownloadBtn) {
+                elements.directDownloadBtn.addEventListener('click', function() {
+                    trackDownload('direct');
+                });
+            }
+            
+            if (elements.driveDownloadBtn) {
+                elements.driveDownloadBtn.addEventListener('click', function() {
+                    trackDownload('drive');
+                });
+            }
+            
+            if (elements.emailRequestBtn) {
+                elements.emailRequestBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const email = elements.userEmail.value.trim();
+                    if (isValidEmail(email)) {
+                        const mailtoUrl = `mailto:psitekphi@gmail.com?subject=Solicitud%20PDF%3A%20Inconsciente%20Lunfardo&body=Hola%2C%0A%0APor%20favor%20env%C3%ADame%20el%20PDF%20del%20libro%20%22Inconsciente%20Lunfardo%22.%0A%0AMi%20correo%20es%3A%20${encodeURIComponent(email)}%0A%0AGracias`;
+                        window.location.href = mailtoUrl;
+                        trackDownload('email');
+                    } else {
+                        alert('Por favor, introduce un correo electrónico válido primero.');
+                    }
+                });
+            }
             
             // Inicializar PayPal una vez que el DOM esté listo
             if (typeof paypal !== 'undefined') {
