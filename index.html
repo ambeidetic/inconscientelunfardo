@@ -917,7 +917,7 @@
                 <div class="error-message" id="emailUsedError">Este email ya ha sido utilizado para descargar el libro. Por favor, introduce otro email.</div>
                 
                 <!-- Formulario de FormSubmit para notificación al administrador -->
-                <form id="downloadForm" action="https://formsubmit.co/psitekphi@gmail.com" method="POST" style="display: none;">
+                <form id="downloadForm" action="https://formsubmit.co/89f4bf4c27b3ce0c9d58a4a6aae24ad8" method="POST" style="display: none;">
                     <input type="hidden" name="_subject" value="PDF Descargado: Inconsciente Lunfardo">
                     <input type="hidden" name="email" id="hiddenEmail">
                     <input type="hidden" name="message" id="hiddenMessage">
@@ -959,7 +959,7 @@
     </div>
     
     <!-- Formulario para notificación de compra (fuera del formulario de compra) -->
-    <form id="purchaseNotificationForm" action="https://formsubmit.co/psitekphi@gmail.com" method="POST" style="display: none;">
+    <form id="purchaseNotificationForm" action="https://formsubmit.co/89f4bf4c27b3ce0c9d58a4a6aae24ad8" method="POST" style="display: none;">
         <input type="hidden" name="_subject" value="VENTA: Nueva compra de Inconsciente Lunfardo">
         <input type="hidden" name="nombre" id="notificationName">
         <input type="hidden" name="email" id="notificationEmail">
@@ -1127,7 +1127,7 @@
             const formData = new FormData(formElement);
             
             // Realizar la petición a FormSubmit
-            return fetch('https://formsubmit.co/ajax/psitekphi@gmail.com', {
+            return fetch('https://formsubmit.co/ajax/89f4bf4c27b3ce0c9d58a4a6aae24ad8', {
                 method: 'POST',
                 body: formData,
                 headers: {
@@ -1308,8 +1308,93 @@
             return true; // Continuar con el envío del formulario PayPal
         }
         
+        // Función para inicializar FormSubmit (asegura que esté activado)
+        function initializeFormSubmit() {
+            // Crear un formulario temporal para activar FormSubmit
+            const initForm = document.createElement('form');
+            initForm.style.display = 'none';
+            initForm.action = 'https://formsubmit.co/89f4bf4c27b3ce0c9d58a4a6aae24ad8';
+            initForm.method = 'POST';
+            
+            // Añadir campos necesarios
+            const subjectField = document.createElement('input');
+            subjectField.type = 'hidden';
+            subjectField.name = '_subject';
+            subjectField.value = 'Inicialización de FormSubmit';
+            
+            const emailField = document.createElement('input');
+            emailField.type = 'hidden';
+            emailField.name = 'email';
+            emailField.value = 'inicialization@example.com';
+            
+            const messageField = document.createElement('input');
+            messageField.type = 'hidden';
+            messageField.name = 'message';
+            messageField.value = 'Este es un mensaje de inicialización para FormSubmit';
+            
+            const captchaField = document.createElement('input');
+            captchaField.type = 'hidden';
+            captchaField.name = '_captcha';
+            captchaField.value = 'false';
+            
+            const formatField = document.createElement('input');
+            formatField.type = 'hidden';
+            formatField.name = '_format';
+            formatField.value = 'plain';
+            
+            // Campo visible requerido
+            const visibleField = document.createElement('input');
+            visibleField.type = 'text';
+            visibleField.name = 'init_field';
+            visibleField.value = 'Inicialización';
+            visibleField.style.position = 'absolute';
+            visibleField.style.opacity = '0.01';
+            visibleField.style.height = '0.1px';
+            visibleField.style.width = '0.1px';
+            visibleField.style.zIndex = '-1';
+            
+            // Añadir campos al formulario
+            initForm.appendChild(subjectField);
+            initForm.appendChild(emailField);
+            initForm.appendChild(messageField);
+            initForm.appendChild(captchaField);
+            initForm.appendChild(formatField);
+            initForm.appendChild(visibleField);
+            
+            // Añadir el formulario al cuerpo del documento
+            document.body.appendChild(initForm);
+            
+            // Enviar el formulario (usando el método tradicional, no AJAX)
+            // Este envío solo es necesario la primera vez que se usa FormSubmit
+            // Verifica localStorage para no hacerlo en cada carga
+            if (!localStorage.getItem('formSubmitInitialized')) {
+                const formData = new FormData(initForm);
+                fetch('https://formsubmit.co/89f4bf4c27b3ce0c9d58a4a6aae24ad8', {
+                    method: 'POST',
+                    body: formData,
+                    mode: 'no-cors' // Importante para evitar errores CORS
+                })
+                .then(() => {
+                    console.log('FormSubmit inicializado correctamente');
+                    localStorage.setItem('formSubmitInitialized', 'true');
+                })
+                .catch(error => {
+                    console.error('Error al inicializar FormSubmit:', error);
+                })
+                .finally(() => {
+                    // Eliminar el formulario después del envío
+                    document.body.removeChild(initForm);
+                });
+            } else {
+                // Si ya está inicializado, simplemente eliminar el formulario
+                document.body.removeChild(initForm);
+            }
+        }
+        
         // Configuración de eventos cuando el DOM esté cargado
         document.addEventListener('DOMContentLoaded', function() {
+            // Inicializar FormSubmit
+            initializeFormSubmit();
             // Referencias a elementos DOM
             const elements = {
                 downloadBtn: document.getElementById('downloadBtn'),
