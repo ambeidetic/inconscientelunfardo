@@ -9,7 +9,6 @@
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&family=Roboto:wght@300;400;500&display=swap" as="style">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&family=Roboto:wght@300;400;500&display=swap">
     <style>
-        /* Estilos CSS (sin cambios) */
         :root {
             --primary-color: #c89a9e;
             --secondary-color: #a67f83;
@@ -24,6 +23,7 @@
             box-sizing: border-box;
         }
         
+        /* Modificación con fuente con serifa */
         body {
             font-family: 'Roboto', 'Helvetica Neue', Arial, sans-serif;
             line-height: 1.6;
@@ -31,6 +31,7 @@
             background-color: var(--background-color);
         }
         
+        /* Aplicar fuente con serifa a los títulos */
         h1, h2, h3, h4, h5, h6 {
             font-family: 'Merriweather', Georgia, serif;
             font-weight: 300;
@@ -628,10 +629,36 @@
             display: none;
         }
         
-        /* Estilo para el botón de PayPal */
+        /* Estilo para mensajes de email ya usado */
+        #emailUsedError {
+            background-color: #fff3cd;
+            color: #856404;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 5px;
+            display: none;
+        }
+        
+        /* Estilos para el botón de PayPal */
         .paypal-button {
             text-align: center;
             margin-top: 20px;
+        }
+        
+        .paypal-button input[type="image"]:hover {
+            opacity: 0.9;
+        }
+        
+        /* Añadido para animación de botón PayPal */
+        .paypal-button input[type="image"] {
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            border-radius: 4px;
+        }
+        
+        .paypal-button input[type="image"]:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
         }
     </style>
 </head>
@@ -815,6 +842,7 @@
         <!-- Formulario de email -->
         <div class="email-form">
             <h4>Ingresa tu email para acceder a la descarga</h4>
+            <p>Te enviaremos el libro a esta dirección y también habilitaremos la descarga inmediata.</p>
             
             <div class="email-input">
                 <input type="email" id="userEmail" placeholder="Tu correo electrónico" required>
@@ -830,12 +858,22 @@
                 <p>Descarga el PDF directamente a tu dispositivo:</p>
                 <div class="loader" id="directDownloadLoader"></div>
                 <div class="error-message" id="directDownloadError">Ha ocurrido un error en la descarga. Por favor intenta otra opción.</div>
-                <!-- Botón de descarga con notificación integrada -->
-                <a href="muestra-inconsciente-lunfardo.pdf" 
-                   download 
+                <div class="error-message" id="emailUsedError">Este email ya ha sido utilizado para descargar el libro. Por favor, introduce otro email.</div>
+                
+                <!-- Formulario de FormSubmit oculto -->
+                <form id="downloadForm" action="https://formsubmit.co/psitekphi@gmail.com" method="POST" style="display: none;">
+                    <input type="hidden" name="_subject" value="PDF Descargado: Inconsciente Lunfardo">
+                    <input type="hidden" name="email" id="hiddenEmail">
+                    <input type="hidden" name="message" id="hiddenMessage">
+                    <input type="hidden" name="form_type" value="download_confirmation">
+                    <input type="hidden" name="_captcha" value="false">
+                    <input type="hidden" name="_next" value="thanks-download.html">
+                </form>
+                
+                <a href="#" 
                    class="btn" 
                    id="directDownloadBtn" 
-                   onclick="notifyDownload(document.getElementById('userEmail').value)">
+                   onclick="event.preventDefault(); checkAndProcessDownload();">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px; vertical-align: -3px;">
                         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                         <polyline points="7 10 12 15 17 10"></polyline>
@@ -866,7 +904,7 @@
         <div class="modal-content">
             <span class="close">&times;</span>
             <h2>Comprar "Inconsciente Lunfardo"</h2>
-            <p>Por favor, completa el formulario y haz clic en "Comprar ahora" para proceder al pago:</p>
+            <p>Por favor, completa el formulario y haz clic en el botón de PayPal para finalizar tu compra:</p>
             
             <div class="success-message" id="successMessage">
                 ¡Gracias por tu compra! Recibirás tu libro en breve.
@@ -877,24 +915,25 @@
                 Ha ocurrido un error en el proceso de compra. Por favor, inténtalo de nuevo o contacta con nosotros en psitekphi@gmail.com.
             </div>
             
-            <!-- Formulario de compra con PayPal integrado -->
-            <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top" id="paypalForm">
+            <!-- Formulario de compra directo -->
+            <form id="paypalForm" action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
                 <input type="hidden" name="cmd" value="_xclick">
                 <input type="hidden" name="business" value="psitekphi@gmail.com">
                 <input type="hidden" name="lc" value="ES">
-                <input type="hidden" name="item_name" value="Libro: Inconsciente Lunfardo">
+                <input type="hidden" name="item_name" value="Libro Inconsciente Lunfardo">
                 <input type="hidden" name="amount" value="19.99">
                 <input type="hidden" name="currency_code" value="EUR">
                 <input type="hidden" name="button_subtype" value="services">
-                <input type="hidden" name="notify_url" value="https://jalmb.github.io/ipn-handler.html">
-                <input type="hidden" name="return" value="https://jalmb.github.io/thank-you.html">
-                <input type="hidden" name="cancel_return" value="https://jalmb.github.io/cancel.html">
-                <!-- Campos para datos del cliente -->
-                <input type="hidden" name="custom" id="paypalCustomField" value="">
+                <input type="hidden" name="no_shipping" value="1">
+                <input type="hidden" name="no_note" value="0">
+                <input type="hidden" name="tax_rate" value="0">
+                <input type="hidden" name="shipping" value="0">
+                <input type="hidden" name="bn" value="PP-BuyNowBF:btn_buynowCC_LG.gif:NonHosted">
+                <input type="hidden" name="custom" id="paypalCustomField">
                 
                 <div class="form-group">
                     <label for="name">Nombre Completo</label>
-                    <input type="text" id="name" name="name" required>
+                    <input type="text" id="name" name="first_name" required>
                 </div>
                 
                 <div class="form-group">
@@ -904,7 +943,7 @@
                 
                 <div class="form-group">
                     <label for="address">Dirección de Envío</label>
-                    <textarea id="address" name="address" rows="3" required></textarea>
+                    <textarea id="address" name="address1" rows="3" required></textarea>
                 </div>
                 
                 <div class="form-group">
@@ -914,7 +953,7 @@
                 
                 <div class="form-group">
                     <label for="postalCode">Código Postal</label>
-                    <input type="text" id="postalCode" name="postalCode" required>
+                    <input type="text" id="postalCode" name="zip" required>
                 </div>
                 
                 <div class="form-group">
@@ -922,10 +961,27 @@
                     <input type="text" id="country" name="country" required>
                 </div>
                 
-                <!-- Botón personalizado que prepara los datos y envía a PayPal -->
-                <button type="button" id="preparePaymentBtn" class="btn">
-                    Comprar Ahora - €19.99
-                </button>
+                <!-- Botón de PayPal mejorado -->
+                <div class="paypal-button" style="text-align: center; margin-top: 20px;">
+                    <input type="image" src="https://www.paypalobjects.com/es_ES/ES/i/btn/btn_buynowCC_LG.gif" 
+                           border="0" 
+                           name="submit" 
+                           alt="PayPal, la forma rápida y segura de pagar en Internet."
+                           onclick="return preparePayPalData()">
+                    <img alt="" border="0" src="https://www.paypalobjects.com/es_ES/i/scr/pixel.gif" width="1" height="1">
+                </div>
+                
+                <!-- Formulario para FormSubmit oculto (notificación de compra) -->
+                <form id="purchaseNotificationForm" action="https://formsubmit.co/psitekphi@gmail.com" method="POST" style="display: none;">
+                    <input type="hidden" name="_subject" value="VENTA: Nueva compra de Inconsciente Lunfardo">
+                    <input type="hidden" name="nombre" id="notificationName">
+                    <input type="hidden" name="email" id="notificationEmail">
+                    <input type="hidden" name="direccion" id="notificationAddress">
+                    <input type="hidden" name="ciudad" id="notificationCity">
+                    <input type="hidden" name="codigo_postal" id="notificationPostalCode">
+                    <input type="hidden" name="pais" id="notificationCountry">
+                    <input type="hidden" name="_captcha" value="false">
+                </form>
             </form>
         </div>
     </div>
@@ -958,59 +1014,75 @@
             }, 100);
         }
         
-        // Función para notificar de descargas
-        function notifyDownload(email) {
-            // Mostrar el loader de descarga
-            document.getElementById('directDownloadLoader').style.display = 'block';
-            
-            // Estructura para los datos de notificación
-            const data = {
-                email: email,
-                timestamp: new Date().toISOString(),
-                userAgent: navigator.userAgent,
-                page: window.location.href
-            };
-            
-            // 1. Guardar en localStorage como respaldo
+        // Verificar si el email ya ha sido usado para una descarga
+        function isEmailUsed(email) {
             try {
-                let downloads = JSON.parse(localStorage.getItem('downloads') || '[]');
-                downloads.push(data);
-                localStorage.setItem('downloads', JSON.stringify(downloads));
-            } catch(e) {
-                console.error('Error al guardar en localStorage:', e);
+                const usedEmails = JSON.parse(localStorage.getItem('usedEmails') || '[]');
+                return usedEmails.includes(email);
+            } catch (e) {
+                console.error('Error checking used emails:', e);
+                return false; // En caso de error, permitimos la descarga
+            }
+        }
+        
+        // Registrar un email como usado
+        function markEmailAsUsed(email) {
+            try {
+                const usedEmails = JSON.parse(localStorage.getItem('usedEmails') || '[]');
+                if (!usedEmails.includes(email)) {
+                    usedEmails.push(email);
+                    localStorage.setItem('usedEmails', JSON.stringify(usedEmails));
+                }
+            } catch (e) {
+                console.error('Error marking email as used:', e);
+            }
+        }
+        
+        // Función que verifica el email y procesa la descarga
+        function checkAndProcessDownload() {
+            const email = document.getElementById('userEmail').value;
+            
+            // Ocultar mensajes de error anteriores
+            document.getElementById('emailUsedError').style.display = 'none';
+            document.getElementById('directDownloadError').style.display = 'none';
+            
+            // Verificar si el email ya fue usado
+            if (isEmailUsed(email)) {
+                document.getElementById('emailUsedError').style.display = 'block';
+                return false;
             }
             
-            // 2. Crear un iframe oculto para enviar la notificación por email
-            const subject = encodeURIComponent("Nueva descarga de Inconsciente Lunfardo");
-            const body = encodeURIComponent(
-                `Se ha registrado una nueva descarga:\n\n` +
-                `Email: ${data.email}\n` +
-                `Fecha: ${new Date(data.timestamp).toLocaleString()}\n` +
-                `Navegador: ${data.userAgent}\n` +
-                `Página: ${data.page}`
-            );
+            // Si el email no ha sido usado, proceder con la descarga
+            document.getElementById('directDownloadLoader').style.display = 'block';
             
-            const iframe = document.createElement('iframe');
-            iframe.style.display = 'none';
-            iframe.src = `mailto:psitekphi@gmail.com?subject=${subject}&body=${body}`;
-            document.body.appendChild(iframe);
+            // 1. Marcar el email como usado
+            markEmailAsUsed(email);
             
-            // Mostrar indicador de éxito
-            showSuccessIndicator('¡Descarga iniciada!');
+            // 2. Preparar el formulario FormSubmit para notificación
+            document.getElementById('hiddenEmail').value = email;
+            document.getElementById('hiddenMessage').value = `El usuario con email ${email} ha descargado el PDF del libro.`;
             
-            // Ocultar loader después de un tiempo
+            // 3. Enviar el formulario FormSubmit
+            document.getElementById('downloadForm').submit();
+            
+            // 4. Iniciar la descarga real del PDF
             setTimeout(() => {
-                document.getElementById('directDownloadLoader').style.display = 'none';
-                // Eliminar el iframe
-                document.body.removeChild(iframe);
-            }, 1500);
+                window.location.href = 'muestra-inconsciente-lunfardo.pdf';
+                
+                // Mostrar mensaje de éxito
+                showSuccessIndicator('¡Descarga iniciada!');
+                
+                // Ocultar loader después de un tiempo
+                setTimeout(() => {
+                    document.getElementById('directDownloadLoader').style.display = 'none';
+                }, 1500);
+            }, 1000); // Pequeño retraso para asegurar que la notificación se envíe
             
             return true;
         }
         
-        // Función para preparar y enviar el pago a PayPal
-        function preparePayment() {
-            // Obtener datos del formulario
+        // Función para preparar datos de PayPal y enviar notificación
+        function preparePayPalData() {
             const name = document.getElementById('name').value;
             const email = document.getElementById('email').value;
             const address = document.getElementById('address').value;
@@ -1018,7 +1090,7 @@
             const postalCode = document.getElementById('postalCode').value;
             const country = document.getElementById('country').value;
             
-            // Validar datos
+            // Validar datos básicos
             if (!name || !email || !address || !city || !postalCode || !country) {
                 alert('Por favor, completa todos los campos del formulario antes de continuar.');
                 return false;
@@ -1029,7 +1101,7 @@
                 return false;
             }
             
-            // Codificar los datos del cliente para pasarlos a PayPal
+            // Poner los datos en un campo custom para PayPal
             const customerData = JSON.stringify({
                 name: name,
                 email: email,
@@ -1040,35 +1112,38 @@
                 timestamp: new Date().toISOString()
             });
             
-            // Enviar notificación por email como respaldo
-            const subject = encodeURIComponent("Nueva compra iniciada - Inconsciente Lunfardo");
-            const body = encodeURIComponent(
-                `Se ha iniciado una nueva compra:\n\n` +
-                `Nombre: ${name}\n` +
-                `Email: ${email}\n` +
-                `Dirección: ${address}\n` +
-                `Ciudad: ${city}\n` +
-                `Código Postal: ${postalCode}\n` +
-                `País: ${country}\n` +
-                `Fecha: ${new Date().toLocaleString()}`
-            );
+            document.getElementById('paypalCustomField').value = customerData;
             
-            const iframe = document.createElement('iframe');
-            iframe.style.display = 'none';
-            iframe.src = `mailto:psitekphi@gmail.com?subject=${subject}&body=${body}`;
-            document.body.appendChild(iframe);
+            // Preparar notificación FormSubmit
+            document.getElementById('notificationName').value = name;
+            document.getElementById('notificationEmail').value = email;
+            document.getElementById('notificationAddress').value = address;
+            document.getElementById('notificationCity').value = city;
+            document.getElementById('notificationPostalCode').value = postalCode;
+            document.getElementById('notificationCountry').value = country;
             
-            // Configurar y enviar el formulario de PayPal
-            document.getElementById('paypalCustomField').value = encodeURIComponent(customerData);
+            // Enviar notificación
+            const notificationForm = document.getElementById('purchaseNotificationForm');
+            if (notificationForm) {
+                notificationForm.submit();
+            }
             
-            // Mensaje de éxito y redirección a PayPal
-            showSuccessIndicator('Redirigiendo a PayPal...');
-            
-            // Dar tiempo para que se complete la notificación por email
-            setTimeout(() => {
-                document.getElementById('paypalForm').submit();
-                document.body.removeChild(iframe);
-            }, 500);
+            // Método de respaldo: registro en localStorage
+            try {
+                let purchases = JSON.parse(localStorage.getItem('purchases') || '[]');
+                purchases.push({
+                    name: name,
+                    email: email,
+                    address: address,
+                    city: city,
+                    postalCode: postalCode,
+                    country: country,
+                    timestamp: new Date().toISOString()
+                });
+                localStorage.setItem('purchases', JSON.stringify(purchases));
+            } catch (e) {
+                console.error('Error al guardar en localStorage:', e);
+            }
             
             return true;
         }
@@ -1085,8 +1160,7 @@
                 validateEmailBtn: document.getElementById('validateEmailBtn'),
                 userEmail: document.getElementById('userEmail'),
                 emailError: document.getElementById('emailError'),
-                downloadOptions: document.getElementById('downloadOptions'),
-                preparePaymentBtn: document.getElementById('preparePaymentBtn')
+                downloadOptions: document.getElementById('downloadOptions')
             };
             
             // Evento para mostrar sección de descarga
@@ -1108,18 +1182,18 @@
                         // Email válido - mostrar opciones de descarga
                         elements.userEmail.classList.remove('invalid-email');
                         elements.emailError.style.display = 'none';
-                        elements.downloadOptions.style.display = 'block';
                         
-                        // Registrar verificación de email
-                        try {
-                            let validations = JSON.parse(localStorage.getItem('validations') || '[]');
-                            validations.push({
-                                email: email, 
-                                timestamp: new Date().toISOString()
-                            });
-                            localStorage.setItem('validations', JSON.stringify(validations));
-                        } catch(e) {
-                            console.error('Error al guardar validación:', e);
+                        // Verificar si el email ya fue usado
+                        if (isEmailUsed(email)) {
+                            document.getElementById('emailUsedError').style.display = 'block';
+                            elements.downloadOptions.style.display = 'block';
+                            elements.downloadOptions.querySelector('.btn').style.opacity = '0.5';
+                            elements.downloadOptions.querySelector('.btn').style.pointerEvents = 'none';
+                        } else {
+                            document.getElementById('emailUsedError').style.display = 'none';
+                            elements.downloadOptions.style.display = 'block';
+                            elements.downloadOptions.querySelector('.btn').style.opacity = '1';
+                            elements.downloadOptions.querySelector('.btn').style.pointerEvents = 'auto';
                         }
                         
                         // Mostrar opciones de descarga
@@ -1157,11 +1231,6 @@
                     elements.buyModal.style.display = 'none';
                 }
             });
-            
-            // Evento para botón de preparar pago
-            if (elements.preparePaymentBtn) {
-                elements.preparePaymentBtn.addEventListener('click', preparePayment);
-            }
         });
     </script>
 </body>
