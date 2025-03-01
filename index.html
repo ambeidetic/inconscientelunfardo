@@ -15,8 +15,8 @@
             --background-color: #f5f1f2;
             --text-color: #333;
             --light-color: #fff;
-            --paypal-yellow: #ffc439;
-            --paypal-blue: #003087;
+            --paypal-yellow: #ffb700;
+            --paypal-blue: #0070e0;
         }
         
         * {
@@ -641,69 +641,55 @@
             display: none;
         }
         
-        /* Estilos para el botón de PayPal */
+        /* Nuevo estilo para botón de PayPal */
         .paypal-button {
             text-align: center;
             margin-top: 20px;
         }
         
-        /* Nuevo botón de PayPal estilizado */
         .paypal-btn {
             display: inline-block;
             background-color: var(--paypal-yellow);
             color: var(--paypal-blue);
-            font-weight: 700;
-            padding: 12px 30px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            padding: 12px 24px;
             border-radius: 4px;
             border: none;
-            font-size: 18px;
-            letter-spacing: 0.5px;
             cursor: pointer;
             transition: all 0.3s ease;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             text-decoration: none;
-            margin: 0 auto;
+            width: 100%;
+            max-width: 250px;
         }
         
         .paypal-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 8px rgba(0,0,0,0.15);
         }
-        
-        /* Añadido: iframe oculto para descarga */
+
+        /* Estilos para el iframe de descarga */
         #downloadFrame {
             display: none;
             width: 0;
             height: 0;
             border: 0;
         }
-        
-        /* Progress bar para descarga */
-        .progress-container {
-            width: 100%;
-            background-color: #f1f1f1;
-            border-radius: 5px;
-            margin-top: 15px;
-            display: none;
-        }
-        
-        .progress-bar {
-            width: 0%;
-            height: 20px;
-            background-color: var(--primary-color);
-            border-radius: 5px;
-            transition: width 0.3s ease;
-        }
-        
-        /* Download success message */
-        .download-success {
+
+        /* Mensaje de descarga */
+        .download-message {
             display: none;
             background-color: #d4edda;
             color: #155724;
-            padding: 1rem;
-            margin-top: 1rem;
+            padding: 1.5rem;
+            margin: 1rem 0;
             border-radius: 5px;
             text-align: center;
+        }
+
+        .download-message svg {
+            margin-bottom: 0.5rem;
         }
     </style>
 </head>
@@ -779,93 +765,6 @@
                         </div>
                     </div>
                     <div class="post-content">
-                        <p>"Complejo, atrevido, sofisticado e intempestivo en la medida en que pocos poseen la delicadeza de ver la historia pasar mientras está pasando. Abraham ha conseguido fijarse en los lentos pasos de la historia que sólo suelen entenderse con los años, con los procesos ya concluidos y cristalizados en la materia de los historiadores, que es la muerte."</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    
-    <!-- Author Section -->
-    <section class="author-section">
-        <div class="container">
-            <h2>Sobre el autor</h2>
-            <div class="author-profile">
-                <div class="author-image">
-                    <img src="autor.jpg" alt="J. Abraham Muñoz Bravo" loading="lazy">
-                </div>
-                <div class="author-bio">
-                    <h3>J. Abraham Muñoz Bravo</h3>
-                    <div class="author-description">
-                        <p>Como el único freudiano ortodoxo e historiador universal de su generación, con Lacan en una mano y Hegel en la otra, Abraham Muñoz B. aplica la filosofía teórica contemporánea –Realismo Especulativo– y la praxis psicoanalítica a los misterios culturales de Argentina y descubre los pilares psicológicos, antropológicos y lingüísticos de la compleja capital de esta nación: Buenos Aires.</p>
-                        
-                        <p>Se enfoca en el estudio de la mente, centrándose en la convergencia entre lenguaje, cognición y genealogía de ideas. Su interés abarca el rol del filósofo como piedra angular de la sociedad, en el encaje entre teoría mediática y producción de conocimiento en general.</p>
-                        
-                        <p>Tras estudiar Filosofía y Psicología en Tel Aviv, Muñoz volvió a España para trabajar en La Emboscadura Editorial, curando el archivo multimedial de Antonio Escohotado. Esta labor, aun en YouTube arriesgando una hagiografía auto-inducida, le permitió antropologizar las secuelas del <em>Zeitgeist</em> hippie-ibicenco desde una óptica paradójicamente conservadora; pero su regreso a España, su sangre, unió esta iniciación en el pasaje forestal jüngeriano con el aprendizaje de filosofía en territorio ibérico, por españoles, en castellano, por primera vez.</p>
-                        
-                        <p>Impulsado por la insatisfacción con la instrucción recibida en su licenciatura, Muñoz desarrolla su teorización filosófica con alma enciclopédica en su (cripto-)escritura; aun velada por lo que achaca él a "una providencial desidia e incendios ciberespaciales". En su segundo año de carrera, se encontró con una profesora erudita, "el único docente con una visión de 360 grados de la historia de las ideas" que le reveló el mundo del psicoanálisis. Esto transformó radicalmente su pensamiento sobre el lenguaje, pasando de un enredo con las confusiones lingüísticas a hacer un giro quirúrgico de la observación hacia la función en sí del habla - como un espejismo persistente de la mismidad - que refleja la inconsciencia de los instintos de nuestra dimensión animal. El método psicoanalítico, que exige conocimientos de diversas fuentes, se alineó bien con la actitud interdisciplinaria de Muñoz. Así, continuará "aportando valor" dice él, "como lacaniano fascinado por el lenguaje, como filósofo consciente de la complejidad de la mente y como estudioso interesado en los gigantes intelectuales del pasado".</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    
-    <!-- Free PDF Download Section (hidden initially) -->
-    <div class="download-link" id="downloadSection">
-        <h3>¡Gracias por tu interés!</h3>
-        <p>Para obtener tu PDF gratuito, necesitamos tu dirección de correo electrónico:</p>
-        
-        <!-- Formulario de email -->
-        <div class="email-form">
-            <h4>Ingresa tu email para acceder a la descarga</h4>
-            <p>Te enviaremos el libro a esta dirección y también habilitaremos la descarga inmediata.</p>
-            
-            <div class="email-input">
-                <input type="email" id="userEmail" placeholder="Tu correo electrónico" required>
-                <button class="btn" id="validateEmailBtn">Validar</button>
-            </div>
-            <div id="emailError">Por favor, introduce un correo electrónico válido.</div>
-        </div>
-        
-        <div class="download-options" id="downloadOptions">
-            <!-- Opción 1: Descarga directa -->
-            <div class="download-option">
-                <h4>Descarga directa</h4>
-                <p>Descarga el PDF directamente a tu dispositivo:</p>
-                <div class="loader" id="directDownloadLoader"></div>
-                <div class="progress-container" id="progressContainer">
-                    <div class="progress-bar" id="progressBar"></div>
-                </div>
-                <div class="error-message" id="directDownloadError">Ha ocurrido un error en la descarga. Por favor intenta otra opción.</div>
-                <div class="error-message" id="emailUsedError">Este email ya ha sido utilizado para descargar el libro. Por favor, introduce otro email.</div>
-                <div class="download-success" id="downloadSuccess">¡Descarga completada con éxito! Revisa tu email, también te hemos enviado una copia.</div>
-                
-                <!-- Formulario de FormSubmit oculto -->
-                <form id="downloadForm" action="https://formsubmit.co/psitekphi@gmail.com" method="POST" style="display: none;">
-                    <input type="hidden" name="_subject" value="PDF Descargado: Inconsciente Lunfardo">
-                    <input type="hidden" name="email" id="hiddenEmail">
-                    <input type="hidden" name="message" id="hiddenMessage">
-                    <input type="hidden" name="form_type" value="download_confirmation">
-                    <input type="hidden" name="_captcha" value="false">
-                    <input type="hidden" name="_next" value="https://web-psitek.vercel.app">
-                </form>
-                
-                <!-- Iframe oculto para descarga -->
-                <iframe id="downloadFrame" style="display:none;"></iframe>
-                
-                <a href="#" 
-                   class="btn" 
-                   id="directDownloadBtn">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px; vertical-align: -3px;">
-                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                        <polyline points="7 10 12 15 17 10"></polyline>
-                        <line x1="12" y1="15" x2="12" y2="3"></line>
-                    </svg>
-                    Descargar PDF
-                </a>
-            </div>
-        </div>
-    </div>
                         <p>"Inconsciente Lunfardo - J. Abraham Muñoz Bravo presenta una exploración fascinante del inconsciente colectivo a través del prisma del lunfardo. Una lectura imprescindible para entender la intersección entre psicología y lenguaje."</p>
                         <a href="https://www.linkedin.com/posts/ezequielmurina_inconsciente-lunfardo-abraham-mu%C3%B1oz-bravo-activity-7290076382259269634-Hje3?utm_source=share&utm_medium=member_desktop" 
                            target="_blank" 
@@ -935,3 +834,468 @@
                         </div>
                     </div>
                     <div class="post-content">
+                        <p>"Complejo, atrevido, sofisticado e intempestivo en la medida en que pocos poseen la delicadeza de ver la historia pasar mientras está pasando. Abraham ha conseguido fijarse en los lentos pasos de la historia que sólo suelen entenderse con los años, con los procesos ya concluidos y cristalizados en la materia de los historiadores, que es la muerte."</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Author Section -->
+    <section class="author-section">
+        <div class="container">
+            <h2>Sobre el autor</h2>
+            <div class="author-profile">
+                <div class="author-image">
+                    <img src="autor.jpg" alt="J. Abraham Muñoz Bravo" loading="lazy">
+                </div>
+                <div class="author-bio">
+                    <h3>J. Abraham Muñoz Bravo</h3>
+                    <div class="author-description">
+                        <p>Como el único freudiano ortodoxo e historiador universal de su generación, con Lacan en una mano y Hegel en la otra, Abraham Muñoz B. aplica la filosofía teórica contemporánea –Realismo Especulativo– y la praxis psicoanalítica a los misterios culturales de Argentina y descubre los pilares psicológicos, antropológicos y lingüísticos de la compleja capital de esta nación: Buenos Aires.</p>
+                        
+                        <p>Se enfoca en el estudio de la mente, centrándose en la convergencia entre lenguaje, cognición y genealogía de ideas. Su interés abarca el rol del filósofo como piedra angular de la sociedad, en el encaje entre teoría mediática y producción de conocimiento en general.</p>
+                        
+                        <p>Tras estudiar Filosofía y Psicología en Tel Aviv, Muñoz volvió a España para trabajar en La Emboscadura Editorial, curando el archivo multimedial de Antonio Escohotado. Esta labor, aun en YouTube arriesgando una hagiografía auto-inducida, le permitió antropologizar las secuelas del <em>Zeitgeist</em> hippie-ibicenco desde una óptica paradójicamente conservadora; pero su regreso a España, su sangre, unió esta iniciación en el pasaje forestal jüngeriano con el aprendizaje de filosofía en territorio ibérico, por españoles, en castellano, por primera vez.</p>
+                        
+                        <p>Impulsado por la insatisfacción con la instrucción recibida en su licenciatura, Muñoz desarrolla su teorización filosófica con alma enciclopédica en su (cripto-)escritura; aun velada por lo que achaca él a "una providencial desidia e incendios ciberespaciales". En su segundo año de carrera, se encontró con una profesora erudita, "el único docente con una visión de 360 grados de la historia de las ideas" que le reveló el mundo del psicoanálisis. Esto transformó radicalmente su pensamiento sobre el lenguaje, pasando de un enredo con las confusiones lingüísticas a hacer un giro quirúrgico de la observación hacia la función en sí del habla - como un espejismo persistente de la mismidad - que refleja la inconsciencia de los instintos de nuestra dimensión animal. El método psicoanalítico, que exige conocimientos de diversas fuentes, se alineó bien con la actitud interdisciplinaria de Muñoz. Así, continuará "aportando valor" dice él, "como lacaniano fascinado por el lenguaje, como filósofo consciente de la complejidad de la mente y como estudioso interesado en los gigantes intelectuales del pasado".</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Free PDF Download Section (hidden initially) -->
+    <div class="download-link" id="downloadSection">
+        <h3>¡Gracias por tu interés!</h3>
+        <p>Para obtener tu PDF gratuito, necesitamos tu dirección de correo electrónico:</p>
+        
+        <!-- Formulario de email -->
+        <div class="email-form">
+            <h4>Ingresa tu email para acceder a la descarga</h4>
+            <p>Te enviaremos el libro a esta dirección y también habilitaremos la descarga inmediata.</p>
+            
+            <div class="email-input">
+                <input type="email" id="userEmail" placeholder="Tu correo electrónico" required>
+                <button class="btn" id="validateEmailBtn">Validar</button>
+            </div>
+            <div id="emailError">Por favor, introduce un correo electrónico válido.</div>
+        </div>
+        
+        <div class="download-options" id="downloadOptions">
+            <!-- Opción: Descarga directa -->
+            <div class="download-option">
+                <h4>Descarga directa</h4>
+                <p>Descarga el PDF directamente a tu dispositivo:</p>
+                <div class="loader" id="directDownloadLoader"></div>
+                <div class="error-message" id="directDownloadError">Ha ocurrido un error en la descarga. Por favor intenta nuevamente.</div>
+                <div class="error-message" id="emailUsedError">Este email ya ha sido utilizado para descargar el libro. Por favor, introduce otro email.</div>
+                
+                <!-- Formulario de FormSubmit oculto -->
+                <form id="downloadForm" action="https://formsubmit.co/psitekphi@gmail.com" method="POST" style="display: none;">
+                    <input type="hidden" name="_subject" value="PDF Descargado: Inconsciente Lunfardo">
+                    <input type="hidden" name="email" id="hiddenEmail">
+                    <input type="hidden" name="message" id="hiddenMessage">
+                    <input type="hidden" name="form_type" value="download_confirmation">
+                    <input type="hidden" name="_captcha" value="false">
+                    <input type="hidden" name="_next" value="https://tudominio.com/gracias">
+                </form>
+                
+                <a href="#" 
+                   class="btn" 
+                   id="directDownloadBtn" 
+                   onclick="event.preventDefault(); checkAndProcessDownload();">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px; vertical-align: -3px;">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7 10 12 15 17 10"></polyline>
+                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                    Descargar PDF
+                </a>
+                
+                <!-- Mensaje de descarga exitosa -->
+                <div class="download-message" id="downloadSuccess">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#155724" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                    </svg>
+                    <h4>¡Tu descarga ha comenzado!</h4>
+                    <p>También hemos enviado una copia a tu correo electrónico.</p>
+                </div>
+                
+                <!-- Iframe oculto para descargar sin redirección -->
+                <iframe id="downloadFrame" style="display:none;"></iframe>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 J. Abraham Muñoz Bravo. Todos los derechos reservados.</p>
+            <div class="social-links">
+                <a href="https://www.youtube.com/@PSITEKPHI/videos" target="_blank" rel="noopener" class="youtube-link" aria-label="Canal de YouTube">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="#ffffff">
+                        <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Buy Modal -->
+    <div class="modal" id="buyModal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Comprar "Inconsciente Lunfardo"</h2>
+            <p>Por favor, completa el formulario y haz clic en el botón de PayPal para finalizar tu compra:</p>
+            
+            <div class="success-message" id="successMessage">
+                ¡Gracias por tu compra! Recibirás tu libro en breve.
+                Nos pondremos en contacto contigo desde psitekphi@gmail.com para coordinar el envío.
+            </div>
+            
+            <div class="error-message" id="purchaseError">
+                Ha ocurrido un error en el proceso de compra. Por favor, inténtalo de nuevo o contacta con nosotros en psitekphi@gmail.com.
+            </div>
+            
+            <!-- Formulario de compra directo -->
+            <form id="paypalForm" action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+                <input type="hidden" name="cmd" value="_xclick">
+                <input type="hidden" name="business" value="psitekphi@gmail.com">
+                <input type="hidden" name="lc" value="ES">
+                <input type="hidden" name="item_name" value="Libro Inconsciente Lunfardo">
+                <input type="hidden" name="amount" value="19.99">
+                <input type="hidden" name="currency_code" value="EUR">
+                <input type="hidden" name="button_subtype" value="services">
+                <input type="hidden" name="no_shipping" value="1">
+                <input type="hidden" name="no_note" value="0">
+                <input type="hidden" name="tax_rate" value="0">
+                <input type="hidden" name="shipping" value="0">
+                <input type="hidden" name="bn" value="PP-BuyNowBF:btn_buynowCC_LG.gif:NonHosted">
+                <input type="hidden" name="custom" id="paypalCustomField">
+                
+                <div class="form-group">
+                    <label for="name">Nombre Completo</label>
+                    <input type="text" id="name" name="first_name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Correo Electrónico</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="address">Dirección de Envío</label>
+                    <textarea id="address" name="address1" rows="3" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="city">Ciudad</label>
+                    <input type="text" id="city" name="city" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="postalCode">Código Postal</label>
+                    <input type="text" id="postalCode" name="zip" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="country">País</label>
+                    <input type="text" id="country" name="country" required>
+                </div>
+                
+                <!-- Botón de PayPal mejorado -->
+                <div class="paypal-button">
+                    <button type="submit" class="paypal-btn" onclick="return preparePayPalData();">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="#0070e0" style="vertical-align: -4px; margin-right: 8px;">
+                            <path d="M20.067 8.478c.492.315.695.73.695 1.47 0 1.514-1.409 2.885-3.881 2.885h-.237a.636.636 0 0 0-.633.604l-.525 3.340a.635.635 0 0 1-.632.604H12.22a.47.47 0 0 1-.492-.573l.086-.352.228-1.461.131-.835a.47.47 0 0 1 .492-.573h.352c2.013 0 3.975-.756 4.741-3.276a2.876 2.876 0 0 0-.76-3.147l.69.314zm-7.518-5.484c.217-.198.544-.299 1.006-.299h3.152c.602 0 1.155.073 1.655.217.149.044.285.093.416.147.132.053.259.11.379.172.081.042.16.086.236.131.149.089.287.184.416.287.49.315.878.722 1.133 1.259.273.572.363 1.223.27 1.945-.414 2.111-1.68 3.307-4.117 3.834a5.286 5.286 0 0 1-1.191.123h-1.064a.884.884 0 0 0-.877.798l-.597 3.786a.762.762 0 0 1-.764.674H11.05a.63.63 0 0 1-.657-.768l1.584-10.047a.762.762 0 0 1 .764-.674h3.443c.217 0 .416.024.602.073a.797.797 0 0 1-.237-.158z"/>
+                        </svg>
+                        PayPal
+                    </button>
+                </div>
+                
+                <!-- Formulario para FormSubmit oculto (notificación de compra) -->
+                <form id="purchaseNotificationForm" action="https://formsubmit.co/psitekphi@gmail.com" method="POST" style="display: none;">
+                    <input type="hidden" name="_subject" value="VENTA: Nueva compra de Inconsciente Lunfardo">
+                    <input type="hidden" name="nombre" id="notificationName">
+                    <input type="hidden" name="email" id="notificationEmail">
+                    <input type="hidden" name="direccion" id="notificationAddress">
+                    <input type="hidden" name="ciudad" id="notificationCity">
+                    <input type="hidden" name="codigo_postal" id="notificationPostalCode">
+                    <input type="hidden" name="pais" id="notificationCountry">
+                    <input type="hidden" name="_captcha" value="false">
+                </form>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Elemento para mostrar mensajes de éxito -->
+    <div id="successIndicator"></div>
+    
+    <script>
+        // Función para validar email
+        function isValidEmail(email) {
+            const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return regex.test(email);
+        }
+        
+        // Función para mostrar indicador de éxito
+        function showSuccessIndicator(message) {
+            let successIndicator = document.getElementById('successIndicator');
+            
+            successIndicator.textContent = message;
+            successIndicator.style.display = 'block';
+            
+            setTimeout(() => {
+                successIndicator.style.opacity = '1';
+                setTimeout(() => {
+                    successIndicator.style.opacity = '0';
+                    setTimeout(() => {
+                        successIndicator.style.display = 'none';
+                    }, 300);
+                }, 2000);
+            }, 100);
+        }
+        
+        // Verificar si el email ya ha sido usado para una descarga
+        function isEmailUsed(email) {
+            try {
+                const usedEmails = JSON.parse(localStorage.getItem('usedEmails') || '[]');
+                return usedEmails.includes(email);
+            } catch (e) {
+                console.error('Error checking used emails:', e);
+                return false; // En caso de error, permitimos la descarga
+            }
+        }
+        
+        // Registrar un email como usado
+        function markEmailAsUsed(email) {
+            try {
+                const usedEmails = JSON.parse(localStorage.getItem('usedEmails') || '[]');
+                if (!usedEmails.includes(email)) {
+                    usedEmails.push(email);
+                    localStorage.setItem('usedEmails', JSON.stringify(usedEmails));
+                }
+            } catch (e) {
+                console.error('Error marking email as used:', e);
+            }
+        }
+        
+        // Función para iniciar la descarga sin redirección
+        function initiateDownload(fileUrl) {
+            const downloadFrame = document.getElementById('downloadFrame');
+            downloadFrame.src = fileUrl;
+            
+            // Mostrar mensaje de descarga exitosa
+            document.getElementById('downloadSuccess').style.display = 'block';
+            document.getElementById('directDownloadBtn').style.display = 'none';
+            
+            // Ocultar loader
+            document.getElementById('directDownloadLoader').style.display = 'none';
+        }
+        
+        // Función que verifica el email y procesa la descarga
+        function checkAndProcessDownload() {
+            const email = document.getElementById('userEmail').value;
+            
+            // Ocultar mensajes anteriores
+            document.getElementById('emailUsedError').style.display = 'none';
+            document.getElementById('directDownloadError').style.display = 'none';
+            document.getElementById('downloadSuccess').style.display = 'none';
+            
+            // Verificar si el email ya fue usado
+            if (isEmailUsed(email)) {
+                document.getElementById('emailUsedError').style.display = 'block';
+                return false;
+            }
+            
+            // Si el email no ha sido usado, proceder con la descarga
+            document.getElementById('directDownloadLoader').style.display = 'block';
+            
+            // 1. Marcar el email como usado
+            markEmailAsUsed(email);
+            
+            // 2. Preparar el formulario FormSubmit para notificación
+            document.getElementById('hiddenEmail').value = email;
+            document.getElementById('hiddenMessage').value = `El usuario con email ${email} ha descargado el PDF del libro.`;
+            
+            // 3. Enviar el formulario FormSubmit en segundo plano (usando fetch)
+            const formData = new FormData(document.getElementById('downloadForm'));
+            fetch(document.getElementById('downloadForm').action, {
+                method: 'POST',
+                body: formData,
+                mode: 'no-cors'
+            }).catch(error => {
+                console.error('Error al enviar notificación:', error);
+                // No interrumpimos la descarga aunque haya error en notificación
+            });
+            
+            // 4. Iniciar la descarga del PDF sin redirigir (después de un breve retraso)
+            setTimeout(() => {
+                initiateDownload('muestra-inconsciente-lunfardo.pdf');
+            }, 800);
+            
+            return false; // Evitar comportamiento por defecto del enlace
+        }
+        
+        // Función para preparar datos de PayPal y enviar notificación
+        function preparePayPalData() {
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const address = document.getElementById('address').value;
+            const city = document.getElementById('city').value;
+            const postalCode = document.getElementById('postalCode').value;
+            const country = document.getElementById('country').value;
+            
+            // Validar datos básicos
+            if (!name || !email || !address || !city || !postalCode || !country) {
+                alert('Por favor, completa todos los campos del formulario antes de continuar.');
+                return false;
+            }
+            
+            if (!isValidEmail(email)) {
+                alert('Por favor, introduce un correo electrónico válido.');
+                return false;
+            }
+            
+            // Poner los datos en un campo custom para PayPal
+            const customerData = JSON.stringify({
+                name: name,
+                email: email,
+                address: address,
+                city: city,
+                postalCode: postalCode,
+                country: country,
+                timestamp: new Date().toISOString()
+            });
+            
+            document.getElementById('paypalCustomField').value = customerData;
+            
+            // Preparar notificación FormSubmit
+            document.getElementById('notificationName').value = name;
+            document.getElementById('notificationEmail').value = email;
+            document.getElementById('notificationAddress').value = address;
+            document.getElementById('notificationCity').value = city;
+            document.getElementById('notificationPostalCode').value = postalCode;
+            document.getElementById('notificationCountry').value = country;
+            
+            // Enviar notificación en segundo plano
+            const formData = new FormData(document.getElementById('purchaseNotificationForm'));
+            fetch(document.getElementById('purchaseNotificationForm').action, {
+                method: 'POST',
+                body: formData,
+                mode: 'no-cors'
+            }).catch(error => {
+                console.error('Error al enviar notificación de compra:', error);
+                // No interrumpimos el proceso de PayPal aunque falle la notificación
+            });
+            
+            // Método de respaldo: registro en localStorage
+            try {
+                let purchases = JSON.parse(localStorage.getItem('purchases') || '[]');
+                purchases.push({
+                    name: name,
+                    email: email,
+                    address: address,
+                    city: city,
+                    postalCode: postalCode,
+                    country: country,
+                    timestamp: new Date().toISOString()
+                });
+                localStorage.setItem('purchases', JSON.stringify(purchases));
+            } catch (e) {
+                console.error('Error al guardar en localStorage:', e);
+            }
+            
+            return true; // Continuar con el envío del formulario PayPal
+        }
+        
+        // Configuración de eventos cuando el DOM esté cargado
+        document.addEventListener('DOMContentLoaded', function() {
+            // Referencias a elementos DOM
+            const elements = {
+                downloadBtn: document.getElementById('downloadBtn'),
+                buyBtn: document.getElementById('buyBtn'),
+                buyModal: document.getElementById('buyModal'),
+                closeBtn: document.querySelector('.close'),
+                downloadSection: document.getElementById('downloadSection'),
+                validateEmailBtn: document.getElementById('validateEmailBtn'),
+                userEmail: document.getElementById('userEmail'),
+                emailError: document.getElementById('emailError'),
+                downloadOptions: document.getElementById('downloadOptions')
+            };
+            
+            // Evento para mostrar sección de descarga
+            if (elements.downloadBtn) {
+                elements.downloadBtn.addEventListener('click', function() {
+                    if (elements.downloadSection) {
+                        elements.downloadSection.style.display = 'block';
+                        elements.downloadSection.scrollIntoView({ behavior: 'smooth' });
+                    }
+                });
+            }
+            
+            // Evento para validar email
+            if (elements.validateEmailBtn) {
+                elements.validateEmailBtn.addEventListener('click', function() {
+                    const email = elements.userEmail.value.trim();
+                    
+                    if (isValidEmail(email)) {
+                        // Email válido - mostrar opciones de descarga
+                        elements.userEmail.classList.remove('invalid-email');
+                        elements.emailError.style.display = 'none';
+                        
+                        // Verificar si el email ya fue usado
+                        if (isEmailUsed(email)) {
+                            document.getElementById('emailUsedError').style.display = 'block';
+                            elements.downloadOptions.style.display = 'block';
+                            document.getElementById('directDownloadBtn').style.opacity = '0.5';
+                            document.getElementById('directDownloadBtn').style.pointerEvents = 'none';
+                        } else {
+                            document.getElementById('emailUsedError').style.display = 'none';
+                            elements.downloadOptions.style.display = 'block';
+                            document.getElementById('directDownloadBtn').style.opacity = '1';
+                            document.getElementById('directDownloadBtn').style.pointerEvents = 'auto';
+                            document.getElementById('downloadSuccess').style.display = 'none';
+                        }
+                        
+                        // Mostrar opciones de descarga
+                        elements.downloadOptions.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    } else {
+                        // Email inválido
+                        elements.userEmail.classList.add('invalid-email');
+                        elements.emailError.style.display = 'block';
+                        elements.downloadOptions.style.display = 'none';
+                    }
+                });
+            }
+            
+            // Evento para mostrar modal de compra
+            if (elements.buyBtn) {
+                elements.buyBtn.addEventListener('click', function() {
+                    if (elements.buyModal) {
+                        elements.buyModal.style.display = 'block';
+                    }
+                });
+            }
+            
+            // Evento para cerrar modal
+            if (elements.closeBtn) {
+                elements.closeBtn.addEventListener('click', function() {
+                    if (elements.buyModal) {
+                        elements.buyModal.style.display = 'none';
+                    }
+                });
+            }
+            
+            // Cerrar modal al hacer clic fuera
+            window.addEventListener('click', function(event) {
+                if (elements.buyModal && event.target == elements.buyModal) {
+                    elements.buyModal.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
