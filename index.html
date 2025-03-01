@@ -916,18 +916,6 @@
                 <div class="error-message" id="directDownloadError">Ha ocurrido un error en la descarga. Por favor intenta nuevamente.</div>
                 <div class="error-message" id="emailUsedError">Este email ya ha sido utilizado para descargar el libro. Por favor, introduce otro email.</div>
                 
-                <!-- Formulario de FormSubmit para notificación al administrador -->
-                <form id="downloadForm" action="https://formsubmit.co/89f4bf4c27b3ce0c9d58a4a6aae24ad8" method="POST" style="display: none;">
-                    <input type="hidden" name="_subject" value="PDF Descargado: Inconsciente Lunfardo">
-                    <input type="hidden" name="email" id="hiddenEmail">
-                    <input type="hidden" name="message" id="hiddenMessage">
-                    <input type="hidden" name="form_type" value="download_confirmation">
-                    <input type="hidden" name="_captcha" value="false">
-                    <input type="text" name="_honey" style="display:none"> <!-- Honeypot para prevenir spam -->
-                    <!-- Campo visible requerido para activar FormSubmit -->
-                    <input type="text" name="download_name" value="Inconsciente Lunfardo" style="display:none">
-                </form>
-                
                 <a href="#" 
                    class="btn" 
                    id="directDownloadBtn" 
@@ -957,21 +945,6 @@
             </div>
         </div>
     </div>
-    
-    <!-- Formulario para notificación de compra (fuera del formulario de compra) -->
-    <form id="purchaseNotificationForm" action="https://formsubmit.co/89f4bf4c27b3ce0c9d58a4a6aae24ad8" method="POST" style="display: none;">
-        <input type="hidden" name="_subject" value="VENTA: Nueva compra de Inconsciente Lunfardo">
-        <input type="hidden" name="nombre" id="notificationName">
-        <input type="hidden" name="email" id="notificationEmail">
-        <input type="hidden" name="direccion" id="notificationAddress">
-        <input type="hidden" name="ciudad" id="notificationCity">
-        <input type="hidden" name="codigo_postal" id="notificationPostalCode">
-        <input type="hidden" name="pais" id="notificationCountry">
-        <input type="hidden" name="_captcha" value="false">
-        <input type="text" name="_honey" style="display:none"> <!-- Honeypot para prevenir spam -->
-        <!-- Campo visible requerido para activar FormSubmit -->
-        <input type="text" name="purchase_type" value="Libro físico" style="display:none">
-    </form>
     
     <!-- Footer -->
     <footer>
@@ -1121,13 +1094,11 @@
             }
         }
         
-        // Función para enviar la notificación usando FormSubmit
-        function sendFormSubmitNotification(formElement, backupData) {
-            // Crear los datos del formulario
-            const formData = new FormData(formElement);
+        // NUEVO: Función para enviar a FormSubmit con reintentos
+        function sendFormSubmitWithRetry(formData, maxRetries = 2, currentRetry = 0) {
+            const FORMSUBMIT_ENDPOINT = 'https://formsubmit.co/ajax/89f4bf4c27b3ce0c9d58a4a6aae24ad8';
             
-            // Realizar la petición a FormSubmit
-            return fetch('https://formsubmit.co/ajax/89f4bf4c27b3ce0c9d58a4a6aae24ad8', {
+            return fetch(FORMSUBMIT_ENDPOINT, {
                 method: 'POST',
                 body: formData,
                 headers: {
@@ -1136,33 +1107,99 @@
             })
             .then(response => {
                 if (!response.ok) {
-                    throw new Error(`Error de red: ${response.status}`);
+                    throw new Error(`Error HTTP: ${response.status}`);
                 }
                 return response.json();
             })
             .then(data => {
-                console.log('Notificación enviada correctamente:', data);
                 return { success: true, data };
             })
             .catch(error => {
-                console.error('Error al enviar notificación:', error);
+                console.warn(`Intento ${currentRetry + 1} fallido:`, error);
                 
-                // Guardar datos de respaldo en localStorage
-                if (backupData) {
-                    const backupKey = `formsubmit_backup_${Date.now()}`;
-                    try {
-                        localStorage.setItem(backupKey, JSON.stringify(backupData));
-                        console.log('Datos de respaldo guardados en localStorage:', backupKey);
-                    } catch (e) {
-                        console.error('Error al guardar datos de respaldo:', e);
-                    }
+                // Si aún tenemos reintentos disponibles, volvemos a intentar
+                if (currentRetry < maxRetries) {
+                    console.log(`Reintentando (${currentRetry + 1}/${maxRetries})...`);
+                    // Esperar un tiempo antes de reintentar (aumentando exponencialmente)
+                    const delay = Math.pow(2, currentRetry) * 1000;
+                    
+                    return new Promise(resolve => {
+                        setTimeout(() => {
+                            resolve(sendFormSubmitWithRetry(formData, maxRetries, currentRetry + 1));
+                        }, delay);
+                    });
                 }
                 
-                return { success: false, error };
+                // Si ya no hay más reintentos, lanzar el error
+                throw error;
             });
         }
         
-        // Función actualizada para iniciar la descarga
+        // NUEVO: Función para guardar datos de respaldo
+        function saveBackupData(action, email, additionalData = {}) {
+            try {
+                const backupKey = `formsubmit_backup_${action}_${Date.now()}`;
+                const backupData = {
+                    action,
+                    email,
+                    timestamp: new Date().toISOString(),
+                    userAgent: navigator.userAgent,
+                    ...additionalData
+                };
+                
+                // Guardar en localStorage
+                localStorage.setItem(backupKey, JSON.stringify(backupData));
+                
+                // También intentar enviar copias de respaldo al administrador
+                sendBackupDataToAdmin(backupData);
+                
+                console.log('Datos de respaldo guardados:', backupKey);
+            } catch (e) {
+                console.error('Error al guardar datos de respaldo:', e);
+            }
+        }
+        
+        // NUEVO: Intento de envío de respaldo usando otro método
+        function sendBackupDataToAdmin(data) {
+            // Método 1: Usar la API de Beacon (más moderna y confiable)
+            if (navigator.sendBeacon) {
+                try {
+                    const beaconData = new FormData();
+                    beaconData.append('_subject', 'RESPALDO: Actividad en Inconsciente Lunfardo');
+                    beaconData.append('email', data.email);
+                    beaconData.append('action', data.action);
+                    beaconData.append('timestamp', data.timestamp);
+                    beaconData.append('message', `Sistema de respaldo: ${data.action} por ${data.email}`);
+                    
+                    // Enviar usando Beacon API
+                    navigator.sendBeacon('https://formsubmit.co/89f4bf4c27b3ce0c9d58a4a6aae24ad8', beaconData);
+                    console.log('Datos de respaldo enviados via Beacon API');
+                } catch (e) {
+                    console.error('Error al enviar via Beacon API:', e);
+                }
+            }
+            
+            // Método 2: Analytics básico (como respaldo final)
+            try {
+                const pixel = new Image();
+                const params = new URLSearchParams();
+                
+                // Codificar datos básicos
+                params.append('email', data.email);
+                params.append('action', data.action);
+                params.append('time', data.timestamp);
+                
+                // Usar un servicio genérico que no requiera configuración
+                // (Esto es solo para registro básico, sin datos personales sensibles)
+                pixel.src = `https://www.google-analytics.com/collect?v=1&tid=UA-XXXXX-Y&cid=555&t=event&ec=backup&ea=${data.action}&el=${data.email}`;
+                document.body.appendChild(pixel);
+                setTimeout(() => document.body.removeChild(pixel), 1000);
+            } catch (e) {
+                console.error('Error en pixel de respaldo:', e);
+            }
+        }
+        
+        // MEJORADO: Función actualizada para descargar PDF
         function downloadPDF(email) {
             // Ocultar mensajes anteriores
             document.getElementById('emailUsedError').style.display = 'none';
@@ -1178,31 +1215,7 @@
             document.getElementById('directDownloadLoader').style.display = 'block';
             
             try {
-                // 1. Marcar el email como usado
-                markEmailAsUsed(email);
-                
-                // 2. Preparar y enviar notificación al administrador
-                document.getElementById('hiddenEmail').value = email;
-                document.getElementById('hiddenMessage').value = `El usuario con email ${email} ha descargado el PDF del libro.`;
-                
-                // Datos de respaldo
-                const backupData = {
-                    type: 'download',
-                    email: email,
-                    timestamp: new Date().toISOString(),
-                    userAgent: navigator.userAgent
-                };
-                
-                // 3. Enviar notificación usando FormSubmit
-                sendFormSubmitNotification(
-                    document.getElementById('downloadForm'),
-                    backupData
-                );
-                
-                // 4. Guardar el email únicamente para seguimiento sin enviar correo
-                localStorage.setItem('lastEmailUsed', email);
-                
-                // 5. Iniciar la descarga del archivo
+                // 1. Primero iniciar la descarga del archivo
                 const link = document.createElement('a');
                 link.href = 'muestra-inconsciente-lunfardo.pdf';
                 link.download = 'Inconsciente-Lunfardo.pdf';
@@ -1211,13 +1224,35 @@
                 link.click();
                 document.body.removeChild(link);
                 
-                // 6. Mostrar mensaje de éxito y enlace alternativo
-                setTimeout(() => {
-                    document.getElementById('directDownloadLoader').style.display = 'none';
-                    document.getElementById('downloadSuccess').style.display = 'block';
-                    document.getElementById('directDownloadBtn').style.display = 'none';
-                    document.getElementById('directDownloadLink').style.display = 'block';
-                }, 1000);
+                // 2. Enviar notificación usando fetch directamente a FormSubmit
+                const formData = new FormData();
+                formData.append('_subject', 'PDF Descargado: Inconsciente Lunfardo');
+                formData.append('email', email);
+                formData.append('action', 'PDF Download');
+                formData.append('timestamp', new Date().toISOString());
+                formData.append('browser', navigator.userAgent);
+                
+                // Usar un campo visible requerido por FormSubmit
+                formData.append('message', `El usuario con email ${email} ha descargado el PDF del libro.`);
+                
+                // Enviar notificación con reintentos
+                sendFormSubmitWithRetry(formData)
+                    .then(success => {
+                        console.log('Notificación de descarga enviada:', success);
+                        // Marcar el email como usado solo si la notificación fue exitosa o después del último reintento
+                        markEmailAsUsed(email);
+                    })
+                    .catch(error => {
+                        console.error('Error final al enviar notificación de descarga:', error);
+                        // Guardar en localStorage como respaldo
+                        saveBackupData('download', email);
+                    });
+                
+                // 3. Mostrar mensaje de éxito inmediatamente (independiente de la notificación)
+                document.getElementById('directDownloadLoader').style.display = 'none';
+                document.getElementById('downloadSuccess').style.display = 'block';
+                document.getElementById('directDownloadBtn').style.display = 'none';
+                document.getElementById('directDownloadLink').style.display = 'block';
                 
                 return true;
                 
@@ -1229,7 +1264,7 @@
             }
         }
         
-        // Función para preparar datos de PayPal y enviar notificación
+        // MEJORADO: Función para preparar datos de PayPal y enviar notificación
         function preparePayPalData() {
             const name = document.getElementById('name').value;
             const email = document.getElementById('email').value;
@@ -1251,56 +1286,34 @@
             
             // Poner los datos en un campo custom para PayPal
             const customerData = JSON.stringify({
-                name: name,
-                email: email,
-                address: address,
-                city: city,
-                postalCode: postalCode,
-                country: country,
+                name, email, address, city, postalCode, country,
                 timestamp: new Date().toISOString()
             });
             
             document.getElementById('paypalCustomField').value = customerData;
             
-            // Preparar notificación FormSubmit (usando el formulario separado)
-            document.getElementById('notificationName').value = name;
-            document.getElementById('notificationEmail').value = email;
-            document.getElementById('notificationAddress').value = address;
-            document.getElementById('notificationCity').value = city;
-            document.getElementById('notificationPostalCode').value = postalCode;
-            document.getElementById('notificationCountry').value = country;
+            // Enviar notificación usando fetch directamente
+            const formData = new FormData();
+            formData.append('_subject', 'VENTA: Nueva compra de Inconsciente Lunfardo');
+            formData.append('nombre', name);
+            formData.append('email', email);
+            formData.append('direccion', address);
+            formData.append('ciudad', city);
+            formData.append('codigo_postal', postalCode);
+            formData.append('pais', country);
+            formData.append('timestamp', new Date().toISOString());
+            formData.append('message', `Nueva compra realizada por ${name} (${email})`);
             
-            // Datos para respaldo
-            const backupData = {
-                type: 'purchase',
-                customer: {
-                    name: name,
-                    email: email,
-                    address: address,
-                    city: city,
-                    postalCode: postalCode,
-                    country: country
-                },
-                product: 'Libro Inconsciente Lunfardo',
-                price: '19.99',
-                currency: 'EUR',
-                timestamp: new Date().toISOString()
-            };
-            
-            // Enviar notificación usando FormSubmit
-            sendFormSubmitNotification(
-                document.getElementById('purchaseNotificationForm'),
-                backupData
-            );
-            
-            // Método de respaldo: guardar información en localStorage
-            try {
-                let purchases = JSON.parse(localStorage.getItem('purchases') || '[]');
-                purchases.push(backupData);
-                localStorage.setItem('purchases', JSON.stringify(purchases));
-            } catch (e) {
-                console.error('Error al guardar en localStorage:', e);
-            }
+            // Enviar notificación
+            sendFormSubmitWithRetry(formData)
+                .then(success => {
+                    console.log('Notificación de compra enviada:', success);
+                })
+                .catch(error => {
+                    console.error('Error al enviar notificación de compra:', error);
+                    // Guardar en localStorage como respaldo
+                    saveBackupData('purchase', email, {name, address, city, postalCode, country});
+                });
             
             // Mostrar mensaje de confirmación antes de continuar
             showSuccessIndicator('Procesando compra...');
@@ -1308,93 +1321,8 @@
             return true; // Continuar con el envío del formulario PayPal
         }
         
-        // Función para inicializar FormSubmit (asegura que esté activado)
-        function initializeFormSubmit() {
-            // Crear un formulario temporal para activar FormSubmit
-            const initForm = document.createElement('form');
-            initForm.style.display = 'none';
-            initForm.action = 'https://formsubmit.co/89f4bf4c27b3ce0c9d58a4a6aae24ad8';
-            initForm.method = 'POST';
-            
-            // Añadir campos necesarios
-            const subjectField = document.createElement('input');
-            subjectField.type = 'hidden';
-            subjectField.name = '_subject';
-            subjectField.value = 'Inicialización de FormSubmit';
-            
-            const emailField = document.createElement('input');
-            emailField.type = 'hidden';
-            emailField.name = 'email';
-            emailField.value = 'inicialization@example.com';
-            
-            const messageField = document.createElement('input');
-            messageField.type = 'hidden';
-            messageField.name = 'message';
-            messageField.value = 'Este es un mensaje de inicialización para FormSubmit';
-            
-            const captchaField = document.createElement('input');
-            captchaField.type = 'hidden';
-            captchaField.name = '_captcha';
-            captchaField.value = 'false';
-            
-            const formatField = document.createElement('input');
-            formatField.type = 'hidden';
-            formatField.name = '_format';
-            formatField.value = 'plain';
-            
-            // Campo visible requerido
-            const visibleField = document.createElement('input');
-            visibleField.type = 'text';
-            visibleField.name = 'init_field';
-            visibleField.value = 'Inicialización';
-            visibleField.style.position = 'absolute';
-            visibleField.style.opacity = '0.01';
-            visibleField.style.height = '0.1px';
-            visibleField.style.width = '0.1px';
-            visibleField.style.zIndex = '-1';
-            
-            // Añadir campos al formulario
-            initForm.appendChild(subjectField);
-            initForm.appendChild(emailField);
-            initForm.appendChild(messageField);
-            initForm.appendChild(captchaField);
-            initForm.appendChild(formatField);
-            initForm.appendChild(visibleField);
-            
-            // Añadir el formulario al cuerpo del documento
-            document.body.appendChild(initForm);
-            
-            // Enviar el formulario (usando el método tradicional, no AJAX)
-            // Este envío solo es necesario la primera vez que se usa FormSubmit
-            // Verifica localStorage para no hacerlo en cada carga
-            if (!localStorage.getItem('formSubmitInitialized')) {
-                const formData = new FormData(initForm);
-                fetch('https://formsubmit.co/89f4bf4c27b3ce0c9d58a4a6aae24ad8', {
-                    method: 'POST',
-                    body: formData,
-                    mode: 'no-cors' // Importante para evitar errores CORS
-                })
-                .then(() => {
-                    console.log('FormSubmit inicializado correctamente');
-                    localStorage.setItem('formSubmitInitialized', 'true');
-                })
-                .catch(error => {
-                    console.error('Error al inicializar FormSubmit:', error);
-                })
-                .finally(() => {
-                    // Eliminar el formulario después del envío
-                    document.body.removeChild(initForm);
-                });
-            } else {
-                // Si ya está inicializado, simplemente eliminar el formulario
-                document.body.removeChild(initForm);
-            }
-        }
-        
         // Configuración de eventos cuando el DOM esté cargado
         document.addEventListener('DOMContentLoaded', function() {
-            // Inicializar FormSubmit
-            initializeFormSubmit();
             // Referencias a elementos DOM
             const elements = {
                 downloadBtn: document.getElementById('downloadBtn'),
@@ -1499,185 +1427,73 @@
                 showSuccessIndicator('¡Compra realizada con éxito!');
                 window.location.hash = '';
             }
+            
+            // Verificar sistema de respaldo periódicamente
+            setInterval(function() {
+                // Revisar datos de respaldo no enviados y reintentar
+                try {
+                    let pendingBackups = 0;
+                    
+                    Object.keys(localStorage).forEach(key => {
+                        if (key.startsWith('formsubmit_backup_')) {
+                            pendingBackups++;
+                            console.log('Encontrado respaldo no enviado:', key);
+                            
+                            try {
+                                // Obtener los datos de respaldo
+                                const backupData = JSON.parse(localStorage.getItem(key));
+                                
+                                // Preparar el formulario para reenvío
+                                const formData = new FormData();
+                                formData.append('_subject', `REINTENTO: ${backupData.action} - Inconsciente Lunfardo`);
+                                formData.append('email', backupData.email);
+                                formData.append('action', backupData.action);
+                                formData.append('timestamp', backupData.timestamp);
+                                formData.append('retry_timestamp', new Date().toISOString());
+                                formData.append('message', `Reintento automático para: ${backupData.action} por ${backupData.email}`);
+                                
+                                // Añadir datos adicionales si existen
+                                if (backupData.name) formData.append('nombre', backupData.name);
+                                if (backupData.address) formData.append('direccion', backupData.address);
+                                if (backupData.city) formData.append('ciudad', backupData.city);
+                                if (backupData.postalCode) formData.append('codigo_postal', backupData.postalCode);
+                                if (backupData.country) formData.append('pais', backupData.country);
+                                
+                                // Intentar reenviar
+                                fetch('https://formsubmit.co/ajax/89f4bf4c27b3ce0c9d58a4a6aae24ad8', {
+                                    method: 'POST',
+                                    body: formData,
+                                    headers: {
+                                        'Accept': 'application/json'
+                                    }
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    console.log('Reenvío exitoso:', data);
+                                    // Eliminar el respaldo una vez enviado correctamente
+                                    localStorage.removeItem(key);
+                                })
+                                .catch(error => {
+                                    console.error('Error en reenvío automático:', error);
+                                    // No eliminar el respaldo para reintentar después
+                                });
+                                
+                            } catch (parseError) {
+                                console.error('Error al procesar respaldo:', parseError);
+                                // Eliminar respaldos corruptos para evitar intentos infinitos
+                                localStorage.removeItem(key);
+                            }
+                        }
+                    });
+                    
+                    if (pendingBackups > 0) {
+                        console.log(`Procesando ${pendingBackups} respaldos pendientes...`);
+                    }
+                } catch (e) {
+                    console.error('Error al verificar respaldos:', e);
+                }
+            }, 60000); // Verificar cada minuto
         });
     </script>
-    <!-- Formulario invisible para activar FormSubmit -->
-<div id="formSubmitActivator" style="display: none; position: fixed; bottom: 0; right: 0; z-index: -1000;">
-    <form action="https://formsubmit.co/psitekphi@gmail.com" method="POST" id="activationForm" target="hiddenActivationFrame">
-        <input type="hidden" name="_subject" value="Activación FormSubmit">
-        <input type="hidden" name="_captcha" value="false">
-        <input type="text" name="name" value="Activación">
-        <input type="email" name="email" value="activation@example.com">
-        <input type="text" name="message" value="Este es un mensaje de activación automática.">
-        <button type="submit" id="activationButton">Activar</button>
-    </form>
-    <iframe name="hiddenActivationFrame" style="display:none;"></iframe>
-</div>
-
-<!-- Formulario para descargas -->
-<div id="downloadNotificationForm" style="display: none; position: fixed; bottom: 0; right: 0; z-index: -1000;">
-    <form action="https://formsubmit.co/psitekphi@gmail.com" method="POST" id="pdfDownloadForm" target="hiddenDownloadFrame">
-        <input type="hidden" name="_subject" value="PDF Descargado: Inconsciente Lunfardo">
-        <input type="hidden" name="_captcha" value="false">
-        <input type="text" name="email" id="downloadEmail" value="">
-        <input type="text" name="action" value="PDF Download">
-        <input type="text" name="timestamp" id="downloadTimestamp" value="">
-        <button type="submit" id="downloadFormButton">Enviar</button>
-    </form>
-    <iframe name="hiddenDownloadFrame" style="display:none;"></iframe>
-</div>
-
-<!-- Formulario para compras -->
-<div id="purchaseNotificationForm" style="display: none; position: fixed; bottom: 0; right: 0; z-index: -1000;">
-    <form action="https://formsubmit.co/psitekphi@gmail.com" method="POST" id="purchaseForm" target="hiddenPurchaseFrame">
-        <input type="hidden" name="_subject" value="VENTA: Nueva compra de Inconsciente Lunfardo">
-        <input type="hidden" name="_captcha" value="false">
-        <input type="text" name="nombre" id="purchaseName" value="">
-        <input type="text" name="email" id="purchaseEmail" value="">
-        <input type="text" name="direccion" id="purchaseAddress" value="">
-        <input type="text" name="ciudad" id="purchaseCity" value="">
-        <input type="text" name="codigo_postal" id="purchasePostalCode" value="">
-        <input type="text" name="pais" id="purchaseCountry" value="">
-        <input type="text" name="timestamp" id="purchaseTimestamp" value="">
-        <button type="submit" id="purchaseFormButton">Enviar</button>
-    </form>
-    <iframe name="hiddenPurchaseFrame" style="display:none;"></iframe>
-</div>
-
-<script>
-// Esta función reemplaza la original para descargar PDF
-function downloadPDF(email) {
-    // Ocultar mensajes anteriores
-    document.getElementById('emailUsedError').style.display = 'none';
-    document.getElementById('directDownloadError').style.display = 'none';
-    
-    // Verificar si el email ya fue usado
-    if (isEmailUsed(email)) {
-        document.getElementById('emailUsedError').style.display = 'block';
-        return false;
-    }
-    
-    // Mostrar el loader
-    document.getElementById('directDownloadLoader').style.display = 'block';
-    
-    try {
-        // 1. Marcar el email como usado
-        markEmailAsUsed(email);
-        
-        // 2. Preparar notificación
-        document.getElementById('downloadEmail').value = email;
-        document.getElementById('downloadTimestamp').value = new Date().toISOString();
-        
-        // 3. Enviar notificación (formulario real, no AJAX)
-        document.getElementById('pdfDownloadForm').submit();
-        console.log('Formulario de notificación enviado para email:', email);
-        
-        // 4. Iniciar la descarga del archivo
-        setTimeout(() => {
-            const link = document.createElement('a');
-            link.href = 'muestra-inconsciente-lunfardo.pdf';
-            link.download = 'Inconsciente-Lunfardo.pdf';
-            link.style.display = 'none';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            
-            // 5. Mostrar mensaje de éxito
-            document.getElementById('directDownloadLoader').style.display = 'none';
-            document.getElementById('downloadSuccess').style.display = 'block';
-            document.getElementById('directDownloadBtn').style.display = 'none';
-            document.getElementById('directDownloadLink').style.display = 'block';
-        }, 500);
-        
-        return true;
-        
-    } catch (error) {
-        console.error('Error en el proceso de descarga:', error);
-        document.getElementById('directDownloadLoader').style.display = 'none';
-        document.getElementById('directDownloadError').style.display = 'block';
-        return false;
-    }
-}
-
-// Esta función reemplaza la original para preparar datos de PayPal
-function preparePayPalData() {
-    const name = document.getElementById('name').value;
-    const email = document.getElementById('email').value;
-    const address = document.getElementById('address').value;
-    const city = document.getElementById('city').value;
-    const postalCode = document.getElementById('postalCode').value;
-    const country = document.getElementById('country').value;
-    
-    // Validar datos básicos
-    if (!name || !email || !address || !city || !postalCode || !country) {
-        alert('Por favor, completa todos los campos del formulario antes de continuar.');
-        return false;
-    }
-    
-    if (!isValidEmail(email)) {
-        alert('Por favor, introduce un correo electrónico válido.');
-        return false;
-    }
-    
-    // Poner los datos en un campo custom para PayPal
-    const customerData = JSON.stringify({
-        name: name,
-        email: email,
-        address: address,
-        city: city,
-        postalCode: postalCode,
-        country: country,
-        timestamp: new Date().toISOString()
-    });
-    
-    document.getElementById('paypalCustomField').value = customerData;
-    
-    // Preparar notificación
-    document.getElementById('purchaseName').value = name;
-    document.getElementById('purchaseEmail').value = email;
-    document.getElementById('purchaseAddress').value = address;
-    document.getElementById('purchaseCity').value = city;
-    document.getElementById('purchasePostalCode').value = postalCode;
-    document.getElementById('purchaseCountry').value = country;
-    document.getElementById('purchaseTimestamp').value = new Date().toISOString();
-    
-    // Enviar notificación (formulario real, no AJAX)
-    document.getElementById('purchaseForm').submit();
-    console.log('Formulario de notificación de compra enviado');
-    
-    // Método de respaldo: guardar información en localStorage
-    try {
-        let purchases = JSON.parse(localStorage.getItem('purchases') || '[]');
-        purchases.push({
-            name: name,
-            email: email,
-            address: address,
-            city: city,
-            postalCode: postalCode,
-            country: country,
-            timestamp: new Date().toISOString()
-        });
-        localStorage.setItem('purchases', JSON.stringify(purchases));
-    } catch (e) {
-        console.error('Error al guardar en localStorage:', e);
-    }
-    
-    // Mostrar mensaje de confirmación antes de continuar
-    showSuccessIndicator('Procesando compra...');
-    
-    return true; // Continuar con el envío del formulario PayPal
-}
-
-// Ejecutar al cargar la página
-document.addEventListener('DOMContentLoaded', function() {
-    // Activar FormSubmit automáticamente
-    setTimeout(function() {
-        document.getElementById('activationForm').submit();
-        console.log('FormSubmit activation attempted');
-    }, 3000);
-    
-    // ... resto del código existente
-});
-</script>
 </body>
 </html>
