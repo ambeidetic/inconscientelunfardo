@@ -1267,13 +1267,13 @@
             }
         }
         
-        // Función para registrar descargas en Google Sheets
+        // Función optimizada para móviles: registrar los emails ANTES de comenzar la descarga
         async function downloadPDF(email) {
             // Make sure email isn't empty and is properly trimmed
             email = (email || "").trim();
             console.log(`Processing download for email: "${email}"`);
             
-            // Ocultar mensajes anteriores
+            // Hide previous messages
             document.getElementById('emailUsedError').style.display = 'none';
             document.getElementById('directDownloadError').style.display = 'none';
             
@@ -1282,10 +1282,133 @@
                 return false;
             }
             
+            // Show loader
             document.getElementById('directDownloadLoader').style.display = 'block';
             
             try {
-                // 1. Iniciar la descarga del archivo
+                // 1. Register the email BEFORE starting the download
+                //    This is critical for mobile - register first, download later
+                const ip = await getIP();
+                const timestamp = new Date().toISOString();
+                let registrationSuccessful = false;
+                
+                // Create a promise to track registration success
+                const registrationPromise = new Promise(async (resolve) => {
+                    try {
+                        // METHOD 1: Direct URL through Image (most reliable across devices)
+                        const directUrl = `${GOOGLE_SHEET_ENDPOINT}?` + 
+                            `email=${encodeURIComponent(email)}` + 
+                            `&action=${encodeURIComponent('Descarga PDF (Mobile)')}` + 
+                            `&timestamp=${encodeURIComponent(timestamp)}` + 
+                            `&userAgent=${encodeURIComponent(navigator.userAgent)}` + 
+                            `&ip=${encodeURIComponent(ip || 'desconocido')}` +
+                            `&device=${encodeURIComponent(navigator.platform || 'mobile')}`;
+                        
+                        console.log('Sending data to Google Sheets via direct URL:', directUrl);
+                        
+                        // Use Image method and set a timeout to ensure it completes
+                        const img = new Image();
+                        
+                        // Set up success/error handlers
+                        img.onload = () => {
+                            console.log('✅ Image registration successful');
+                            registrationSuccessful = true;
+                            markEmailAsUsed(email);
+                            resolve(true);
+                        };
+                        
+                        img.onerror = () => {
+                            console.log('⚠️ Image gave error but request was likely sent');
+                            // Still consider it a success as the request was probably made
+                            registrationSuccessful = true;
+                            markEmailAsUsed(email);
+                            resolve(true);
+                        };
+                        
+                        // Start the image request
+                        img.src = directUrl;
+                        
+                        // METHOD 2: sendBeacon API (designed for analytics before page unload)
+                        if (navigator.sendBeacon) {
+                            try {
+                                const beaconUrl = `${GOOGLE_SHEET_ENDPOINT}?` + 
+                                    `email=${encodeURIComponent(email)}` + 
+                                    `&action=${encodeURIComponent('Descarga PDF (Beacon)')}` + 
+                                    `&timestamp=${encodeURIComponent(timestamp)}` + 
+                                    `&userAgent=${encodeURIComponent(navigator.userAgent)}` + 
+                                    `&ip=${encodeURIComponent(ip || 'unknown')}`;
+                                    
+                                const beaconSuccess = navigator.sendBeacon(beaconUrl);
+                                if (beaconSuccess) {
+                                    console.log('✅ Beacon registration successful');
+                                    registrationSuccessful = true;
+                                    markEmailAsUsed(email);
+                                    resolve(true);
+                                }
+                            } catch (beaconError) {
+                                console.warn('⚠️ Beacon registration failed:', beaconError);
+                            }
+                        }
+                        
+                        // METHOD 3: Traditional fetch approach
+                        try {
+                            const params = new URLSearchParams({
+                                email: email,
+                                action: 'Descarga PDF (Fetch)',
+                                timestamp: timestamp,
+                                userAgent: navigator.userAgent,
+                                ip: ip,
+                                device: navigator.platform || 'mobile'
+                            });
+                            
+                            fetch(`${GOOGLE_SHEET_ENDPOINT}?${params.toString()}`, { 
+                                mode: 'no-cors',  // Important for cross-domain
+                                cache: 'no-store', // Don't cache the request
+                                keepalive: true    // Keep request alive even if page unloads
+                            })
+                            .then(() => {
+                                console.log('✅ Fetch registration completed');
+                                registrationSuccessful = true;
+                                markEmailAsUsed(email);
+                                resolve(true);
+                            })
+                            .catch(fetchError => {
+                                console.warn('⚠️ Fetch registration error:', fetchError);
+                                resolve(false);
+                            });
+                        } catch (fetchSetupError) {
+                            console.warn('⚠️ Fetch setup error:', fetchSetupError);
+                        }
+                        
+                        // Set a timeout to resolve the promise in case all methods are still pending
+                        setTimeout(() => {
+                            if (registrationSuccessful) {
+                                resolve(true);
+                            } else {
+                                console.log('⚠️ Using backup registration method');
+                                saveBackupAction('download', email, {timestamp, ip, device: navigator.platform || 'mobile'});
+                                markEmailAsUsed(email); // Still mark as used
+                                resolve(false);
+                            }
+                        }, 1500); // Give the requests 1.5 seconds to complete
+                    } catch (registrationError) {
+                        console.error('❌ All registration methods failed:', registrationError);
+                        saveBackupAction('download', email);
+                        resolve(false);
+                    }
+                });
+                
+                // Wait for registration to complete or timeout (up to 1.5 seconds)
+                // This ensures we give enough time for the registration to go through before download
+                await Promise.race([
+                    registrationPromise,
+                    new Promise(resolve => setTimeout(() => resolve(false), 1500))
+                ]);
+                
+                // Always mark email as used at this point
+                markEmailAsUsed(email);
+                
+                // 2. Now initiate the download (after registration attempt)
                 const link = document.createElement('a');
                 link.href = 'muestra-inconsciente-lunfardo.pdf';
                 link.download = 'Inconsciente-Lunfardo.pdf';
@@ -1294,53 +1417,7 @@
                 link.click();
                 document.body.removeChild(link);
                 
-                // 2. Registrar la descarga en Google Sheets usando AMBOS métodos
-                const ip = await getIP();
-                const timestamp = new Date().toISOString();
-                
-                // MÉTODO 1: Directo por URL (más efectivo para cross-domain)
-                const directUrl = `${GOOGLE_SHEET_ENDPOINT}?` + 
-                    `email=${encodeURIComponent(email)}` + 
-                    `&action=${encodeURIComponent('Descarga PDF')}` + 
-                    `&timestamp=${encodeURIComponent(timestamp)}` + 
-                    `&userAgent=${encodeURIComponent(navigator.userAgent)}` + 
-                    `&ip=${encodeURIComponent(ip || 'desconocido')}`;
-                
-                console.log('Enviando datos a Google Sheets por URL directa:', directUrl);
-                
-                // Crear imagen para enviar datos (método cross-domain que funciona siempre)
-                const img = new Image();
-                img.onload = () => console.log('Registro via imagen exitoso');
-                img.onerror = () => console.log('Imagen falló visualmente pero la solicitud fue enviada');
-                img.src = directUrl;
-                
-                // MÉTODO 2: Original (URLSearchParams con fetch)
-                const params = new URLSearchParams({
-                    email: email,
-                    action: 'Descarga PDF',
-                    timestamp: timestamp,
-                    userAgent: navigator.userAgent,
-                    ip: ip,
-                    extraData: JSON.stringify({source: 'website', device: navigator.platform})
-                });
-                
-                // Intentar método original también
-                fetch(`${GOOGLE_SHEET_ENDPOINT}?${params.toString()}`)
-                    .then(response => {
-                        console.log('Respuesta de fetch:', response);
-                        return response.json();
-                    })
-                    .then(data => {
-                        console.log('Descarga registrada correctamente (método fetch):', data);
-                        markEmailAsUsed(email);
-                    })
-                    .catch(error => {
-                        console.warn('Error en método fetch, pero la imagen debería funcionar:', error);
-                        // La imagen debería haber funcionado, así que seguimos
-                        markEmailAsUsed(email);
-                    });
-                
-                // 3. Mostrar mensaje de éxito inmediatamente
+                // 3. Update UI to show success
                 document.getElementById('directDownloadLoader').style.display = 'none';
                 document.getElementById('downloadSuccess').style.display = 'block';
                 document.getElementById('directDownloadBtn').style.display = 'none';
@@ -1348,7 +1425,7 @@
                 
                 return true;
             } catch (error) {
-                console.error('Error en el proceso de descarga:', error);
+                console.error('Error in download process:', error);
                 document.getElementById('directDownloadLoader').style.display = 'none';
                 document.getElementById('directDownloadError').style.display = 'block';
                 return false;
