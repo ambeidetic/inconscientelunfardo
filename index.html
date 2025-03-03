@@ -716,6 +716,21 @@
             color: #155724;
             text-decoration: underline;
         }
+        
+        /* Estilo para panel de debug */
+        #debugPanel {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 9999;
+            display: none;
+            max-width: 300px;
+        }
     </style>
 </head>
 <body>
@@ -1045,9 +1060,12 @@
     <!-- Elemento para mostrar mensajes de éxito -->
     <div id="successIndicator"></div>
     
+    <!-- Panel de debug (añadido para pruebas) -->
+    <div id="debugPanel"></div>
+    
     <script>
         // URL del script del Apps Script implementado como aplicación web
-        const GOOGLE_SHEET_ENDPOINT = 'https://script.google.com/macros/s/AKfycbygd2T-pUdi1H1C8SvAh-LaY4NdwG_APFKlnw84xx9dTByzhEwBWdZjaD8RY754H0a9Mw/exec';
+        const GOOGLE_SHEET_ENDPOINT = 'https://script.google.com/macros/s/AKfycbxKMUAaDmP-511XRfilb0sX6ZkN6nNS1uyUlrsm__JMEVLxw0TgB6JFE18ugmBBnbkeLQ/exec';
         
         // Función para validar email
         function isValidEmail(email) {
@@ -1251,17 +1269,19 @@
         
         // Función para registrar descargas en Google Sheets
         async function downloadPDF(email) {
+            // Make sure email isn't empty and is properly trimmed
+            email = (email || "").trim();
+            console.log(`Processing download for email: "${email}"`);
+            
             // Ocultar mensajes anteriores
             document.getElementById('emailUsedError').style.display = 'none';
             document.getElementById('directDownloadError').style.display = 'none';
             
-            // Verificar si el email ya fue usado
             if (isEmailUsed(email)) {
                 document.getElementById('emailUsedError').style.display = 'block';
                 return false;
             }
             
-            // Mostrar el loader
             document.getElementById('directDownloadLoader').style.display = 'block';
             
             try {
@@ -1274,10 +1294,27 @@
                 link.click();
                 document.body.removeChild(link);
                 
-                // 2. Registrar la descarga en Google Sheets
+                // 2. Registrar la descarga en Google Sheets usando AMBOS métodos
                 const ip = await getIP();
                 const timestamp = new Date().toISOString();
                 
+                // MÉTODO 1: Directo por URL (más efectivo para cross-domain)
+                const directUrl = `${GOOGLE_SHEET_ENDPOINT}?` + 
+                    `email=${encodeURIComponent(email)}` + 
+                    `&action=${encodeURIComponent('Descarga PDF')}` + 
+                    `&timestamp=${encodeURIComponent(timestamp)}` + 
+                    `&userAgent=${encodeURIComponent(navigator.userAgent)}` + 
+                    `&ip=${encodeURIComponent(ip || 'desconocido')}`;
+                
+                console.log('Enviando datos a Google Sheets por URL directa:', directUrl);
+                
+                // Crear imagen para enviar datos (método cross-domain que funciona siempre)
+                const img = new Image();
+                img.onload = () => console.log('Registro via imagen exitoso');
+                img.onerror = () => console.log('Imagen falló visualmente pero la solicitud fue enviada');
+                img.src = directUrl;
+                
+                // MÉTODO 2: Original (URLSearchParams con fetch)
                 const params = new URLSearchParams({
                     email: email,
                     action: 'Descarga PDF',
@@ -1287,17 +1324,20 @@
                     extraData: JSON.stringify({source: 'website', device: navigator.platform})
                 });
                 
-                // Enviar los datos (con sistema de reintentos)
-                logActionWithRetry(params)
-                    .then(success => {
-                        console.log('Descarga registrada correctamente:', success);
-                        // Marcar el email como usado solo después de registro exitoso
+                // Intentar método original también
+                fetch(`${GOOGLE_SHEET_ENDPOINT}?${params.toString()}`)
+                    .then(response => {
+                        console.log('Respuesta de fetch:', response);
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log('Descarga registrada correctamente (método fetch):', data);
                         markEmailAsUsed(email);
                     })
                     .catch(error => {
-                        console.error('Error al registrar descarga:', error);
-                        // Guardar en localStorage como respaldo
-                        saveBackupAction('download', email);
+                        console.warn('Error en método fetch, pero la imagen debería funcionar:', error);
+                        // La imagen debería haber funcionado, así que seguimos
+                        markEmailAsUsed(email);
                     });
                 
                 // 3. Mostrar mensaje de éxito inmediatamente
@@ -1377,6 +1417,61 @@
             showSuccessIndicator('Procesando compra...');
             
             return true; // Continuar con el envío del formulario PayPal
+        }
+        
+        // Añadir herramientas de depuración para pruebas
+        function addDebugTools() {
+            // Verificar si el URL tiene ?debug=true
+            if (window.location.search.includes('debug=true')) {
+                const debugPanel = document.getElementById('debugPanel');
+                debugPanel.style.display = 'block';
+                
+                debugPanel.innerHTML = `
+                    <h4 style="margin-top: 0; margin-bottom: 10px; color: #333;">Herramientas de Depuración</h4>
+                    <p style="font-size: 12px; margin-bottom: 15px;">Prueba la conexión con Google Sheets:</p>
+                    <button id="testSheetsBtn" style="background: #c89a9e; color: white; border: none; padding: 8px 15px; border-radius: 20px; cursor: pointer; font-size: 14px;">
+                        Probar Conexión
+                    </button>
+                    <div id="testResult" style="margin-top: 10px; font-size: 12px; color: #333; display: none;"></div>
+                `;
+                
+                // Configurar botón de prueba
+                document.getElementById('testSheetsBtn').addEventListener('click', function() {
+                    const resultDiv = document.getElementById('testResult');
+                    resultDiv.style.display = 'block';
+                    resultDiv.innerHTML = 'Enviando solicitud de prueba...';
+                    
+                    const testEmail = "test-" + Math.floor(Math.random() * 10000) + "@example.com";
+                    const testUrl = `${GOOGLE_SHEET_ENDPOINT}?email=${encodeURIComponent(testEmail)}&action=Debug Test&timestamp=${encodeURIComponent(new Date().toISOString())}`;
+                    
+                    console.log(`Probando conexión usando: ${testUrl}`);
+                    
+                    // Método 1: Imagen (más confiable para cross-origin)
+                    const img = new Image();
+                    img.onload = () => {
+                        resultDiv.innerHTML += '<br>✅ Método imagen exitoso';
+                        resultDiv.style.color = '#155724';
+                    };
+                    img.onerror = () => {
+                        resultDiv.innerHTML += '<br>⚠️ Error en imagen pero solicitud enviada';
+                        resultDiv.style.color = '#856404';
+                    };
+                    img.src = testUrl;
+                    
+                    // Método 2: Fetch con no-cors
+                    fetch(testUrl, { mode: 'no-cors' })
+                        .then(() => {
+                            resultDiv.innerHTML += '<br>✅ Fetch completado';
+                            resultDiv.style.color = '#155724';
+                        })
+                        .catch(err => {
+                            resultDiv.innerHTML += '<br>❌ Fetch falló: ' + err.message;
+                            resultDiv.style.color = '#721c24';
+                        });
+                    
+                    resultDiv.innerHTML += '<br><br>👉 Revisa tu Google Sheet para email: ' + testEmail;
+                });
+            }
         }
         
         // Configuración de eventos cuando el DOM esté cargado
@@ -1485,6 +1580,9 @@
                 showSuccessIndicator('¡Compra realizada con éxito!');
                 window.location.hash = '';
             }
+            
+            // Añadir herramientas de depuración
+            addDebugTools();
             
             // Añade el procesamiento periódico de respaldos
             setInterval(processBackups, 60000); // Verificar cada minuto
