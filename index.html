@@ -731,6 +731,56 @@
             display: none;
             max-width: 300px;
         }
+        /* Overlay mask */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.75);
+            z-index: 99999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .overlay-popup {
+            background: rgba(30, 30, 30, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+            max-width: 640px;
+            width: 90%;
+            padding: 2.5rem 2rem;
+            color: #e0e0e0;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+        }
+        .overlay-icon {
+            font-size: 3rem;
+            color: #f5a623;
+            margin-bottom: 0.5rem;
+        }
+        .overlay-popup h2 {
+            font-family: 'Merriweather', Georgia, serif;
+            font-size: 1.3rem;
+            font-weight: 300;
+            color: #ccc;
+            margin: 0 0 1.5rem 0;
+            letter-spacing: 0.03em;
+        }
+        .overlay-message p {
+            font-family: 'Merriweather', Georgia, serif;
+            font-size: 0.95rem;
+            line-height: 1.7;
+            color: #bbb;
+            text-align: left;
+            margin: 1rem 0;
+        }
+        .overlay-message hr {
+            border: none;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin: 1.5rem 0;
+        }
     </style>
 </head>
 <body>
@@ -1668,5 +1718,18 @@
             setTimeout(processBackups, 5000);
         });
     </script>
+
+    <!-- Overlay mask -->
+    <div class="overlay">
+        <div class="overlay-popup">
+            <div class="overlay-icon">&#9888;</div>
+            <h2>Technical Difficulties / Dificultades T&eacute;cnicas</h2>
+            <div class="overlay-message">
+                <p lang="es">Hace un a&ntilde;o ya que launch&eacute;e este proyecto; un a&ntilde;o despu&eacute;s he estado profundizando la iron&iacute;a de que la filosof&iacute;a sea la disciplina m&aacute;s abarcativa que simult&aacute;neamente confunde Filosof&iacute;a por Historia y no es capaz de ni siquiera trazar su filosof&iacute;a m&aacute;s contempor&aacute;nea, bleeding-edge, y expl&iacute;cita explicaci&oacute;n del estado de sus t&eacute;rminos estado-de-arte (Zizek presumiendo de una nueva &ldquo;l&oacute;gica de la naturaleza&rdquo; como coment&oacute; al final del seudodebate con Pinkard como poco, y Brassier en la presentaci&oacute;n &ldquo;Psychoanalysis of Form&rdquo; como mucho)&mdash; me hall&oacute; ahora pensando con los hegelianos del Cono Sur, y en contra de la filosof&iacute;a de la liberaci&oacute;n rioplatense (los &uacute;nicos pioneros de una ontolog&iacute;a del inconsciente, ad minimum, rioplatense, quienes heredo emulando su fagocitaci&oacute;n por epitaxis... en unos considero nuevas ediciones.</p>
+                <hr>
+                <p lang="en">It&rsquo;s been a year since I launched this project; a year later I&rsquo;ve been deepening the irony that philosophy&mdash;the most encompassing discipline&mdash;simultaneously confuses Philosophy for History and cannot even trace its most contemporary, bleeding-edge, and explicit explanation of the state of its state-of-the-art terms (Zizek boasting of a new &ldquo;logic of nature&rdquo; as he remarked at the end of the pseudo-debate with Pinkard at minimum, and Brassier in the presentation &ldquo;Psychoanalysis of Form&rdquo; at most)&mdash; which found me now thinking alongside the Hegelians of the Southern Cone, and against the Rioplatense philosophy of liberation (the only pioneers of an ontology of the unconscious, ad minimum, Rioplatense, whom I inherit by emulating their phagocytosis through epitaxis... in some I consider new editions.</p>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
