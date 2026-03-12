@@ -738,48 +738,74 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.75);
+            background: rgba(51, 51, 51, 0.88);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
             z-index: 99999;
             display: flex;
             align-items: center;
             justify-content: center;
+            cursor: not-allowed;
+            overflow: hidden;
+        }
+        .overlay * {
+            pointer-events: none;
         }
         .overlay-popup {
-            background: rgba(30, 30, 30, 0.95);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 8px;
-            max-width: 640px;
+            background: var(--background-color);
+            border: 1px solid var(--primary-color);
+            border-radius: 12px;
+            max-width: 660px;
             width: 90%;
-            padding: 2.5rem 2rem;
-            color: #e0e0e0;
+            padding: 3rem 2.5rem;
+            color: var(--text-color);
             text-align: center;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(200, 154, 158, 0.2);
+            animation: overlayFadeIn 0.8s ease-out;
+        }
+        @keyframes overlayFadeIn {
+            from { opacity: 0; transform: translateY(20px) scale(0.97); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
         }
         .overlay-icon {
-            font-size: 3rem;
-            color: #f5a623;
-            margin-bottom: 0.5rem;
+            font-size: 2.4rem;
+            color: var(--secondary-color);
+            margin-bottom: 0.75rem;
+            opacity: 0.7;
         }
         .overlay-popup h2 {
             font-family: 'Merriweather', Georgia, serif;
-            font-size: 1.3rem;
+            font-size: 1.15rem;
             font-weight: 300;
-            color: #ccc;
-            margin: 0 0 1.5rem 0;
-            letter-spacing: 0.03em;
+            font-style: italic;
+            color: var(--secondary-color);
+            margin: 0 0 1.8rem 0;
+            letter-spacing: 0.04em;
         }
         .overlay-message p {
             font-family: 'Merriweather', Georgia, serif;
-            font-size: 0.95rem;
-            line-height: 1.7;
-            color: #bbb;
+            font-size: 0.92rem;
+            line-height: 1.85;
+            color: #555;
             text-align: left;
             margin: 1rem 0;
         }
+        .overlay-message p[lang="en"] {
+            font-style: italic;
+            color: #777;
+        }
         .overlay-message hr {
             border: none;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            margin: 1.5rem 0;
+            border-top: 1px solid var(--primary-color);
+            opacity: 0.35;
+            margin: 1.8rem 2rem;
+        }
+        .overlay-message em {
+            font-style: italic;
+        }
+        .overlay-message strong {
+            font-weight: 700;
+            color: var(--secondary-color);
         }
     </style>
 </head>
@@ -1720,14 +1746,14 @@
     </script>
 
     <!-- Overlay mask -->
-    <div class="overlay">
+    <div class="overlay" onclick="return false;" oncontextmenu="return false;">
         <div class="overlay-popup">
-            <div class="overlay-icon">&#9888;</div>
-            <h2>Technical Difficulties / Dificultades T&eacute;cnicas</h2>
+            <div class="overlay-icon">&#9671;</div>
+            <h2>Sitio en revisi&oacute;n &mdash; Under Revision</h2>
             <div class="overlay-message">
-                <p lang="es">Hace un a&ntilde;o ya que launch&eacute;e este proyecto; un a&ntilde;o despu&eacute;s he estado profundizando la iron&iacute;a de que la filosof&iacute;a sea la disciplina m&aacute;s abarcativa que simult&aacute;neamente confunde Filosof&iacute;a por Historia y no es capaz de ni siquiera trazar su filosof&iacute;a m&aacute;s contempor&aacute;nea, bleeding-edge, y expl&iacute;cita explicaci&oacute;n del estado de sus t&eacute;rminos estado-de-arte (Zizek presumiendo de una nueva &ldquo;l&oacute;gica de la naturaleza&rdquo; como coment&oacute; al final del seudodebate con Pinkard como poco, y Brassier en la presentaci&oacute;n &ldquo;Psychoanalysis of Form&rdquo; como mucho)&mdash; me hall&oacute; ahora pensando con los hegelianos del Cono Sur, y en contra de la filosof&iacute;a de la liberaci&oacute;n rioplatense (los &uacute;nicos pioneros de una ontolog&iacute;a del inconsciente, ad minimum, rioplatense, quienes heredo emulando su fagocitaci&oacute;n por epitaxis... en unos considero nuevas ediciones.</p>
+                <p lang="es">Hace un a&ntilde;o ya que launch&eacute;e este proyecto; un a&ntilde;o despu&eacute;s he estado profundizando la iron&iacute;a de que <strong>la filosof&iacute;a</strong> sea la disciplina m&aacute;s abarcativa que simult&aacute;neamente confunde <em>Filosof&iacute;a</em> por <em>Historia</em> y no es capaz de ni siquiera trazar su filosof&iacute;a m&aacute;s contempor&aacute;nea, <em>bleeding-edge</em>, y expl&iacute;cita explicaci&oacute;n del estado de sus t&eacute;rminos estado-de-arte (<strong>Zizek</strong> presumiendo de una nueva &ldquo;<em>l&oacute;gica de la naturaleza</em>&rdquo; como coment&oacute; al final del seudodebate con <strong>Pinkard</strong> como poco, y <strong>Brassier</strong> en la presentaci&oacute;n &ldquo;<em>Psychoanalysis of Form</em>&rdquo; como mucho)&mdash; me hall&oacute; ahora pensando con los <strong>hegelianos del Cono Sur</strong>, y en contra de la <em>filosof&iacute;a de la liberaci&oacute;n rioplatense</em> (los &uacute;nicos pioneros de una ontolog&iacute;a del inconsciente, <em>ad minimum</em>, rioplatense, quienes heredo emulando su fagocitaci&oacute;n por epitaxis... en unos considero nuevas ediciones.</p>
                 <hr>
-                <p lang="en">It&rsquo;s been a year since I launched this project; a year later I&rsquo;ve been deepening the irony that philosophy&mdash;the most encompassing discipline&mdash;simultaneously confuses Philosophy for History and cannot even trace its most contemporary, bleeding-edge, and explicit explanation of the state of its state-of-the-art terms (Zizek boasting of a new &ldquo;logic of nature&rdquo; as he remarked at the end of the pseudo-debate with Pinkard at minimum, and Brassier in the presentation &ldquo;Psychoanalysis of Form&rdquo; at most)&mdash; which found me now thinking alongside the Hegelians of the Southern Cone, and against the Rioplatense philosophy of liberation (the only pioneers of an ontology of the unconscious, ad minimum, Rioplatense, whom I inherit by emulating their phagocytosis through epitaxis... in some I consider new editions.</p>
+                <p lang="en">It&rsquo;s been a year since I launched this project; a year later I&rsquo;ve been deepening the irony that <strong>philosophy</strong>&mdash;the most encompassing discipline&mdash;simultaneously confuses <em>Philosophy</em> for <em>History</em> and cannot even trace its most contemporary, bleeding-edge, and explicit explanation of the state of its state-of-the-art terms (<strong>Zizek</strong> boasting of a new &ldquo;<em>logic of nature</em>&rdquo; as he remarked at the end of the pseudo-debate with <strong>Pinkard</strong> at minimum, and <strong>Brassier</strong> in the presentation &ldquo;<em>Psychoanalysis of Form</em>&rdquo; at most)&mdash; which found me now thinking alongside the <strong>Hegelians of the Southern Cone</strong>, and against the <em>Rioplatense philosophy of liberation</em> (the only pioneers of an ontology of the unconscious, <em>ad minimum</em>, Rioplatense, whom I inherit by emulating their phagocytosis through epitaxis... in some I consider new editions.</p>
             </div>
         </div>
     </div>
